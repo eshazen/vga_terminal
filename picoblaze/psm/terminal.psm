@@ -1,0 +1,108 @@
+;;;
+;;; serial terminal
+;;;
+	CONSTANT nrows, 40'd
+	CONSTANT last_row, 39'd
+	CONSTANT ncols, 80'd
+	CONSTANT last_col, 79'd
+
+	;; enter here from monitor
+	;; for now, display characters received, exit on ^C
+cmd_T:
+	;; clear the screen
+	call cls
+	load s0, 00
+	store s0,cur_line
+	store s0,cur_col
+
+termi:	call UART_RX_wait
+	call UART_TX
+	compare s5, 03		;^C
+	jump z, main
+	compare s5, 1b		;ESC
+	jump z, main
+	
+	;; check for a few control chars
+	compare s5,0d		;CR?
+	jump z,term_cr
+	compare s5,0a		;LF?
+	jump z,term_lf
+	
+	;; display at cursor
+	call cur2mem		;convert cursor loc'n to memory address
+	output s5,vram_data_out
+	load s5,01
+	output s5,vram_wr
+	call currt
+	jump termi
+
+	;; CR
+term_cr:
+	load s2,00
+	store s2,cur_col
+	jump termi
+
+	;; LF
+term_lf:
+	load s3,cur_line
+	add s3,01
+	store s3,cur_line
+	jump termi
+
+	;; cursor right, wrap at end
+currt:	fetch s2, cur_col
+	fetch s3, cur_line
+	add s2, 01
+	compare s2, 80'd
+	jump z,curwrp
+	;; no wrap
+	store s2, cur_col
+	jump cur2mem
+
+curwrp:	load s2,00
+	add s3, 01
+	compare s3, 40'd
+	jump z,curlwp
+	store s3,cur_line
+	store s2,cur_col
+	jump cur2mem
+
+curlwp:	load s3,00
+	store s3,cur_line
+	;; fall through to cur2mem
+
+	;; get cursor location from scratchpad (cur_line, cur_col)
+	;; convert to linear memory address
+	;; output to vram_addr_lo/hi
+cur2mem:
+	fetch s2, cur_line	;cur_line as double word to (s3, s2)
+	fetch s3, cur_col
+	output s2, vram_addr_hi
+	output s3, vram_addr_lo
+	return
+	
+	;; clear the screen
+	;; home the cursor
+cls:	load s2, 00
+	load s3, 00
+
+	output s3, vram_addr_hi
+	load s0, 20		;space character
+	output s0, vram_data_out
+	load s4, 01		;write bit
+
+	;; clear a line
+crl:	output s2, vram_addr_lo
+	output s4, vram_wr
+	add s2, 01
+	compare s2, ncols
+	jump nz, crl
+
+	load s2,00
+	add s3,01
+	output s3, vram_addr_hi
+	compare s3, nrows
+	jump nz, crl
+
+	return
+	

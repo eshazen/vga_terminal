@@ -29,22 +29,23 @@ use ieee.numeric_std.all;
 
 entity vga80x40 is
   port (
-    reset    : in  std_logic;
-    clk25MHz : in  std_logic;
-    TEXT_A   : out std_logic_vector(11 downto 0);  -- text buffer
-    TEXT_D   : in  std_logic_vector(07 downto 0);
-    FONT_A   : out std_logic_vector(11 downto 0);  -- font buffer
-    FONT_D   : in  std_logic_vector(07 downto 0);
+    reset      : in  std_logic;
+    clk25MHz   : in  std_logic;
+    TEXT_A_ROW : out integer range 039 downto 0;     -- chr row   < 40 (6 bits)
+    TEXT_A_COL : out integer range 079 downto 0;     -- chr col   < 80 (7 bits)
+    TEXT_D     : in  std_logic_vector(07 downto 0);
+    FONT_A     : out std_logic_vector(11 downto 0);  -- font buffer
+    FONT_D     : in  std_logic_vector(07 downto 0);
     --
-    ocrx     : in  std_logic_vector(07 downto 0);  -- OUTPUT regs
-    ocry     : in  std_logic_vector(07 downto 0);
-    octl     : in  std_logic_vector(07 downto 0);
+    ocrx       : in  std_logic_vector(07 downto 0);  -- OUTPUT regs
+    ocry       : in  std_logic_vector(07 downto 0);
+    octl       : in  std_logic_vector(07 downto 0);
     --
-    R        : out std_logic;
-    G        : out std_logic;
-    B        : out std_logic;
-    hsync    : out std_logic;
-    vsync    : out std_logic
+    R          : out std_logic;
+    G          : out std_logic;
+    B          : out std_logic;
+    hsync      : out std_logic;
+    vsync      : out std_logic
     );
 end vga80x40;
 

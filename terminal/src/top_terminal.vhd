@@ -44,13 +44,14 @@ architecture arch of top_terminal is
 
   component mem_text is
     port (
-      clk   : in  std_logic;
-      addra : in  std_logic_vector(11 downto 0);
-      douta : out std_logic_vector(07 downto 0);
-      dinb  : in  std_logic_vector(07 downto 0);
-      addrb : in  std_logic_vector(11 downto 0);
-      web   : in  std_logic;
-      doutb : out std_logic_vector(07 downto 0));
+      clk       : in  std_logic;
+      addra     : in  std_logic_vector(11 downto 0);
+      douta     : out std_logic_vector(07 downto 0);
+      dinb      : in  std_logic_vector(7 downto 0);
+      addrb_col : in  std_logic_vector(6 downto 0);
+      addrb_row : in  std_logic_vector(5 downto 0);
+      web       : in  std_logic;
+      doutb     : out std_logic_vector(07 downto 0));
   end component mem_text;
 
   component clk_vga is
@@ -62,20 +63,21 @@ architecture arch of top_terminal is
 
   component vga80x40 is
     port (
-      reset    : in  std_logic;
-      clk25MHz : in  std_logic;
-      TEXT_A   : out std_logic_vector(11 downto 0);
-      TEXT_D   : in  std_logic_vector(07 downto 0);
-      FONT_A   : out std_logic_vector(11 downto 0);
-      FONT_D   : in  std_logic_vector(07 downto 0);
-      ocrx     : in  std_logic_vector(07 downto 0);
-      ocry     : in  std_logic_vector(07 downto 0);
-      octl     : in  std_logic_vector(07 downto 0);
-      R        : out std_logic;
-      G        : out std_logic;
-      B        : out std_logic;
-      hsync    : out std_logic;
-      vsync    : out std_logic);
+      reset      : in  std_logic;
+      clk25MHz   : in  std_logic;
+      TEXT_A_ROW : out integer range 039 downto 0;
+      TEXT_A_COL : out integer range 079 downto 0;
+      TEXT_D     : in  std_logic_vector(07 downto 0);
+      FONT_A     : out std_logic_vector(11 downto 0);
+      FONT_D     : in  std_logic_vector(07 downto 0);
+      ocrx       : in  std_logic_vector(07 downto 0);
+      ocry       : in  std_logic_vector(07 downto 0);
+      octl       : in  std_logic_vector(07 downto 0);
+      R          : out std_logic;
+      G          : out std_logic;
+      B          : out std_logic;
+      hsync      : out std_logic;
+      vsync      : out std_logic);
   end component vga80x40;
 
   component mem_font is
@@ -94,10 +96,11 @@ architecture arch of top_terminal is
   signal TEXT_A, FONT_A : std_logic_vector(11 downto 0);
   signal TEXT_D, FONT_D : std_logic_vector(7 downto 0);
 
-  signal TEXT_WR_A  : std_logic_vector(11 downto 0);
-  signal TEXT_WR_D  : std_logic_vector(7 downto 0);
-  signal TEXT_RD_D  : std_logic_vector(7 downto 0);
-  signal TEXT_WR_WE : std_logic;
+  signal TEXT_WR_A_COL : std_logic_vector(6 downto 0);
+  signal TEXT_WR_A_ROW : std_logic_vector(5 downto 0);
+  signal TEXT_WR_D     : std_logic_vector(7 downto 0);
+  signal TEXT_RD_D     : std_logic_vector(7 downto 0);
+  signal TEXT_WR_WE    : std_logic;
 
   signal locked : std_logic;
 
@@ -108,8 +111,8 @@ architecture arch of top_terminal is
   signal vga_control : std_logic_vector(7 downto 0);
 
   signal s_control : std_logic_vector(31 downto 0);
-  signal s_status : std_logic_vector(7 downto 0);
-  signal s_action : std_logic_vector(7 downto 0);
+  signal s_status  : std_logic_vector(7 downto 0);
+  signal s_action  : std_logic_vector(7 downto 0);
 
 begin  -- architecture arch
 
@@ -119,7 +122,12 @@ begin  -- architecture arch
 
   vga_control <= "10000" & color;
 
-  s_status <= sw(7 downto 0);
+  s_status <= TEXT_RD_D;
+
+  TEXT_WR_D     <= s_control(7 downto 0);
+  TEXT_WR_A_COL <= s_control(14 downto 8);
+  TEXT_WR_A_ROW <= s_control(21 downto 16);
+  TEXT_WR_WE    <= s_action(0);
 
   led <= s_control(15 downto 0);
 
@@ -145,7 +153,7 @@ begin  -- architecture arch
       locked   => locked,
       clk_in1  => clk);
 
-  pico_control_1: entity work.pico_control
+  pico_control_1 : entity work.pico_control
     port map (
       clk     => clk,
       reset   => reset,
@@ -175,13 +183,15 @@ begin  -- architecture arch
   -- video RAM
   mem_text_1 : entity work.mem_text
     port map (
-      clk   => clk,
-      addra => TEXT_A,
-      douta => TEXT_D,
-      dinb  => TEXT_WR_D,
-      addrb => TEXT_WR_A,
-      web   => TEXT_WR_WE,
-      doutb => TEXT_RD_D);
+      clk       => clk,
+      addra_row => TEXT_A_ROW,
+      addra_col => TEXT_A_COL,
+      douta     => TEXT_D,
+      dinb      => TEXT_WR_D,
+      addrb_col => TEXT_WR_A_COL,
+      addrb_row => TEXT_WR_A_ROW,
+      web       => TEXT_WR_WE,
+      doutb     => TEXT_RD_D);
 
   -- character generator
   mem_font_1 : entity work.mem_font

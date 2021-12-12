@@ -17,11 +17,8 @@
 ;;;   w <addr> <data>           - write to e-bus
 ;;;   r <addr> [<count>]        - read from e-bus
 ;;;
-;;;   c <data> <count>          - send CITIROC serial data
-;;;                               (set CLKDIV first)
 ;;;   b                         - start UUE bootloader
 ;;;
-;;;   t                         - test various things
 ;;;   v <rate>                  - set line (baud) divisor
 ;;;                               (2 bytes, 16X rate divider for 100MHz)
 ;;;                               (so 0286 for 9600, 0036 for 115200 etc)
@@ -38,7 +35,7 @@
 	CONSTANT get_peek_data_mid, 04 ; program data middle bits
 	CONSTANT get_peek_data_high, 05 ; ; program data upper bits
 
-	CONSTANT trigger_ebus_read, 07 ; trigger ebus read cycle
+	CONSTANT vram_data_in, 0d
 
 ;;; output ports
 	CONSTANT UART_TX6_output_port, 80
@@ -50,16 +47,10 @@
 	CONSTANT set_poke_data_mid, 06  ; program RAM write data latch lsb
 	CONSTANT set_poke_data_high, 07  ; program RAM write data latch msb (triggers write)
 
-	CONSTANT set_ebus_addr_0, 08 ; e-bus address byte 0
-	CONSTANT set_ebus_addr_1, 09 ; e-bus address byte 1
-	CONSTANT set_ebus_addr_2, 0a ; e-bus address byte 2
-	CONSTANT set_ebus_addr_3, 0b ; e-bus address byte 3
-
-	CONSTANT ebus_data_0, 0c     ; e-bus data byte 0 (read/write)
-	CONSTANT ebus_data_1, 0d     ; e-bus data byte 1
-	CONSTANT ebus_data_2, 0e     ; e-bus data byte 2
-	CONSTANT ebus_data_3, 0f     ; e-bus data byte 3 (trigger write)
-	
+	CONSTANT vram_data_out, 09
+	CONSTANT vram_addr_lo, 0a
+	CONSTANT vram_addr_hi, 0b
+	CONSTANT vram_wr, 0d
 
 ;;; scratchpad (256 bytes)
 ;;; 
@@ -93,7 +84,11 @@
 	CONSTANT hexarg4, 40
 	CONSTANT hexarg5, 44
 
-;;; free space for now 48-73
+;;; terminal stuff
+	CONSTANT cur_line, 48	;cursor line   0-39
+	CONSTANT cur_col, 49	;cursor column 0-79
+;;; free space up to 7e
+	
 
 ;;; command history 80-ff
 	CONSTANT cmd_next, 7f	; offset for next history buffer, 0-3
@@ -181,20 +176,6 @@ m_done:	call send_CR
 	store s0, (s8)		; null-terminate string
 	store s8, input_pointer
 
-	;; copy to save buffer
-;;;	fetch sA, cmd_next	; pointer to next buffer
-;;;	load s9, sA		; save in s9
-;;;	add sA, 01		; increment pointer
-;;;	and sA, 03		; wrap at 4
-;;;	store sA, cmd_next	; save for next time
-;;;	;; multiply s9 by $20 to point to buffer
-;;;	sl0 s9			; *02
-;;;	sl0 s9			; *04
-;;;	sl0 s9			; *08
-;;;	sl0 s9			; *10
-;;;	sl0 s9			; *20
-;;;	add s9, cmd_hist	; now we point to active buffer
-	
 	load s9, cmd_hist	; for now just copy to one buffer
 	load s8, input_pointer
 	load s7, 20
@@ -343,18 +324,12 @@ hx_end:
 	jump z, cmd_I
 	compare s5, "O"		;command O - output port
 	jump z, cmd_O
-	compare s5, "R"		;command R - ebus read
-	jump z, cmd_R
-	compare s5, "W"		;command w - ebus write
-	jump z, cmd_W
-	compare s5, "T"
-	jump z, cmd_T
 	compare s5, "H"
 	jump z, cmd_H
-	compare s5, "C"
-	jump z, cmd_C
 	compare s5, "V"
 	jump z, cmd_V
+	compare s5, "T"
+	jump z, cmd_T
 
 	;; fall through to error on unknown command
 
@@ -373,117 +348,9 @@ cmd_V:
 	jump main
 
 
-;;; write to CITIROC serial interface
-cmd_C:
-	;; on entry:  hexarg1 has data   (for 30000000)
-	;;            hexarg2 has length (for 30000001)
-	;; we'll use hexarg0 for the address
-	load sA, 30
-	load sB, 00
-	store sA, hexarg0	;first byte = 30
-	store sB, hexarg0_1	;second byte = 00
-	store sB, hexarg0_2	;third byte = 00
-	store sB, hexarg0_3	;last byte = 00
-	;; 
-	load s8, hexarg0
-	call set_ebus_addr	;set address
-
-	load s8, hexarg1	;write the serial data
-	call set_ebus_data
-
-	;; set address to 30000001
-	load sB, 01
-	store sB, hexarg0_3
-
-	load s8, hexarg0
-	call set_ebus_addr	;set address
-
-	load s8, hexarg2	;write length
-	call set_ebus_data
-
-	;; set address to 30000001
-	;; set address to 30000001
-	load sB, 10
-	store sB, hexarg0_3
-
-	load s8, hexarg0
-	call set_ebus_addr	;set address
-
-	load s8, hexarg2	;write arb data to trigger serial output
-	call set_ebus_data
-
-	jump main
-
 cmd_H:	call send_help
 	jump main
 
-;;; test the increment function
-cmd_T:	fetch s8, hexarg1
-	fetch s7, hexarg2
-	call increment_scratch
-	jump cmd_S
-
-;;; write to e-bus
-cmd_W:
-	compare s0, 03		;need address and data
-	jump nz, err
-
-	load s8, hexarg1
-	call set_ebus_addr	;set address
-
-	load s8, hexarg2
-	call set_ebus_data	;this triggers a write
-
-	jump main
-
-;;; read from e-bus 
-;;;   0 args:  re-use last address
-;;;   1 arg:   read from one address
-;;;   2 args:  address and count
-cmd_R:	
-	load sA, 01		;default count
-	compare s0, 03		;was a count specified?
-	jump nz, norai
-	fetch sA, hexarg2	;yes, get count from 2nd arg
-	
-norai:
-	load s8, hexarg1
-	load s7, 4
-	call send_hex_scratch_bytes
-	
-	call send_space
-	
-	load s8, hexarg1
-	call set_ebus_addr
-	
-	;; trigger read
-	input s0, trigger_ebus_read
-
-	;; read and display 4 bytes of data
-	load s8, ebus_data_0
-	load s7, 4
-	call send_hex_input_bytes
-	
-	call send_CR
-	sub sA, 01		;decrement count
-	jump z, main
-	;; increment the address
-	load s8, hexarg1
-	load s7, 4
-	call increment_scratch
-	jump norai
-
-
-;;;; --- set e-bus address from scratch starting at s8
-set_ebus_addr:
-	load s9, set_ebus_addr_0
-setego:	load s7, 4
-	jump output_scratch
-	
-;;; --- set e-bus data from scratch starting at s8
-set_ebus_data:
-	load s9, ebus_data_0
-	jump setego
 
 cmd_I:
 	;; don't check for address since we can re-use the last one
@@ -773,6 +640,7 @@ STRING error$, "Error"
 	INCLUDE "uart_utility.psm"
 	INCLUDE "memory_utility.psm"
 	INCLUDE "long_help.psm"
+	INCLUDE "terminal.psm"
 	
 last:	load s0,s0
 	
