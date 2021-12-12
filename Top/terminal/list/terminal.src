@@ -1,0 +1,7 @@
+terminal/src/top_terminal.vhd
+terminal/src/losr.vhd
+terminal/src/ctrm.vhd
+terminal/src/vga80x40_col1fixed.vhd
+terminal/src/mem_font.vhd
+terminal/src/mem_text.vhd
+IP/clk_vga/clk_vga.xci
