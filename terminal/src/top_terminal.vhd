@@ -118,7 +118,7 @@ begin  -- architecture arch
   Hsync <= s_hsync;
   Vsync <= s_vsync;
 
-  clk_vga_1 : entity work.clk_vga
+  clk_vga_1 : clk_vga
     port map (
       clk_out1 => pclk,
       locked   => locked,
