@@ -22,12 +22,25 @@ entity top_terminal is
     vgaGreen : out std_logic_vector(3 downto 0);
     Hsync    : out std_logic;
     Vsync    : out std_logic;
-    led      : out std_logic_vector(7 downto 0);
-    sw       : in  std_logic_vector(10 downto 0)
+    led      : out std_logic_vector(15 downto 0);
+    sw       : in  std_logic_vector(10 downto 0);
+    RsRx     : in  std_logic;
+    RsTx     : out std_logic
     );
 end entity top_terminal;
 
 architecture arch of top_terminal is
+
+  component pico_control is
+    port (
+      clk     : in  std_logic;
+      reset   : in  std_logic;
+      RX      : in  std_logic;
+      TX      : out std_logic;
+      control : out std_logic_vector(31 downto 0);
+      status  : in  std_logic_vector(7 downto 0);
+      action  : out std_logic_vector(7 downto 0));
+  end component pico_control;
 
   component mem_text is
     port (
@@ -76,23 +89,27 @@ architecture arch of top_terminal is
 
   signal s_vsync, s_hsync : std_logic;
 
-  signal R, G, B        : std_logic;
+  signal R, G, B : std_logic;
 
   signal TEXT_A, FONT_A : std_logic_vector(11 downto 0);
   signal TEXT_D, FONT_D : std_logic_vector(7 downto 0);
 
-  signal TEXT_WR_A : std_logic_vector(11 downto 0);
-  signal TEXT_WR_D : std_logic_vector(7 downto 0);
-  signal TEXT_RD_D : std_logic_vector(7 downto 0);
+  signal TEXT_WR_A  : std_logic_vector(11 downto 0);
+  signal TEXT_WR_D  : std_logic_vector(7 downto 0);
+  signal TEXT_RD_D  : std_logic_vector(7 downto 0);
   signal TEXT_WR_WE : std_logic;
 
   signal locked : std_logic;
 
   signal color : std_logic_vector(2 downto 0);
 
-  signal vs0    : std_logic;
+  signal vs0 : std_logic;
 
-  signal control : std_logic_vector(7 downto 0);
+  signal vga_control : std_logic_vector(7 downto 0);
+
+  signal s_control : std_logic_vector(31 downto 0);
+  signal s_status : std_logic_vector(7 downto 0);
+  signal s_action : std_logic_vector(7 downto 0);
 
 begin  -- architecture arch
 
@@ -100,7 +117,11 @@ begin  -- architecture arch
 
   color <= sw(10 downto 8);
 
-  control <= "10000" & color;
+  vga_control <= "10000" & color;
+
+  s_status <= sw(7 downto 0);
+
+  led <= s_control(15 downto 0);
 
   -- all full intensity
   vgaRed(0) <= R;
@@ -124,6 +145,16 @@ begin  -- architecture arch
       locked   => locked,
       clk_in1  => clk);
 
+  pico_control_1: entity work.pico_control
+    port map (
+      clk     => clk,
+      reset   => reset,
+      RX      => RsRx,
+      TX      => RsTx,
+      control => s_control,
+      status  => s_status,
+      action  => s_action);
+
   vga80x40_1 : entity work.vga80x40
     port map (
       reset    => reset,
@@ -134,7 +165,7 @@ begin  -- architecture arch
       FONT_D   => FONT_D,
       ocrx     => X"00",
       ocry     => X"00",
-      octl     => control,
+      octl     => vga_control,
       R        => R,
       G        => G,
       B        => B,
@@ -142,7 +173,7 @@ begin  -- architecture arch
       vsync    => s_vsync);
 
   -- video RAM
-  mem_text_1: entity work.mem_text
+  mem_text_1 : entity work.mem_text
     port map (
       clk   => clk,
       addra => TEXT_A,
@@ -162,7 +193,7 @@ begin  -- architecture arch
   begin  -- process
     if clk'event and clk = '1' then     -- rising clock edge
 
-      
+
 
     end if;
   end process;

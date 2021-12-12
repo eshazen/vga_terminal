@@ -1,0 +1,2758 @@
+
+************************************************
+              _  _           ___ __ ___ _   ___
+  (\____/)   | || |___  __ _|_  )  \_  ) | |_  )
+  / @__@ \   | __ / _ \/ _` |/ / () / /| |_ / /
+ (  (oo)  )  |_||_\___/\__, /___\__/___|_(_)___|
+     ~~                |___/
+     
+                ---------------            
+Copyright 2018-2021 The University of Birmingham
+************************************************
+ Version: v4.16.14
+
+/home/hazen/work/vga_terminal
+[0m HOG:Info select_command_from_line()   Recognised Vivado project [0m
+[0m HOG:Info main()  Using executable: /opt/Xilinx/Vivado/2020.2/bin/vivado [0m
+
+****** Vivado v2020.2 (64-bit)
+  **** SW Build 3064766 on Wed Nov 18 09:12:47 MST 2020
+  **** IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
+    ** Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+
+source /home/hazen/work/vga_terminal/Hog/Tcl/launchers/launch_workflow.tcl -notrace
+INFO: [Hog:Msg-0] Will launch implementation and write bitstream...
+INFO: [Hog:Msg-0] Number of jobs set to 4.
+INFO: [Hog:Msg-0] Found project file /home/hazen/work/vga_terminal/Projects/terminal/terminal.xpr for terminal.
+INFO: [Hog:Msg-0] Opening existing project file /home/hazen/work/vga_terminal/Projects/terminal/terminal.xpr...
+Scanning sources...
+Finished scanning sources
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/opt/Xilinx/Vivado/2020.2/data/ip'.
+INFO: [Hog:Msg-0] Skipping syntax check for project terminal
+INFO: [Hog:Msg-0] Resetting run before launching synthesis...
+INFO: [Vivado 12-4149] The synthesis checkpoint for IP '/home/hazen/work/vga_terminal/IP/clk_vga/clk_vga.xci' is already up-to-date
+[Sun Dec 12 15:37:59 2021] Launched synth_1...
+Run output will be captured here: /home/hazen/work/vga_terminal/Projects/terminal/terminal.runs/synth_1/runme.log
+[Sun Dec 12 15:37:59 2021] Waiting for synth_1 to finish...
+
+*** Running vivado
+    with args -log top_terminal.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source top_terminal.tcl
+
+
+****** Vivado v2020.2 (64-bit)
+  **** SW Build 3064766 on Wed Nov 18 09:12:47 MST 2020
+  **** IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
+    ** Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+
+source top_terminal.tcl -notrace
+source /home/hazen/work/vga_terminal/Hog/Tcl/integrated/pre-synthesis.tcl
+INFO: [Hog:GetRepoVersions-0] Hog submodule /home/hazen/work/vga_terminal/Hog clean.
+CRITICAL WARNING: [Hog:GetRepoVersions-0] Git working directory /home/hazen/work/vga_terminal/Top/terminal not clean, commit hash, and version will be set to 0.
+INFO: [Hog:GetVerFromSHA-0] No tag contains 3B24302, will use most recent tag v0.0.1. As this is an official tag, patch will be incremented to 2.
+INFO: [Hog:GetVerFromSHA-0] No tag contains BB51F16, will use most recent tag v0.0.1. As this is an official tag, patch will be incremented to 2.
+INFO: [Hog:GetVerFromSHA-0] No tag contains BB51F16, will use most recent tag v0.0.1. As this is an official tag, patch will be incremented to 2.
+INFO: [Hog:GetVerFromSHA-0] No tag contains BB51F16, will use most recent tag v0.0.1. As this is an official tag, patch will be incremented to 2.
+INFO: [Hog:GetRepoVersions-0] This project does not use IPbus XMLs
+INFO: [Hog:Msg-0] Creating /home/hazen/work/vga_terminal/bin/terminal-v0.0.1-6-g1e6ba7b-dirty...
+INFO: [Hog:Msg-0] Opening project terminal...
+Scanning sources...
+Finished scanning sources
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/opt/Xilinx/Vivado/2020.2/data/ip'.
+INFO: [Hog:Msg-0] Checking terminal list files...
+INFO: [Hog:Msg-0] List Files matches project. Nothing to do.
+INFO: [Hog:Msg-0] /home/hazen/work/vga_terminal/Top_new//terminal/hog.conf matches project. Nothing to do
+INFO: [Hog:Msg-0] List files and hog.conf match project. All ok!
+INFO: [Hog:Msg-0] All done.
+INFO: [Hog:Msg-0] Evaluating non committed changes...
+WARNING: [Hog:Msg-0] Found non committed changes:...
+diff --git a/.gitignore b/.gitignore
+index 6e12ded..a6df4e5 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -94,3 +94,5 @@ _info
+ **.qdb
+ **.qpg
+ **.qtl
++**.fmt
++**.hex
+diff --git a/Top/terminal/list/terminal.src b/Top/terminal/list/terminal.src
+index dd7afd2..f4107c2 100644
+--- a/Top/terminal/list/terminal.src
++++ b/Top/terminal/list/terminal.src
+@@ -5,3 +5,8 @@ terminal/src/vga80x40_col1fixed.vhd
+ terminal/src/mem_font.vhd
+ terminal/src/mem_text.vhd
+ IP/clk_vga/clk_vga.xci
++picoblaze/src/kcpsm6.vhd
++picoblaze/src/pico_control.vhd
++picoblaze/src/uart_rx6.vhd
++picoblaze/src/uart_tx6.vhd
++picoblaze/psm/my_ROM.vhd
+diff --git a/terminal/src/top_terminal.vhd b/terminal/src/top_terminal.vhd
+index 0722274..92b3eae 100644
+--- a/terminal/src/top_terminal.vhd
++++ b/terminal/src/top_terminal.vhd
+@@ -22,13 +22,26 @@ entity top_terminal is
+     vgaGreen : out std_logic_vector(3 downto 0);
+     Hsync    : out std_logic;
+     Vsync    : out std_logic;
+-    led      : out std_logic_vector(7 downto 0);
+-    sw       : in  std_logic_vector(10 downto 0)
++    led      : out std_logic_vector(15 downto 0);
++    sw       : in  std_logic_vector(10 downto 0);
++    RsRx     : in  std_logic;
++    RsTx     : out std_logic
+     );
+ end entity top_terminal;
+ 
+ architecture arch of top_terminal is
+ 
++  component pico_control is
++    port (
++      clk     : in  std_logic;
++      reset   : in  std_logic;
++      RX      : in  std_logic;
++      TX      : out std_logic;
++      control : out std_logic_vector(31 downto 0);
++      status  : in  std_logic_vector(7 downto 0);
++      action  : out std_logic_vector(7 downto 0));
++  end component pico_control;
++
+   component mem_text is
+     port (
+       clk   : in  std_logic;
+@@ -76,23 +89,27 @@ architecture arch of top_terminal is
+ 
+   signal s_vsync, s_hsync : std_logic;
+ 
+-  signal R, G, B        : std_logic;
++  signal R, G, B : std_logic;
+ 
+   signal TEXT_A, FONT_A : std_logic_vector(11 downto 0);
+   signal TEXT_D, FONT_D : std_logic_vector(7 downto 0);
+ 
+-  signal TEXT_WR_A : std_logic_vector(11 downto 0);
+-  signal TEXT_WR_D : std_logic_vector(7 downto 0);
+-  signal TEXT_RD_D : std_logic_vector(7 downto 0);
++  signal TEXT_WR_A  : std_logic_vector(11 downto 0);
++  signal TEXT_WR_D  : std_logic_vector(7 downto 0);
++  signal TEXT_RD_D  : std_logic_vector(7 downto 0);
+   signal TEXT_WR_WE : std_logic;
+ 
+   signal locked : std_logic;
+ 
+   signal color : std_logic_vector(2 downto 0);
+ 
+-  signal vs0    : std_logic;
++  signal vs0 : std_logic;
+ 
+-  signal control : std_logic_vector(7 downto 0);
++  signal vga_control : std_logic_vector(7 downto 0);
++
++  signal s_control : std_logic_vector(31 downto 0);
++  signal s_status : std_logic_vector(7 downto 0);
++  signal s_action : std_logic_vector(7 downto 0);
+ 
+ begin  -- architecture arch
+ 
+@@ -100,7 +117,11 @@ begin  -- architecture arch
+ 
+   color <= sw(10 downto 8);
+ 
+-  control <= "10000" & color;
++  vga_control <= "10000" & color;
++
++  s_status <= sw(7 downto 0);
++
++  led <= s_control(15 downto 0);
+ 
+   -- all full intensity
+   vgaRed(0) <= R;
+@@ -124,6 +145,16 @@ begin  -- architecture arch
+       locked   => locked,
+       clk_in1  => clk);
+ 
++  pico_control_1: entity work.pico_control
++    port map (
++      clk     => clk,
++      reset   => reset,
++      RX      => RsRx,
++      TX      => RsTx,
++      control => s_control,
++      status  => s_status,
++      action  => s_action);
++
+   vga80x40_1 : entity work.vga80x40
+     port map (
+       reset    => reset,
+@@ -134,7 +165,7 @@ begin  -- architecture arch
+       FONT_D   => FONT_D,
+       ocrx     => X"00",
+       ocry     => X"00",
+-      octl     => control,
++      octl     => vga_control,
+       R        => R,
+       G        => G,
+       B        => B,
+@@ -142,7 +173,7 @@ begin  -- architecture arch
+       vsync    => s_vsync);
+ 
+   -- video RAM
+-  mem_text_1: entity work.mem_text
++  mem_text_1 : entity work.mem_text
+     port map (
+       clk   => clk,
+       addra => TEXT_A,
+@@ -162,7 +193,7 @@ begin  -- architecture arch
+   begin  -- process
+     if clk'event and clk = '1' then     -- rising clock edge
+ 
+-      
++
+ 
+     end if;
+   end process;
+diff --git a/terminal/xdc/Basys3_VGA.xdc b/terminal/xdc/Basys3_VGA.xdc
+index 39daca5..a165662 100644
+--- a/terminal/xdc/Basys3_VGA.xdc
++++ b/terminal/xdc/Basys3_VGA.xdc
+@@ -43,7 +43,7 @@ set_property PACKAGE_PIN T2 [get_ports {sw[10]}]
+ 	#set_property IOSTANDARD LVCMOS33 [get_ports {sw[15]}]
+ 
+ 
+-LEDs
++#LEDs
+ set_property PACKAGE_PIN U16 [get_ports {led[0]}]
+ 	set_property IOSTANDARD LVCMOS33 [get_ports {led[0]}]
+ set_property PACKAGE_PIN E19 [get_ports {led[1]}]
+@@ -68,14 +68,14 @@ set_property PACKAGE_PIN W3 [get_ports {led[10]}]
+ 	set_property IOSTANDARD LVCMOS33 [get_ports {led[10]}]
+ set_property PACKAGE_PIN U3 [get_ports {led[11]}]
+ 	set_property IOSTANDARD LVCMOS33 [get_ports {led[11]}]
+-#set_property PACKAGE_PIN P3 [get_ports {led[12]}]
+-	#set_property IOSTANDARD LVCMOS33 [get_ports {led[12]}]
+-#set_property PACKAGE_PIN N3 [get_ports {led[13]}]
+-	#set_property IOSTANDARD LVCMOS33 [get_ports {led[13]}]
+-#set_property PACKAGE_PIN P1 [get_ports {led[14]}]
+-	#set_property IOSTANDARD LVCMOS33 [get_ports {led[14]}]
+-#set_property PACKAGE_PIN L1 [get_ports {led[15]}]
+-	#set_property IOSTANDARD LVCMOS33 [get_ports {led[15]}]
++set_property PACKAGE_PIN P3 [get_ports {led[12]}]
++	set_property IOSTANDARD LVCMOS33 [get_ports {led[12]}]
++set_property PACKAGE_PIN N3 [get_ports {led[13]}]
++	set_property IOSTANDARD LVCMOS33 [get_ports {led[13]}]
++set_property PACKAGE_PIN P1 [get_ports {led[14]}]
++	set_property IOSTANDARD LVCMOS33 [get_ports {led[14]}]
++set_property PACKAGE_PIN L1 [get_ports {led[15]}]
++	set_property IOSTANDARD LVCMOS33 [get_ports {led[15]}]
+ 
+ 
+ ##7 segment display
+@@ -264,10 +264,10 @@ set_property PACKAGE_PIN R19 [get_ports Vsync]
+ 
+ 
+ ##USB-RS232 Interface
+-#set_property PACKAGE_PIN B18 [get_ports RsRx]
+-	#set_property IOSTANDARD LVCMOS33 [get_ports RsRx]
+-#set_property PACKAGE_PIN A18 [get_ports RsTx]
+-	#set_property IOSTANDARD LVCMOS33 [get_ports RsTx]
++set_property PACKAGE_PIN B18 [get_ports RsRx]
++	set_property IOSTANDARD LVCMOS33 [get_ports RsRx]
++set_property PACKAGE_PIN A18 [get_ports RsTx]
++	set_property IOSTANDARD LVCMOS33 [get_ports RsTx]
+ 
+ 
+ ##USB HID (PS/2)
+CRITICAL WARNING: [Hog:Msg-0] Repository is not clean, will use current SHA (1e6ba7b) and create a dirty bitfile...
+CRITICAL WARNING: [Hog:FileCommitted-0] File /home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd is not in the git repository. Please add it with:
+ git add /home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd
+CRITICAL WARNING: [Hog:Msg-0] picoblaze/src/kcpsm6.vhd is not in the git repository. Will use current SHA (1e6ba7b) and version will be set to 0.
+CRITICAL WARNING: [Hog:FileCommitted-0] File /home/hazen/work/vga_terminal/picoblaze/src/pico_control.vhd is not in the git repository. Please add it with:
+ git add /home/hazen/work/vga_terminal/picoblaze/src/pico_control.vhd
+CRITICAL WARNING: [Hog:Msg-0] picoblaze/src/pico_control.vhd is not in the git repository. Will use current SHA (1e6ba7b) and version will be set to 0.
+CRITICAL WARNING: [Hog:FileCommitted-0] File /home/hazen/work/vga_terminal/picoblaze/src/uart_rx6.vhd is not in the git repository. Please add it with:
+ git add /home/hazen/work/vga_terminal/picoblaze/src/uart_rx6.vhd
+CRITICAL WARNING: [Hog:Msg-0] picoblaze/src/uart_rx6.vhd is not in the git repository. Will use current SHA (1e6ba7b) and version will be set to 0.
+CRITICAL WARNING: [Hog:FileCommitted-0] File /home/hazen/work/vga_terminal/picoblaze/src/uart_tx6.vhd is not in the git repository. Please add it with:
+ git add /home/hazen/work/vga_terminal/picoblaze/src/uart_tx6.vhd
+CRITICAL WARNING: [Hog:Msg-0] picoblaze/src/uart_tx6.vhd is not in the git repository. Will use current SHA (1e6ba7b) and version will be set to 0.
+INFO: [Hog:Msg-0] Git describe for 00000000 is: v0.0.1-6-g1e6ba7b-dirty
+CRITICAL WARNING: [Hog:Msg-0] Multithreading enabled. Bitfile will not be deterministic. Number of threads: 4
+INFO: [Hog:Msg-0] Opening version file /home/hazen/work/vga_terminal/Projects/terminal/terminal.runs/versions.txt...
+ ------------------------- PRE SYNTHESIS -------------------------
+ 12/12/2021 at 15:38:10
+ Firmware date and time: '12122021', '00151354'
+ Global SHA: 1e6ba7b, VER: 0.0.0
+ Constraints SHA: BB51F16, VER: 0.0.2
+ Top SHA: 3B24302, VER: 0.0.2
+ Hog SHA: 71A66A1, VER: 4.16.14
+ --- Libraries ---
+ terminal SHA: BB51F16, VER: 0.0.2
+ --- External Libraries ---
+ -----------------------------------------------------------------
+INFO: [Hog:CheckYmlRef-0] .gitlab-ci.yml not found in /home/hazen/work/vga_terminal. Skipping this step
+INFO: [Hog:Msg-0] All done.
+Command: synth_design -top top_terminal -part xc7a35tcpg236-1
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7a35t'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7a35t'
+INFO: [Device 21-403] Loading part xc7a35tcpg236-1
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 4 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 1989288
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 2364.059 ; gain = 0.000 ; free physical = 917 ; free virtual = 52608
+---------------------------------------------------------------------------------
+INFO: [Synth 8-638] synthesizing module 'top_terminal' [/home/hazen/work/vga_terminal/terminal/src/top_terminal.vhd:32]
+WARNING: [Synth 8-3819] Generic 'GLOBAL_DATE' not present in instantiated entity will be ignored
+WARNING: [Synth 8-3819] Generic 'GLOBAL_TIME' not present in instantiated entity will be ignored
+WARNING: [Synth 8-3819] Generic 'GLOBAL_VER' not present in instantiated entity will be ignored
+WARNING: [Synth 8-3819] Generic 'GLOBAL_SHA' not present in instantiated entity will be ignored
+WARNING: [Synth 8-3819] Generic 'TOP_SHA' not present in instantiated entity will be ignored
+WARNING: [Synth 8-3819] Generic 'TOP_VER' not present in instantiated entity will be ignored
+WARNING: [Synth 8-3819] Generic 'HOG_SHA' not present in instantiated entity will be ignored
+WARNING: [Synth 8-3819] Generic 'HOG_VER' not present in instantiated entity will be ignored
+WARNING: [Synth 8-3819] Generic 'CON_VER' not present in instantiated entity will be ignored
+WARNING: [Synth 8-3819] Generic 'CON_SHA' not present in instantiated entity will be ignored
+WARNING: [Synth 8-3819] Generic 'TERMINAL_VER' not present in instantiated entity will be ignored
+WARNING: [Synth 8-3819] Generic 'TERMINAL_SHA' not present in instantiated entity will be ignored
+INFO: [Synth 8-3491] module 'clk_vga' declared at '/home/hazen/work/vga_terminal/Projects/terminal/terminal.runs/synth_1/.Xil/Vivado-1989188-eric-x20/realtime/clk_vga_stub.vhdl:5' bound to instance 'clk_vga_1' of component 'clk_vga' [/home/hazen/work/vga_terminal/terminal/src/top_terminal.vhd:142]
+INFO: [Synth 8-638] synthesizing module 'clk_vga' [/home/hazen/work/vga_terminal/Projects/terminal/terminal.runs/synth_1/.Xil/Vivado-1989188-eric-x20/realtime/clk_vga_stub.vhdl:14]
+INFO: [Synth 8-638] synthesizing module 'pico_control' [/home/hazen/work/vga_terminal/picoblaze/src/pico_control.vhd:24]
+	Parameter hwbuild bound to: 8'b01000001 
+	Parameter interrupt_vector bound to: 12'b011111111111 
+	Parameter scratch_pad_memory_size bound to: 256 - type: integer 
+INFO: [Synth 8-3491] module 'kcpsm6' declared at '/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:87' bound to instance 'processor' of component 'kcpsm6' [/home/hazen/work/vga_terminal/picoblaze/src/pico_control.vhd:198]
+INFO: [Synth 8-638] synthesizing module 'kcpsm6' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:111]
+	Parameter hwbuild bound to: 8'b01000001 
+	Parameter interrupt_vector bound to: 12'b011111111111 
+	Parameter scratch_pad_memory_size bound to: 256 - type: integer 
+	Parameter INIT bound to: 64'b1111111111111111111101010101010100000000000000000000111011101110 
+INFO: [Synth 8-113] binding component instance 'reset_lut' to cell 'LUT6_2' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:685]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'run_flop' to cell 'FD' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:696]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'internal_reset_flop' to cell 'FD' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:701]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'sync_sleep_flop' to cell 'FD' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:706]
+	Parameter INIT bound to: 64'b0000000010000011000000000000101100000000110001000000000001001100 
+INFO: [Synth 8-113] binding component instance 't_state_lut' to cell 'LUT6_2' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:711]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 't_state1_flop' to cell 'FD' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:722]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 't_state2_flop' to cell 'FD' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:727]
+	Parameter INIT bound to: 64'b0000000000010000000000000000000000000000000000000000100000000000 
+INFO: [Synth 8-113] binding component instance 'int_enable_type_lut' to cell 'LUT6_2' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:733]
+	Parameter INIT bound to: 64'b0000000000000000000000000000000000000000000000001100101010101010 
+INFO: [Synth 8-113] binding component instance 'interrupt_enable_lut' to cell 'LUT6' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:744]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'interrupt_enable_flop' to cell 'FD' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:754]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'sync_interrupt_flop' to cell 'FD' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:759]
+	Parameter INIT bound to: 64'b1100110000110011111111110000000010000000100000001000000010000000 
+INFO: [Synth 8-113] binding component instance 'active_interrupt_lut' to cell 'LUT6_2' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:764]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'active_interrupt_flop' to cell 'FD' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:775]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'interrupt_ack_flop' to cell 'FD' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:780]
+	Parameter INIT bound to: 64'b0101101000111100111111111111111100000000000000000000000000000000 
+INFO: [Synth 8-113] binding component instance 'pc_move_is_valid_lut' to cell 'LUT6' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:804]
+	Parameter INIT bound to: 64'b0111011101110111000000100111011100000000000000000000001000000000 
+INFO: [Synth 8-113] binding component instance 'move_type_lut' to cell 'LUT6_2' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:814]
+	Parameter INIT bound to: 64'b0000000000000000111100000000000000000000000000000010001111111111 
+INFO: [Synth 8-113] binding component instance 'pc_mode1_lut' to cell 'LUT6_2' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:825]
+	Parameter INIT bound to: 64'b1111111111111111111111111111111100000000000001000000000000000000 
+INFO: [Synth 8-113] binding component instance 'pc_mode2_lut' to cell 'LUT6' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:836]
+	Parameter INIT bound to: 64'b1111111111111111000100000000000000000000000000000010000000000000 
+INFO: [Synth 8-113] binding component instance 'push_pop_lut' to cell 'LUT6_2' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:846]
+	Parameter INIT bound to: 64'b0000001111001010000000000000000000000100001000000000000000000000 
+INFO: [Synth 8-113] binding component instance 'alu_decode0_lut' to cell 'LUT6_2' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:861]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'alu_mux_sel0_flop' to cell 'FD' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:872]
+	Parameter INIT bound to: 64'b0111011100001000000000000000000000000000000000000000111100000000 
+INFO: [Synth 8-113] binding component instance 'alu_decode1_lut' to cell 'LUT6_2' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:877]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'alu_mux_sel1_flop' to cell 'FD' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:888]
+	Parameter INIT bound to: 64'b1101000000000000000000000000000000000010000000000000000000000000 
+INFO: [Synth 8-113] binding component instance 'alu_decode2_lut' to cell 'LUT6_2' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:894]
+	Parameter INIT bound to: 64'b0000000000000001001111110011111100000000000100001111011111001110 
+INFO: [Synth 8-113] binding component instance 'register_enable_type_lut' to cell 'LUT6_2' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:909]
+	Parameter INIT bound to: 64'b1100000011001100000000000000000010100000101010100000000000000000 
+INFO: [Synth 8-113] binding component instance 'register_enable_lut' to cell 'LUT6_2' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:920]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'flag_enable_flop' to cell 'FDR' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:931]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'register_enable_flop' to cell 'FDR' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:937]
+	Parameter INIT bound to: 64'b1000000000000000000000000000000000100000000000000000000000000000 
+INFO: [Synth 8-113] binding component instance 'spm_enable_lut' to cell 'LUT6_2' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:943]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'k_write_strobe_flop' to cell 'FDR' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:954]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'spm_enable_flop' to cell 'FDR' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:960]
+	Parameter INIT bound to: 64'b0100000000000000000000000000000000000001000000000000000000000000 
+INFO: [Synth 8-113] binding component instance 'read_strobe_lut' to cell 'LUT6_2' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:966]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'write_strobe_flop' to cell 'FDR' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:977]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'read_strobe_flop' to cell 'FDR' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:983]
+	Parameter INIT bound to: 64'b0000000010000000000000100000000000000000000000000000000000000000 
+INFO: [Synth 8-113] binding component instance 'regbank_type_lut' to cell 'LUT6' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1001]
+	Parameter INIT bound to: 64'b1010110010101100111111110000000011111111000000001111111100000000 
+INFO: [Synth 8-113] binding component instance 'bank_lut' to cell 'LUT6' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1011]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'bank_flop' to cell 'FDR' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1021]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'sx_addr4_flop' to cell 'FD' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1027]
+INFO: [Synth 8-113] binding component instance 'arith_carry_xorcy' to cell 'XORCY' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1051]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'arith_carry_flop' to cell 'FD' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1056]
+	Parameter INIT bound to: 64'b0000000000000000000000000000000010000111011110000000000000000000 
+INFO: [Synth 8-113] binding component instance 'lower_parity_lut' to cell 'LUT6_2' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1061]
+INFO: [Synth 8-113] binding component instance 'parity_muxcy' to cell 'MUXCY' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1072]
+	Parameter INIT bound to: 64'b0110100110010110100101100110100110010110011010010110100110010110 
+INFO: [Synth 8-113] binding component instance 'upper_parity_lut' to cell 'LUT6' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1078]
+INFO: [Synth 8-113] binding component instance 'parity_xorcy' to cell 'XORCY' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1088]
+	Parameter INIT bound to: 64'b1111111111111111101010101100110011110000111100001111000011110000 
+INFO: [Synth 8-113] binding component instance 'shift_carry_lut' to cell 'LUT6' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1093]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'shift_carry_flop' to cell 'FD' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1103]
+	Parameter INIT bound to: 64'b0011001100110011101010101100110011110000101010100000000000000000 
+INFO: [Synth 8-113] binding component instance 'carry_flag_lut' to cell 'LUT6_2' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1108]
+	Parameter INIT bound to: 1'b0 
+	Parameter IS_C_INVERTED bound to: 1'b0 
+	Parameter IS_D_INVERTED bound to: 1'b0 
+	Parameter IS_R_INVERTED bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'carry_flag_flop' to cell 'FDRE' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1119]
+INFO: [Synth 8-113] binding component instance 'init_zero_muxcy' to cell 'MUXCY' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1126]
+	Parameter INIT bound to: 64'b1010001010000000000000000000000000000000111100000000000011110000 
+INFO: [Synth 8-113] binding component instance 'use_zero_flag_lut' to cell 'LUT6_2' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1132]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'use_zero_flag_flop' to cell 'FD' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1143]
+	Parameter INIT bound to: 64'b0000000000000000000000000000000000000000000000000000000000000001 
+INFO: [Synth 8-113] binding component instance 'lower_zero_lut' to cell 'LUT6_2' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1148]
+INFO: [Synth 8-113] binding component instance 'lower_zero_muxcy' to cell 'MUXCY' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1159]
+	Parameter INIT bound to: 64'b0000000000000000000000000000110100000000000000000000000000000000 
+INFO: [Synth 8-113] binding component instance 'middle_zero_lut' to cell 'LUT6_2' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1165]
+INFO: [Synth 8-113] binding component instance 'middle_zero_muxcy' to cell 'MUXCY' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1176]
+	Parameter INIT bound to: 64'b1111101111111111000000000000000000000000000000000000000000000000 
+INFO: [Synth 8-113] binding component instance 'upper_zero_lut' to cell 'LUT6' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1182]
+INFO: [Synth 8-113] binding component instance 'upper_zero_muxcy' to cell 'MUXCY' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1192]
+	Parameter INIT bound to: 1'b0 
+	Parameter IS_C_INVERTED bound to: 1'b0 
+	Parameter IS_D_INVERTED bound to: 1'b0 
+	Parameter IS_R_INVERTED bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'zero_flag_flop' to cell 'FDRE' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1198]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'return_vector_flop' to cell 'FD' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1249]
+	Parameter INIT bound to: 64'b1111111100000000111100001111000011001100110011001010101010101010 
+INFO: [Synth 8-113] binding component instance 'pc_vector_mux_lut' to cell 'LUT6_2' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1264]
+	Parameter INIT bound to: 1'b0 
+	Parameter IS_C_INVERTED bound to: 1'b0 
+	Parameter IS_D_INVERTED bound to: 1'b0 
+	Parameter IS_R_INVERTED bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'pc_flop' to cell 'FDRE' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1309]
+	Parameter INIT bound to: 64'b0000000010101010000000001111111100110011110011000000111100000000 
+INFO: [Synth 8-113] binding component instance 'pc_lut' to cell 'LUT6' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1350]
+INFO: [Synth 8-113] binding component instance 'pc_xorcy' to cell 'XORCY' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1366]
+INFO: [Synth 8-113] binding component instance 'pc_muxcy' to cell 'MUXCY' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1371]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'return_vector_flop' to cell 'FD' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1249]
+	Parameter INIT bound to: 1'b0 
+	Parameter IS_C_INVERTED bound to: 1'b0 
+	Parameter IS_D_INVERTED bound to: 1'b0 
+	Parameter IS_R_INVERTED bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'pc_flop' to cell 'FDRE' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1309]
+	Parameter INIT bound to: 64'b0000000010101010000000001111111111001100110011001111000000000000 
+INFO: [Synth 8-113] binding component instance 'pc_lut' to cell 'LUT6' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1411]
+INFO: [Synth 8-113] binding component instance 'pc_xorcy' to cell 'XORCY' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1426]
+INFO: [Synth 8-113] binding component instance 'pc_muxcy' to cell 'MUXCY' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1440]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'return_vector_flop' to cell 'FD' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1249]
+	Parameter INIT bound to: 64'b1111111100000000111100001111000011001100110011001010101010101010 
+INFO: [Synth 8-113] binding component instance 'pc_vector_mux_lut' to cell 'LUT6_2' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1264]
+	Parameter INIT bound to: 1'b0 
+	Parameter IS_C_INVERTED bound to: 1'b0 
+	Parameter IS_D_INVERTED bound to: 1'b0 
+	Parameter IS_R_INVERTED bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'pc_flop' to cell 'FDRE' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1309]
+	Parameter INIT bound to: 64'b0000000010101010000000001111111111001100110011001111000000000000 
+INFO: [Synth 8-113] binding component instance 'pc_lut' to cell 'LUT6' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1411]
+INFO: [Synth 8-113] binding component instance 'pc_xorcy' to cell 'XORCY' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1426]
+INFO: [Synth 8-113] binding component instance 'pc_muxcy' to cell 'MUXCY' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1440]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'return_vector_flop' to cell 'FD' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1249]
+	Parameter INIT bound to: 1'b0 
+	Parameter IS_C_INVERTED bound to: 1'b0 
+	Parameter IS_D_INVERTED bound to: 1'b0 
+	Parameter IS_R_INVERTED bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'pc_flop' to cell 'FDRE' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1309]
+	Parameter INIT bound to: 64'b0000000010101010000000001111111111001100110011001111000000000000 
+INFO: [Synth 8-113] binding component instance 'pc_lut' to cell 'LUT6' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1411]
+INFO: [Synth 8-113] binding component instance 'pc_xorcy' to cell 'XORCY' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1426]
+INFO: [Synth 8-113] binding component instance 'pc_muxcy' to cell 'MUXCY' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1440]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'return_vector_flop' to cell 'FD' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1249]
+	Parameter INIT bound to: 64'b1111111100000000111100001111000011001100110011001010101010101010 
+INFO: [Synth 8-113] binding component instance 'pc_vector_mux_lut' to cell 'LUT6_2' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1264]
+	Parameter INIT bound to: 1'b0 
+	Parameter IS_C_INVERTED bound to: 1'b0 
+	Parameter IS_D_INVERTED bound to: 1'b0 
+	Parameter IS_R_INVERTED bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'pc_flop' to cell 'FDRE' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1309]
+	Parameter INIT bound to: 64'b0000000010101010000000001111111111001100110011001111000000000000 
+INFO: [Synth 8-113] binding component instance 'pc_lut' to cell 'LUT6' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1411]
+INFO: [Synth 8-113] binding component instance 'pc_xorcy' to cell 'XORCY' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1426]
+INFO: [Synth 8-113] binding component instance 'pc_muxcy' to cell 'MUXCY' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1440]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'return_vector_flop' to cell 'FD' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1249]
+	Parameter INIT bound to: 1'b0 
+	Parameter IS_C_INVERTED bound to: 1'b0 
+	Parameter IS_D_INVERTED bound to: 1'b0 
+	Parameter IS_R_INVERTED bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'pc_flop' to cell 'FDRE' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1309]
+	Parameter INIT bound to: 64'b0000000010101010000000001111111111001100110011001111000000000000 
+INFO: [Synth 8-113] binding component instance 'pc_lut' to cell 'LUT6' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1411]
+INFO: [Synth 8-113] binding component instance 'pc_xorcy' to cell 'XORCY' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1426]
+INFO: [Synth 8-113] binding component instance 'pc_muxcy' to cell 'MUXCY' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1440]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'return_vector_flop' to cell 'FD' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1249]
+	Parameter INIT bound to: 64'b1111111100000000111100001111000011001100110011001010101010101010 
+INFO: [Synth 8-113] binding component instance 'pc_vector_mux_lut' to cell 'LUT6_2' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1264]
+	Parameter INIT bound to: 1'b0 
+	Parameter IS_C_INVERTED bound to: 1'b0 
+	Parameter IS_D_INVERTED bound to: 1'b0 
+	Parameter IS_R_INVERTED bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'pc_flop' to cell 'FDRE' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1309]
+	Parameter INIT bound to: 64'b0000000010101010000000001111111111001100110011001111000000000000 
+INFO: [Synth 8-113] binding component instance 'pc_lut' to cell 'LUT6' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1411]
+INFO: [Synth 8-113] binding component instance 'pc_xorcy' to cell 'XORCY' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1426]
+INFO: [Synth 8-113] binding component instance 'pc_muxcy' to cell 'MUXCY' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1440]
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'return_vector_flop' to cell 'FD' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1249]
+	Parameter INIT bound to: 1'b0 
+	Parameter IS_C_INVERTED bound to: 1'b0 
+	Parameter IS_D_INVERTED bound to: 1'b0 
+	Parameter IS_R_INVERTED bound to: 1'b0 
+INFO: [Synth 8-113] binding component instance 'pc_flop' to cell 'FDRE' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1309]
+	Parameter INIT bound to: 64'b0000000010101010000000001111111111001100110011001111000000000000 
+INFO: [Synth 8-113] binding component instance 'pc_lut' to cell 'LUT6' [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:1411]
+INFO: [Common 17-14] Message 'Synth 8-113' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b1111111100000000111100001111000011001100110011001010101010101010 
+	Parameter INIT bound to: 1'b0 
+	Parameter IS_C_INVERTED bound to: 1'b0 
+	Parameter IS_D_INVERTED bound to: 1'b0 
+	Parameter IS_R_INVERTED bound to: 1'b0 
+	Parameter INIT bound to: 64'b0000000010101010000000001111111111001100110011001111000000000000 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter IS_C_INVERTED bound to: 1'b0 
+	Parameter IS_D_INVERTED bound to: 1'b0 
+	Parameter IS_R_INVERTED bound to: 1'b0 
+	Parameter INIT bound to: 64'b0000000010101010000000001111111111001100110011001111000000000000 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b1111111100000000111100001111000011001100110011001010101010101010 
+	Parameter INIT bound to: 1'b0 
+	Parameter IS_C_INVERTED bound to: 1'b0 
+	Parameter IS_D_INVERTED bound to: 1'b0 
+	Parameter IS_R_INVERTED bound to: 1'b0 
+	Parameter INIT bound to: 64'b0000000010101010000000001111111111001100110011001111000000000000 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter IS_C_INVERTED bound to: 1'b0 
+	Parameter IS_D_INVERTED bound to: 1'b0 
+	Parameter IS_R_INVERTED bound to: 1'b0 
+	Parameter INIT bound to: 64'b0000000010101010000000000000000011001100110011001111000000000000 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT_A bound to: 64'b0000000000000000000000000000000000000000000000000000000000000000 
+	Parameter INIT_B bound to: 64'b0000000000000000000000000000000000000000000000000000000000000000 
+	Parameter INIT_C bound to: 64'b0000000000000000000000000000000000000000000000000000000000000000 
+	Parameter INIT_D bound to: 64'b0000000000000000000000000000000000000000000000000000000000000000 
+	Parameter IS_WCLK_INVERTED bound to: 1'b0 
+	Parameter INIT_A bound to: 64'b0000000000000000000000000000000000000000000000000000000000000000 
+	Parameter INIT_B bound to: 64'b0000000000000000000000000000000000000000000000000000000000000000 
+	Parameter INIT_C bound to: 64'b0000000000000000000000000000000000000000000000000000000000000000 
+	Parameter INIT_D bound to: 64'b0000000000000000000000000000000000000000000000000000000000000000 
+	Parameter IS_WCLK_INVERTED bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b0000000000010101001010011010101010101010101010101010101010101010 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b0000000000101010001001010010101010101010101010101010101010101010 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b0000000000101010001001010010101010101010101010101010101010101010 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b0000000000101010001001010010101010101010101010101010101010101010 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b0000000000101010001001010010101010101010101010101010101010101010 
+	Parameter INIT bound to: 64'b1111111100000000111100001111000011001100110011001010101010101010 
+	Parameter INIT bound to: 64'b1111111100000000111100001111000011001100110011001010101010101010 
+	Parameter INIT bound to: 64'b0110100101101001011011101000101011001100110011000000000000000000 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 1'b1 
+	Parameter INIT bound to: 64'b1011111110111100100011111000110010110011101100001000001110000000 
+	Parameter INIT bound to: 64'b1111111100000000111100001111000011001100110011001010101010101010 
+	Parameter INIT bound to: 64'b1111111100000000111100001111000011001100110011001010101010101010 
+	Parameter INIT bound to: 256'b0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 
+	Parameter IS_WCLK_INVERTED bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b0110100101101001011011101000101011001100110011000000000000000000 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b1111111100000000111100001111000011001100110011001010101010101010 
+	Parameter INIT bound to: 256'b0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 
+	Parameter IS_WCLK_INVERTED bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b1111111100000000111100001111000011001100110011001010101010101010 
+	Parameter INIT bound to: 64'b1111111100000000111100001111000011001100110011001010101010101010 
+	Parameter INIT bound to: 64'b0110100101101001011011101000101011001100110011000000000000000000 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b1111111100000000111100001111000011001100110011001010101010101010 
+	Parameter INIT bound to: 64'b1111111100000000111100001111000011001100110011001010101010101010 
+	Parameter INIT bound to: 256'b0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 
+	Parameter IS_WCLK_INVERTED bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b0110100101101001011011101000101011001100110011000000000000000000 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b1111111100000000111100001111000011001100110011001010101010101010 
+	Parameter INIT bound to: 256'b0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 
+	Parameter IS_WCLK_INVERTED bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b1111111100000000111100001111000011001100110011001010101010101010 
+	Parameter INIT bound to: 64'b1111111100000000111100001111000011001100110011001010101010101010 
+	Parameter INIT bound to: 64'b0110100101101001011011101000101011001100110011000000000000000000 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b1111111100000000111100001111000011001100110011001010101010101010 
+	Parameter INIT bound to: 64'b1111111100000000111100001111000011001100110011001010101010101010 
+	Parameter INIT bound to: 256'b0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 
+	Parameter IS_WCLK_INVERTED bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b0110100101101001011011101000101011001100110011000000000000000000 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b1111111100000000111100001111000011001100110011001010101010101010 
+	Parameter INIT bound to: 256'b0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 
+	Parameter IS_WCLK_INVERTED bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b1111111100000000111100001111000011001100110011001010101010101010 
+	Parameter INIT bound to: 64'b1111111100000000111100001111000011001100110011001010101010101010 
+	Parameter INIT bound to: 64'b0110100101101001011011101000101011001100110011000000000000000000 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 1'b1 
+	Parameter INIT bound to: 64'b1111111100000000111100001111000011001100110011001010101010101010 
+	Parameter INIT bound to: 64'b1111111100000000111100001111000011001100110011001010101010101010 
+	Parameter INIT bound to: 256'b0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 
+	Parameter IS_WCLK_INVERTED bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b0110100101101001011011101000101011001100110011000000000000000000 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b1111111100000000111100001111000011001100110011001010101010101010 
+	Parameter INIT bound to: 256'b0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 
+	Parameter IS_WCLK_INVERTED bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT_A bound to: 64'b0000000000000000000000000000000000000000000000000000000000000000 
+	Parameter INIT_B bound to: 64'b0000000000000000000000000000000000000000000000000000000000000000 
+	Parameter INIT_C bound to: 64'b0000000000000000000000000000000000000000000000000000000000000000 
+	Parameter INIT_D bound to: 64'b0000000000000000000000000000000000000000000000000000000000000000 
+	Parameter IS_WCLK_INVERTED bound to: 1'b0 
+	Parameter INIT_A bound to: 64'b0000000000000000000000000000000000000000000000000000000000000000 
+	Parameter INIT_B bound to: 64'b0000000000000000000000000000000000000000000000000000000000000000 
+	Parameter INIT_C bound to: 64'b0000000000000000000000000000000000000000000000000000000000000000 
+	Parameter INIT_D bound to: 64'b0000000000000000000000000000000000000000000000000000000000000000 
+	Parameter IS_WCLK_INVERTED bound to: 1'b0 
+INFO: [Synth 8-256] done synthesizing module 'kcpsm6' (1#1) [/home/hazen/work/vga_terminal/picoblaze/src/kcpsm6.vhd:111]
+WARNING: [Synth 8-5640] Port 'msize' is missing in component declaration [/home/hazen/work/vga_terminal/picoblaze/src/pico_control.vhd:50]
+INFO: [Synth 8-3491] module 'monitor' declared at '/home/hazen/work/vga_terminal/picoblaze/psm/my_ROM.vhd:10' bound to instance 'program_rom' of component 'monitor' [/home/hazen/work/vga_terminal/picoblaze/src/pico_control.vhd:221]
+INFO: [Synth 8-638] synthesizing module 'monitor' [/home/hazen/work/vga_terminal/picoblaze/psm/my_ROM.vhd:25]
+INFO: [Synth 8-256] done synthesizing module 'monitor' (2#1) [/home/hazen/work/vga_terminal/picoblaze/psm/my_ROM.vhd:25]
+INFO: [Synth 8-3491] module 'uart_tx6' declared at '/home/hazen/work/vga_terminal/picoblaze/src/uart_tx6.vhd:84' bound to instance 'txi' of component 'uart_tx6' [/home/hazen/work/vga_terminal/picoblaze/src/pico_control.vhd:239]
+INFO: [Synth 8-638] synthesizing module 'uart_tx6' [/home/hazen/work/vga_terminal/picoblaze/src/uart_tx6.vhd:100]
+	Parameter INIT bound to: 16'b0000000000000000 
+	Parameter IS_CLK_INVERTED bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 16'b0000000000000000 
+	Parameter IS_CLK_INVERTED bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 16'b0000000000000000 
+	Parameter IS_CLK_INVERTED bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 16'b0000000000000000 
+	Parameter IS_CLK_INVERTED bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 16'b0000000000000000 
+	Parameter IS_CLK_INVERTED bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 16'b0000000000000000 
+	Parameter IS_CLK_INVERTED bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 16'b0000000000000000 
+	Parameter IS_CLK_INVERTED bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 16'b0000000000000000 
+	Parameter IS_CLK_INVERTED bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b1111111100000000111111100000000011111111100000001111111100000000 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b1111000011110000111000011110000011111000011110001111000011110000 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b1100110010010000011000001100110010101010010100000101000010101010 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b1111010011111100111101001111110000000100000000000000010011000000 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b0000000000000001000000000000000010000000000000000000000000000000 
+	Parameter INIT bound to: 64'b1111111100000000111100001111000011001100110011001010101010101010 
+	Parameter INIT bound to: 64'b1111111100000000111100001111000011001100110011001010101010101010 
+	Parameter INIT bound to: 64'b1100111110101010110011000000111100001111111111111111111111111111 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b1000010101010000000000000000000010101010101010101010101010101010 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b0010011001100001000000000000000011001100110011001100110011001100 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b1000100001110000000000000000000011110000111100001111000011110000 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b1000011101000100000000000000000011111111000000001111111100000000 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b0110110000000000000000000000000001011010000000000000000000000000 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b0111111110000000111111110000000001111000011110001111000011110000 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b0000000000000000000000000000000010000000000000000000000000000000 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-256] done synthesizing module 'uart_tx6' (3#1) [/home/hazen/work/vga_terminal/picoblaze/src/uart_tx6.vhd:100]
+INFO: [Synth 8-3491] module 'uart_rx6' declared at '/home/hazen/work/vga_terminal/picoblaze/src/uart_rx6.vhd:84' bound to instance 'rxi' of component 'uart_rx6' [/home/hazen/work/vga_terminal/picoblaze/src/pico_control.vhd:262]
+INFO: [Synth 8-638] synthesizing module 'uart_rx6' [/home/hazen/work/vga_terminal/picoblaze/src/uart_rx6.vhd:100]
+	Parameter INIT bound to: 16'b0000000000000000 
+	Parameter IS_CLK_INVERTED bound to: 1'b0 
+	Parameter INIT bound to: 16'b0000000000000000 
+	Parameter IS_CLK_INVERTED bound to: 1'b0 
+	Parameter INIT bound to: 16'b0000000000000000 
+	Parameter IS_CLK_INVERTED bound to: 1'b0 
+	Parameter INIT bound to: 16'b0000000000000000 
+	Parameter IS_CLK_INVERTED bound to: 1'b0 
+	Parameter INIT bound to: 16'b0000000000000000 
+	Parameter IS_CLK_INVERTED bound to: 1'b0 
+	Parameter INIT bound to: 16'b0000000000000000 
+	Parameter IS_CLK_INVERTED bound to: 1'b0 
+	Parameter INIT bound to: 16'b0000000000000000 
+	Parameter IS_CLK_INVERTED bound to: 1'b0 
+	Parameter INIT bound to: 16'b0000000000000000 
+	Parameter IS_CLK_INVERTED bound to: 1'b0 
+	Parameter INIT bound to: 64'b1111111100000000111111100000000011111111100000001111111100000000 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b1111000011110000111000011110000011111000011110001111000011110000 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b1100110010010000011000001100110010101010010100000101000010101010 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b1111010011111100111101001111110000000100000000000000010011000000 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b0000000000000001000000000000000010000000000000000000000000000000 
+	Parameter INIT bound to: 64'b1100110011110000000000000000000010101010110011000000000000000000 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b1100101011111111110010101111111100000000000000001100000011000000 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b1111000011001100111111111111111111001100101010101111111111111111 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b1111000011001100111111111111111111001100101010101111111111111111 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b1111000011001100111111111111111111001100101010101111111111111111 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b1111000011001100111111111111111111001100101010101111111111111111 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b0010111100101111101011111010111100000000000000001111111100000000 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b0010001000100010000000001111000000000000000000000000000000000000 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b0110110000000000000000000000000001011010000000000000000000000000 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b0110110011001100000000000000000001011010101010100000000000000000 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 1'b0 
+	Parameter INIT bound to: 64'b0000000010000000000000000000000010001000100010001000100010001000 
+	Parameter INIT bound to: 1'b0 
+INFO: [Synth 8-256] done synthesizing module 'uart_rx6' (4#1) [/home/hazen/work/vga_terminal/picoblaze/src/uart_rx6.vhd:100]
+INFO: [Synth 8-256] done synthesizing module 'pico_control' (5#1) [/home/hazen/work/vga_terminal/picoblaze/src/pico_control.vhd:24]
+INFO: [Synth 8-638] synthesizing module 'vga80x40' [/home/hazen/work/vga_terminal/terminal/src/vga80x40_col1fixed.vhd:53]
+	Parameter M bound to: 794 - type: integer 
+INFO: [Synth 8-3491] module 'ctrm' declared at '/home/hazen/work/vga_terminal/terminal/src/ctrm.vhd:28' bound to instance 'U_HCTR' of component 'ctrm' [/home/hazen/work/vga_terminal/terminal/src/vga80x40_col1fixed.vhd:213]
+INFO: [Synth 8-638] synthesizing module 'ctrm' [/home/hazen/work/vga_terminal/terminal/src/ctrm.vhd:42]
+	Parameter M bound to: 794 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'ctrm' (6#1) [/home/hazen/work/vga_terminal/terminal/src/ctrm.vhd:42]
+	Parameter M bound to: 525 - type: integer 
+INFO: [Synth 8-3491] module 'ctrm' declared at '/home/hazen/work/vga_terminal/terminal/src/ctrm.vhd:28' bound to instance 'U_VCTR' of component 'ctrm' [/home/hazen/work/vga_terminal/terminal/src/vga80x40_col1fixed.vhd:216]
+INFO: [Synth 8-638] synthesizing module 'ctrm__parameterized1' [/home/hazen/work/vga_terminal/terminal/src/ctrm.vhd:42]
+	Parameter M bound to: 525 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'ctrm__parameterized1' (6#1) [/home/hazen/work/vga_terminal/terminal/src/ctrm.vhd:42]
+	Parameter M bound to: 8 - type: integer 
+INFO: [Synth 8-3491] module 'ctrm' declared at '/home/hazen/work/vga_terminal/terminal/src/ctrm.vhd:28' bound to instance 'U_CHRX' of component 'ctrm' [/home/hazen/work/vga_terminal/terminal/src/vga80x40_col1fixed.vhd:223]
+INFO: [Synth 8-638] synthesizing module 'ctrm__parameterized3' [/home/hazen/work/vga_terminal/terminal/src/ctrm.vhd:42]
+	Parameter M bound to: 8 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'ctrm__parameterized3' (6#1) [/home/hazen/work/vga_terminal/terminal/src/ctrm.vhd:42]
+	Parameter M bound to: 12 - type: integer 
+INFO: [Synth 8-3491] module 'ctrm' declared at '/home/hazen/work/vga_terminal/terminal/src/ctrm.vhd:28' bound to instance 'U_CHRY' of component 'ctrm' [/home/hazen/work/vga_terminal/terminal/src/vga80x40_col1fixed.vhd:224]
+INFO: [Synth 8-638] synthesizing module 'ctrm__parameterized5' [/home/hazen/work/vga_terminal/terminal/src/ctrm.vhd:42]
+	Parameter M bound to: 12 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'ctrm__parameterized5' (6#1) [/home/hazen/work/vga_terminal/terminal/src/ctrm.vhd:42]
+	Parameter M bound to: 80 - type: integer 
+INFO: [Synth 8-3491] module 'ctrm' declared at '/home/hazen/work/vga_terminal/terminal/src/ctrm.vhd:28' bound to instance 'U_SCRX' of component 'ctrm' [/home/hazen/work/vga_terminal/terminal/src/vga80x40_col1fixed.vhd:225]
+INFO: [Synth 8-638] synthesizing module 'ctrm__parameterized7' [/home/hazen/work/vga_terminal/terminal/src/ctrm.vhd:42]
+	Parameter M bound to: 80 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'ctrm__parameterized7' (6#1) [/home/hazen/work/vga_terminal/terminal/src/ctrm.vhd:42]
+	Parameter M bound to: 40 - type: integer 
+INFO: [Synth 8-3491] module 'ctrm' declared at '/home/hazen/work/vga_terminal/terminal/src/ctrm.vhd:28' bound to instance 'U_SCRY' of component 'ctrm' [/home/hazen/work/vga_terminal/terminal/src/vga80x40_col1fixed.vhd:226]
+INFO: [Synth 8-638] synthesizing module 'ctrm__parameterized9' [/home/hazen/work/vga_terminal/terminal/src/ctrm.vhd:42]
+	Parameter M bound to: 40 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'ctrm__parameterized9' (6#1) [/home/hazen/work/vga_terminal/terminal/src/ctrm.vhd:42]
+	Parameter N bound to: 8 - type: integer 
+INFO: [Synth 8-3491] module 'losr' declared at '/home/hazen/work/vga_terminal/terminal/src/losr.vhd:31' bound to instance 'U_LOSR' of component 'losr' [/home/hazen/work/vga_terminal/terminal/src/vga80x40_col1fixed.vhd:261]
+INFO: [Synth 8-638] synthesizing module 'losr' [/home/hazen/work/vga_terminal/terminal/src/losr.vhd:44]
+	Parameter N bound to: 8 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'losr' (7#1) [/home/hazen/work/vga_terminal/terminal/src/losr.vhd:44]
+INFO: [Synth 8-256] done synthesizing module 'vga80x40' (8#1) [/home/hazen/work/vga_terminal/terminal/src/vga80x40_col1fixed.vhd:53]
+INFO: [Synth 8-638] synthesizing module 'mem_text' [/home/hazen/work/vga_terminal/terminal/src/mem_text.vhd:27]
+INFO: [Synth 8-256] done synthesizing module 'mem_text' (9#1) [/home/hazen/work/vga_terminal/terminal/src/mem_text.vhd:27]
+INFO: [Synth 8-638] synthesizing module 'mem_font' [/home/hazen/work/vga_terminal/terminal/src/mem_font.vhd:20]
+INFO: [Synth 8-256] done synthesizing module 'mem_font' (10#1) [/home/hazen/work/vga_terminal/terminal/src/mem_font.vhd:20]
+INFO: [Synth 8-256] done synthesizing module 'top_terminal' (11#1) [/home/hazen/work/vga_terminal/terminal/src/top_terminal.vhd:32]
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 2364.059 ; gain = 0.000 ; free physical = 1610 ; free virtual = 53303
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:04 ; elapsed = 00:00:05 . Memory (MB): peak = 2364.059 ; gain = 0.000 ; free physical = 1670 ; free virtual = 53362
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:04 ; elapsed = 00:00:05 . Memory (MB): peak = 2364.059 ; gain = 0.000 ; free physical = 1670 ; free virtual = 53362
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2364.059 ; gain = 0.000 ; free physical = 1665 ; free virtual = 53357
+INFO: [Netlist 29-17] Analyzing 253 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [/home/hazen/Basys3_IP.gen/sources_1/ip/clk_vga/clk_vga/clk_vga_in_context.xdc] for cell 'clk_vga_1'
+Finished Parsing XDC File [/home/hazen/Basys3_IP.gen/sources_1/ip/clk_vga/clk_vga/clk_vga_in_context.xdc] for cell 'clk_vga_1'
+Parsing XDC File [/home/hazen/work/vga_terminal/terminal/xdc/Basys3_VGA.xdc]
+Finished Parsing XDC File [/home/hazen/work/vga_terminal/terminal/xdc/Basys3_VGA.xdc]
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [/home/hazen/work/vga_terminal/terminal/xdc/Basys3_VGA.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/top_terminal_propImpl.xdc].
+Resolution: To avoid this warning, move constraints listed in [.Xil/top_terminal_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
+Parsing XDC File [/home/hazen/work/vga_terminal/Projects/terminal/terminal.runs/synth_1/dont_touch.xdc]
+Finished Parsing XDC File [/home/hazen/work/vga_terminal/Projects/terminal/terminal.runs/synth_1/dont_touch.xdc]
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2387.918 ; gain = 0.000 ; free physical = 1580 ; free virtual = 53272
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 197 instances were transformed.
+  FD => FDRE: 86 instances
+  FDR => FDRE: 28 instances
+  FDS => FDSE: 2 instances
+  LUT6_2 => LUT6_2 (LUT5, LUT6): 69 instances
+  RAM256X1S => RAM256X1S (MUXF7(x2), MUXF8, RAMS64E(x4)): 8 instances
+  RAM32M => RAM32M (RAMD32(x6), RAMS32(x2)): 4 instances
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2387.918 ; gain = 0.000 ; free physical = 1580 ; free virtual = 53272
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 2387.918 ; gain = 23.859 ; free physical = 1650 ; free virtual = 53343
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7a35tcpg236-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 2387.918 ; gain = 23.859 ; free physical = 1650 ; free virtual = 53343
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+Applied set_property IO_BUFFER_TYPE = NONE for clk. (constraint file  /home/hazen/Basys3_IP.gen/sources_1/ip/clk_vga/clk_vga/clk_vga_in_context.xdc, line 3).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for clk. (constraint file  /home/hazen/Basys3_IP.gen/sources_1/ip/clk_vga/clk_vga/clk_vga_in_context.xdc, line 4).
+Applied set_property KEEP_HIERARCHY = SOFT for clk_vga_1. (constraint file  auto generated constraint).
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 2387.918 ; gain = 23.859 ; free physical = 1650 ; free virtual = 53343
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 2387.918 ; gain = 23.859 ; free physical = 1639 ; free virtual = 53333
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input   10 Bit       Adders := 2     
+	   2 Input    7 Bit       Adders := 1     
+	   2 Input    6 Bit       Adders := 1     
+	   2 Input    4 Bit       Adders := 1     
+	   2 Input    3 Bit       Adders := 1     
++---XORs : 
+	   2 Input      1 Bit         XORs := 1     
++---Registers : 
+	               32 Bit    Registers := 1     
+	               18 Bit    Registers := 2     
+	               16 Bit    Registers := 1     
+	               12 Bit    Registers := 1     
+	               10 Bit    Registers := 2     
+	                8 Bit    Registers := 4     
+	                7 Bit    Registers := 1     
+	                6 Bit    Registers := 1     
+	                4 Bit    Registers := 1     
+	                3 Bit    Registers := 1     
+	                1 Bit    Registers := 11    
++---RAMs : 
+	              36K Bit	(2048 X 18 bit)          RAMs := 1     
++---Muxes : 
+	  15 Input   32 Bit        Muxes := 1     
+	  15 Input   18 Bit        Muxes := 1     
+	  15 Input   16 Bit        Muxes := 1     
+	  15 Input   12 Bit        Muxes := 1     
+	   2 Input   10 Bit        Muxes := 2     
+	  14 Input    8 Bit        Muxes := 3     
+	   2 Input    8 Bit        Muxes := 1     
+	   2 Input    7 Bit        Muxes := 1     
+	   2 Input    6 Bit        Muxes := 1     
+	   2 Input    4 Bit        Muxes := 1     
+	   2 Input    3 Bit        Muxes := 1     
+	  14 Input    1 Bit        Muxes := 2     
+	   2 Input    1 Bit        Muxes := 4     
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 90 (col length:60)
+BRAMs: 100 (col length: RAMB18 60 RAMB36 30)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:15 ; elapsed = 00:00:16 . Memory (MB): peak = 2387.918 ; gain = 23.859 ; free physical = 1602 ; free virtual = 53299
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+
+ROM: Preliminary Mapping	Report
++-------------+------------+---------------+----------------+
+|Module Name  | RTL Object | Depth x Width | Implemented As | 
++-------------+------------+---------------+----------------+
+|mem_font     | p_0_out    | 4096x8        | LUT            | 
+|top_terminal | p_0_out    | 4096x8        | LUT            | 
++-------------+------------+---------------+----------------+
+
+
+Distributed RAM: Preliminary Mapping	Report (see note below)
++-------------+------------------------------------+-----------+----------------------+------------------+
+|Module Name  | RTL Object                         | Inference | Size (Depth x Width) | Primitives       | 
++-------------+------------------------------------+-----------+----------------------+------------------+
+|top_terminal | pico_control_1/program_rom/RAM_reg | Implied   | 2 K x 18             | RAM128X1D x 288	 | 
++-------------+------------------------------------+-----------+----------------------+------------------+
+
+Note: The table above is a preliminary report that shows the Distributed RAMs at the current stage of the synthesis flow. Some Distributed RAMs may be reimplemented as non Distributed RAM primitives later in the synthesis flow. Multiple instantiated RAMs are reported only once.
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:19 ; elapsed = 00:00:20 . Memory (MB): peak = 2387.918 ; gain = 23.859 ; free physical = 1510 ; free virtual = 53185
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:19 ; elapsed = 00:00:20 . Memory (MB): peak = 2387.918 ; gain = 23.859 ; free physical = 1508 ; free virtual = 53182
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+
+Distributed RAM: Final Mapping	Report
++-------------+------------------------------------+-----------+----------------------+------------------+
+|Module Name  | RTL Object                         | Inference | Size (Depth x Width) | Primitives       | 
++-------------+------------------------------------+-----------+----------------------+------------------+
+|top_terminal | pico_control_1/program_rom/RAM_reg | Implied   | 2 K x 18             | RAM128X1D x 288	 | 
++-------------+------------------------------------+-----------+----------------------+------------------+
+
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:19 ; elapsed = 00:00:21 . Memory (MB): peak = 2387.918 ; gain = 23.859 ; free physical = 1515 ; free virtual = 53189
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:21 ; elapsed = 00:00:23 . Memory (MB): peak = 2387.918 ; gain = 23.859 ; free physical = 1513 ; free virtual = 53187
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:21 ; elapsed = 00:00:23 . Memory (MB): peak = 2387.918 ; gain = 23.859 ; free physical = 1513 ; free virtual = 53187
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:22 ; elapsed = 00:00:23 . Memory (MB): peak = 2387.918 ; gain = 23.859 ; free physical = 1513 ; free virtual = 53187
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:22 ; elapsed = 00:00:23 . Memory (MB): peak = 2387.918 ; gain = 23.859 ; free physical = 1513 ; free virtual = 53187
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:22 ; elapsed = 00:00:23 . Memory (MB): peak = 2387.918 ; gain = 23.859 ; free physical = 1513 ; free virtual = 53187
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:22 ; elapsed = 00:00:23 . Memory (MB): peak = 2387.918 ; gain = 23.859 ; free physical = 1513 ; free virtual = 53187
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++------+--------------+----------+
+|      |BlackBox name |Instances |
++------+--------------+----------+
+|1     |clk_vga       |         1|
++------+--------------+----------+
+
+Report Cell Usage: 
++------+-------------+------+
+|      |Cell         |Count |
++------+-------------+------+
+|1     |clk_vga_bbox |     1|
+|2     |CARRY4       |    14|
+|3     |LUT1         |     2|
+|4     |LUT2         |     9|
+|5     |LUT3         |    17|
+|6     |LUT4         |    17|
+|7     |LUT5         |    54|
+|8     |LUT6         |   305|
+|10    |MUXCY        |    29|
+|11    |MUXF7        |    86|
+|12    |MUXF8        |    42|
+|13    |RAM128X1D    |   288|
+|14    |RAM256X1S    |     8|
+|15    |RAM32M       |     4|
+|16    |SRL16E       |    16|
+|17    |XORCY        |    27|
+|18    |FD           |    83|
+|19    |FDR          |    28|
+|20    |FDRE         |   268|
+|21    |FDS          |     2|
+|22    |IBUF         |    12|
+|23    |OBUF         |    28|
+|24    |OBUFT        |     3|
++------+-------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:22 ; elapsed = 00:00:23 . Memory (MB): peak = 2387.918 ; gain = 23.859 ; free physical = 1513 ; free virtual = 53187
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 0 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:20 ; elapsed = 00:00:21 . Memory (MB): peak = 2387.918 ; gain = 0.000 ; free physical = 1565 ; free virtual = 53239
+Synthesis Optimization Complete : Time (s): cpu = 00:00:22 ; elapsed = 00:00:23 . Memory (MB): peak = 2387.926 ; gain = 23.859 ; free physical = 1565 ; free virtual = 53239
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2387.926 ; gain = 0.000 ; free physical = 1650 ; free virtual = 53325
+INFO: [Netlist 29-17] Analyzing 680 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-140] Inserted 1 IBUFs to IO ports without IO buffers.
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2387.926 ; gain = 0.000 ; free physical = 1595 ; free virtual = 53269
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 492 instances were transformed.
+  (MUXCY,XORCY) => CARRY4: 10 instances
+  FD => FDRE: 83 instances
+  FDR => FDRE: 28 instances
+  FDS => FDSE: 2 instances
+  LUT6_2 => LUT6_2 (LUT5, LUT6): 69 instances
+  RAM128X1D => RAM128X1D (MUXF7(x2), RAMD64E(x4)): 288 instances
+  RAM256X1S => RAM256X1S (MUXF7(x2), MUXF8, RAMS64E(x4)): 8 instances
+  RAM32M => RAM32M (RAMD32(x6), RAMS32(x2)): 4 instances
+
+INFO: [Common 17-83] Releasing license: Synthesis
+185 Infos, 14 Warnings, 11 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:29 ; elapsed = 00:00:27 . Memory (MB): peak = 2387.926 ; gain = 24.020 ; free physical = 1738 ; free virtual = 53412
+INFO: [Common 17-600] The following parameters have non-default value.
+general.maxThreads
+INFO: [Common 17-1381] The checkpoint '/home/hazen/work/vga_terminal/Projects/terminal/terminal.runs/synth_1/top_terminal.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_utilization -file top_terminal_utilization_synth.rpt -pb top_terminal_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Sun Dec 12 15:38:37 2021...
+[Sun Dec 12 15:38:40 2021] synth_1 finished
+wait_on_run: Time (s): cpu = 00:00:41 ; elapsed = 00:00:41 . Memory (MB): peak = 2363.027 ; gain = 0.000 ; free physical = 2530 ; free virtual = 54199
+INFO: [Hog:Msg-0] Run: synth_1 progress: 100%, status : synth_design Complete!
+INFO: [Hog:GetRepoVersions-0] Hog submodule /home/hazen/work/vga_terminal/Hog clean.
+CRITICAL WARNING: [Hog:GetRepoVersions-0] Git working directory /home/hazen/work/vga_terminal/Top/terminal not clean, commit hash, and version will be set to 0.
+INFO: [Hog:GetVerFromSHA-0] No tag contains 3B24302, will use most recent tag v0.0.1. As this is an official tag, patch will be incremented to 2.
+INFO: [Hog:GetVerFromSHA-0] No tag contains BB51F16, will use most recent tag v0.0.1. As this is an official tag, patch will be incremented to 2.
+INFO: [Hog:GetVerFromSHA-0] No tag contains BB51F16, will use most recent tag v0.0.1. As this is an official tag, patch will be incremented to 2.
+INFO: [Hog:GetVerFromSHA-0] No tag contains BB51F16, will use most recent tag v0.0.1. As this is an official tag, patch will be incremented to 2.
+INFO: [Hog:GetRepoVersions-0] This project does not use IPbus XMLs
+INFO: [Hog:Msg-0] Git describe set to v0.0.1-6-g1e6ba7b-dirty
+INFO: [Hog:Msg-0] Starting implementation flow...
+INFO: [Hog:Msg-0] Resetting run before launching implementation...
+INFO: [Vivado 12-4149] The synthesis checkpoint for IP '/home/hazen/work/vga_terminal/IP/clk_vga/clk_vga.xci' is already up-to-date
+[Sun Dec 12 15:38:41 2021] Launched impl_1...
+Run output will be captured here: /home/hazen/work/vga_terminal/Projects/terminal/terminal.runs/impl_1/runme.log
+[Sun Dec 12 15:38:41 2021] Waiting for impl_1 to finish...
+
+*** Running vivado
+    with args -log top_terminal.vdi -applog -m64 -product Vivado -messageDb vivado.pb -mode batch -source top_terminal.tcl -notrace
+
+
+****** Vivado v2020.2 (64-bit)
+  **** SW Build 3064766 on Wed Nov 18 09:12:47 MST 2020
+  **** IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
+    ** Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+
+source top_terminal.tcl -notrace
+Command: link_design -top top_terminal -part xc7a35tcpg236-1
+Design is defaulting to srcset: sources_1
+Design is defaulting to constrset: constrs_1
+INFO: [Device 21-403] Loading part xc7a35tcpg236-1
+INFO: [Project 1-454] Reading design checkpoint '/home/hazen/Basys3_IP.gen/sources_1/ip/clk_vga/clk_vga.dcp' for cell 'clk_vga_1'
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 2356.055 ; gain = 0.000 ; free physical = 1985 ; free virtual = 53654
+INFO: [Netlist 29-17] Analyzing 522 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2020.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+WARNING: [Opt 31-35] Removing redundant IBUF, clk_vga_1/inst/clkin1_ibufg, from the path connected to top-level port: clk 
+Resolution: The tool has removed redundant IBUF. To resolve this warning, check for redundant IBUF in the input design.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'clk_vga_1/clk_in1' is not directly connected to top level port. Synthesis is ignored for IBUF_LOW_PWR but preserved for implementation.
+Parsing XDC File [/home/hazen/Basys3_IP.gen/sources_1/ip/clk_vga/clk_vga_board.xdc] for cell 'clk_vga_1/inst'
+Finished Parsing XDC File [/home/hazen/Basys3_IP.gen/sources_1/ip/clk_vga/clk_vga_board.xdc] for cell 'clk_vga_1/inst'
+Parsing XDC File [/home/hazen/Basys3_IP.gen/sources_1/ip/clk_vga/clk_vga.xdc] for cell 'clk_vga_1/inst'
+INFO: [Timing 38-35] Done setting XDC timing constraints. [/home/hazen/Basys3_IP.gen/sources_1/ip/clk_vga/clk_vga.xdc:57]
+INFO: [Timing 38-2] Deriving generated clocks [/home/hazen/Basys3_IP.gen/sources_1/ip/clk_vga/clk_vga.xdc:57]
+get_clocks: Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memory (MB): peak = 2596.773 ; gain = 184.844 ; free physical = 1508 ; free virtual = 53177
+Finished Parsing XDC File [/home/hazen/Basys3_IP.gen/sources_1/ip/clk_vga/clk_vga.xdc] for cell 'clk_vga_1/inst'
+Parsing XDC File [/home/hazen/work/vga_terminal/terminal/xdc/Basys3_VGA.xdc]
+Finished Parsing XDC File [/home/hazen/work/vga_terminal/terminal/xdc/Basys3_VGA.xdc]
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2596.773 ; gain = 0.000 ; free physical = 1513 ; free virtual = 53182
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 369 instances were transformed.
+  LUT6_2 => LUT6_2 (LUT5, LUT6): 69 instances
+  RAM128X1D => RAM128X1D (MUXF7(x2), RAMD64E(x4)): 288 instances
+  RAM256X1S => RAM256X1S (MUXF7(x2), MUXF8, RAMS64E(x4)): 8 instances
+  RAM32M => RAM32M (RAMD32(x6), RAMS32(x2)): 4 instances
+
+10 Infos, 2 Warnings, 0 Critical Warnings and 0 Errors encountered.
+link_design completed successfully
+link_design: Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 2596.773 ; gain = 240.871 ; free physical = 1513 ; free virtual = 53182
+source /home/hazen/work/vga_terminal/Hog/Tcl/integrated/pre-implementation.tcl
+CRITICAL WARNING: [Hog:Msg-0] Multithreading enabled. Bitfile will not be deterministic. Number of threads: 4
+INFO: [Hog:Msg-0] All done
+Command: opt_design
+Attempting to get a license for feature 'Implementation' and/or device 'xc7a35t'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xc7a35t'
+Running DRC as a precondition to command opt_design
+
+Starting DRC Task
+INFO: [DRC 23-27] Running DRC with 4 threads
+INFO: [Project 1-461] DRC finished with 0 Errors
+INFO: [Project 1-462] Please refer to the DRC report (report_drc) for more information.
+
+Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.64 . Memory (MB): peak = 2628.789 ; gain = 32.016 ; free physical = 1502 ; free virtual = 53171
+
+Starting Cache Timing Information Task
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+Ending Cache Timing Information Task | Checksum: 1c184fad8
+
+Time (s): cpu = 00:00:00.15 ; elapsed = 00:00:00.09 . Memory (MB): peak = 2647.633 ; gain = 18.844 ; free physical = 1502 ; free virtual = 53171
+
+Starting Logic Optimization Task
+
+Phase 1 Retarget
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Opt 31-49] Retargeted 0 cell(s).
+Phase 1 Retarget | Checksum: 1a0afd2e2
+
+Time (s): cpu = 00:00:00.23 ; elapsed = 00:00:00.10 . Memory (MB): peak = 2801.633 ; gain = 0.000 ; free physical = 1335 ; free virtual = 53004
+INFO: [Opt 31-389] Phase Retarget created 2 cells and removed 2 cells
+INFO: [Opt 31-1021] In phase Retarget, 1 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail. 
+
+Phase 2 Constant propagation
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Phase 2 Constant propagation | Checksum: 1c22e2dc6
+
+Time (s): cpu = 00:00:00.26 ; elapsed = 00:00:00.13 . Memory (MB): peak = 2801.633 ; gain = 0.000 ; free physical = 1335 ; free virtual = 53004
+INFO: [Opt 31-389] Phase Constant propagation created 11 cells and removed 12 cells
+
+Phase 3 Sweep
+Phase 3 Sweep | Checksum: 1679d6de5
+
+Time (s): cpu = 00:00:00.28 ; elapsed = 00:00:00.14 . Memory (MB): peak = 2801.633 ; gain = 0.000 ; free physical = 1335 ; free virtual = 53004
+INFO: [Opt 31-389] Phase Sweep created 7 cells and removed 3 cells
+INFO: [Opt 31-1021] In phase Sweep, 2 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail. 
+
+Phase 4 BUFG optimization
+INFO: [Opt 31-194] Inserted BUFG clk_IBUF_BUFG_inst to drive 656 load(s) on clock net clk_IBUF_BUFG
+INFO: [Opt 31-193] Inserted 1 BUFG(s) on clock nets
+Phase 4 BUFG optimization | Checksum: 16102ea02
+
+Time (s): cpu = 00:00:00.36 ; elapsed = 00:00:00.23 . Memory (MB): peak = 2801.633 ; gain = 0.000 ; free physical = 1335 ; free virtual = 53004
+INFO: [Opt 31-662] Phase BUFG optimization created 1 cells of which 1 are BUFGs and removed 0 cells.
+
+Phase 5 Shift Register Optimization
+INFO: [Opt 31-1064] SRL Remap converted 0 SRLs to 0 registers and converted 0 registers of register chains to 0 SRLs
+Phase 5 Shift Register Optimization | Checksum: 16102ea02
+
+Time (s): cpu = 00:00:00.36 ; elapsed = 00:00:00.23 . Memory (MB): peak = 2801.633 ; gain = 0.000 ; free physical = 1335 ; free virtual = 53004
+INFO: [Opt 31-389] Phase Shift Register Optimization created 0 cells and removed 0 cells
+
+Phase 6 Post Processing Netlist
+Phase 6 Post Processing Netlist | Checksum: 1236d3f94
+
+Time (s): cpu = 00:00:00.37 ; elapsed = 00:00:00.24 . Memory (MB): peak = 2801.633 ; gain = 0.000 ; free physical = 1335 ; free virtual = 53004
+INFO: [Opt 31-389] Phase Post Processing Netlist created 0 cells and removed 0 cells
+Opt_design Change Summary
+=========================
+
+
+-------------------------------------------------------------------------------------------------------------------------
+|  Phase                        |  #Cells created  |  #Cells Removed  |  #Constrained objects preventing optimizations  |
+-------------------------------------------------------------------------------------------------------------------------
+|  Retarget                     |               2  |               2  |                                              1  |
+|  Constant propagation         |              11  |              12  |                                              0  |
+|  Sweep                        |               7  |               3  |                                              2  |
+|  BUFG optimization            |               1  |               0  |                                              0  |
+|  Shift Register Optimization  |               0  |               0  |                                              0  |
+|  Post Processing Netlist      |               0  |               0  |                                              0  |
+-------------------------------------------------------------------------------------------------------------------------
+
+
+
+Starting Connectivity Check Task
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2801.633 ; gain = 0.000 ; free physical = 1335 ; free virtual = 53004
+Ending Logic Optimization Task | Checksum: 2670749c4
+
+Time (s): cpu = 00:00:00.45 ; elapsed = 00:00:00.28 . Memory (MB): peak = 2801.633 ; gain = 0.000 ; free physical = 1335 ; free virtual = 53004
+
+Starting Power Optimization Task
+INFO: [Pwropt 34-132] Skipping clock gating for clocks with a period < 2.00 ns.
+Ending Power Optimization Task | Checksum: 2670749c4
+
+Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2801.633 ; gain = 0.000 ; free physical = 1335 ; free virtual = 53004
+
+Starting Final Cleanup Task
+Ending Final Cleanup Task | Checksum: 2670749c4
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2801.633 ; gain = 0.000 ; free physical = 1335 ; free virtual = 53004
+
+Starting Netlist Obfuscation Task
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2801.633 ; gain = 0.000 ; free physical = 1335 ; free virtual = 53004
+Ending Netlist Obfuscation Task | Checksum: 2670749c4
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2801.633 ; gain = 0.000 ; free physical = 1335 ; free virtual = 53004
+INFO: [Common 17-83] Releasing license: Implementation
+32 Infos, 2 Warnings, 1 Critical Warnings and 0 Errors encountered.
+opt_design completed successfully
+INFO: [Common 17-600] The following parameters have non-default value.
+general.maxThreads
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Writing placer database...
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Write XDEF Complete: Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00 . Memory (MB): peak = 2801.633 ; gain = 0.000 ; free physical = 1329 ; free virtual = 53000
+INFO: [Common 17-1381] The checkpoint '/home/hazen/work/vga_terminal/Projects/terminal/terminal.runs/impl_1/top_terminal_opt.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_drc -file top_terminal_drc_opted.rpt -pb top_terminal_drc_opted.pb -rpx top_terminal_drc_opted.rpx
+Command: report_drc -file top_terminal_drc_opted.rpt -pb top_terminal_drc_opted.pb -rpx top_terminal_drc_opted.rpx
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 4 threads
+INFO: [Coretcl 2-168] The results of DRC are in file /home/hazen/work/vga_terminal/Projects/terminal/terminal.runs/impl_1/top_terminal_drc_opted.rpt.
+report_drc completed successfully
+Command: place_design
+Attempting to get a license for feature 'Implementation' and/or device 'xc7a35t'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xc7a35t'
+INFO: [DRC 23-27] Running DRC with 4 threads
+INFO: [Vivado_Tcl 4-198] DRC finished with 0 Errors
+INFO: [Vivado_Tcl 4-199] Please refer to the DRC report (report_drc) for more information.
+Running DRC as a precondition to command place_design
+INFO: [DRC 23-27] Running DRC with 4 threads
+INFO: [Vivado_Tcl 4-198] DRC finished with 0 Errors
+INFO: [Vivado_Tcl 4-199] Please refer to the DRC report (report_drc) for more information.
+
+Starting Placer Task
+INFO: [Place 30-611] Multithreading enabled for place_design using a maximum of 4 CPUs
+
+Phase 1 Placer Initialization
+
+Phase 1.1 Placer Initialization Netlist Sorting
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1264 ; free virtual = 52934
+Phase 1.1 Placer Initialization Netlist Sorting | Checksum: 1bcc03265
+
+Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.03 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1264 ; free virtual = 52934
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1264 ; free virtual = 52934
+
+Phase 1.2 IO Placement/ Clock Placement/ Build Placer Device
+Phase 1.2 IO Placement/ Clock Placement/ Build Placer Device | Checksum: f6fd70c4
+
+Time (s): cpu = 00:00:00.40 ; elapsed = 00:00:00.23 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1294 ; free virtual = 52964
+
+Phase 1.3 Build Placer Netlist Model
+Phase 1.3 Build Placer Netlist Model | Checksum: 1f5a6bec5
+
+Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.86 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1303 ; free virtual = 52973
+
+Phase 1.4 Constrain Clocks/Macros
+Phase 1.4 Constrain Clocks/Macros | Checksum: 1f5a6bec5
+
+Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.86 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1303 ; free virtual = 52973
+Phase 1 Placer Initialization | Checksum: 1f5a6bec5
+
+Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.87 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1303 ; free virtual = 52973
+
+Phase 2 Global Placement
+
+Phase 2.1 Floorplanning
+Phase 2.1 Floorplanning | Checksum: 1a9e9ec62
+
+Time (s): cpu = 00:00:02 ; elapsed = 00:00:01 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1302 ; free virtual = 52972
+
+Phase 2.2 Update Timing before SLR Path Opt
+Phase 2.2 Update Timing before SLR Path Opt | Checksum: 1e0457485
+
+Time (s): cpu = 00:00:02 ; elapsed = 00:00:01 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1302 ; free virtual = 52972
+
+Phase 2.3 Global Placement Core
+
+Phase 2.3.1 Physical Synthesis In Placer
+INFO: [Physopt 32-1035] Found 0 LUTNM shape to break, 17 LUT instances to create LUTNM shape
+INFO: [Physopt 32-1044] Break lutnm for timing: one critical 0, two critical 0, total 0, new lutff created 0
+INFO: [Physopt 32-775] End 1 Pass. Optimized 8 nets or cells. Created 0 new cell, deleted 8 existing cells and moved 0 existing cell
+INFO: [Physopt 32-65] No nets found for high-fanout optimization.
+INFO: [Physopt 32-232] Optimized 0 net. Created 0 new instance.
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+INFO: [Physopt 32-670] No setup violation found.  DSP Register Optimization was not performed.
+INFO: [Physopt 32-670] No setup violation found.  Shift Register to Pipeline Optimization was not performed.
+INFO: [Physopt 32-670] No setup violation found.  Shift Register Optimization was not performed.
+INFO: [Physopt 32-670] No setup violation found.  BRAM Register Optimization was not performed.
+INFO: [Physopt 32-670] No setup violation found.  URAM Register Optimization was not performed.
+INFO: [Physopt 32-949] No candidate nets found for dynamic/static region interface net replication
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1288 ; free virtual = 52957
+
+Summary of Physical Synthesis Optimizations
+============================================
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+|  Optimization                                     |  Added Cells  |  Removed Cells  |  Optimized Cells/Nets  |  Dont Touch  |  Iterations  |  Elapsed   |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+|  LUT Combining                                    |            0  |              8  |                     8  |           0  |           1  |  00:00:00  |
+|  Very High Fanout                                 |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  DSP Register                                     |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  Shift Register to Pipeline                       |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  Shift Register                                   |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  BRAM Register                                    |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  URAM Register                                    |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  Dynamic/Static Region Interface Net Replication  |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  Total                                            |            0  |              8  |                     8  |           0  |           3  |  00:00:00  |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Phase 2.3.1 Physical Synthesis In Placer | Checksum: 16084cb30
+
+Time (s): cpu = 00:00:05 ; elapsed = 00:00:02 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1288 ; free virtual = 52958
+Phase 2.3 Global Placement Core | Checksum: 1dba05742
+
+Time (s): cpu = 00:00:05 ; elapsed = 00:00:03 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1288 ; free virtual = 52958
+Phase 2 Global Placement | Checksum: 1dba05742
+
+Time (s): cpu = 00:00:05 ; elapsed = 00:00:03 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1289 ; free virtual = 52959
+
+Phase 3 Detail Placement
+
+Phase 3.1 Commit Multi Column Macros
+Phase 3.1 Commit Multi Column Macros | Checksum: 15564bce6
+
+Time (s): cpu = 00:00:06 ; elapsed = 00:00:03 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1286 ; free virtual = 52956
+
+Phase 3.2 Commit Most Macros & LUTRAMs
+Phase 3.2 Commit Most Macros & LUTRAMs | Checksum: 1192cdd5a
+
+Time (s): cpu = 00:00:07 ; elapsed = 00:00:03 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1284 ; free virtual = 52954
+
+Phase 3.3 Area Swap Optimization
+Phase 3.3 Area Swap Optimization | Checksum: 168204a21
+
+Time (s): cpu = 00:00:07 ; elapsed = 00:00:03 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1284 ; free virtual = 52954
+
+Phase 3.4 Pipeline Register Optimization
+Phase 3.4 Pipeline Register Optimization | Checksum: e5dc920d
+
+Time (s): cpu = 00:00:07 ; elapsed = 00:00:03 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1284 ; free virtual = 52954
+
+Phase 3.5 Small Shape Detail Placement
+Phase 3.5 Small Shape Detail Placement | Checksum: 25c5cad47
+
+Time (s): cpu = 00:00:07 ; elapsed = 00:00:04 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+
+Phase 3.6 Re-assign LUT pins
+Phase 3.6 Re-assign LUT pins | Checksum: 22831995d
+
+Time (s): cpu = 00:00:07 ; elapsed = 00:00:04 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+
+Phase 3.7 Pipeline Register Optimization
+Phase 3.7 Pipeline Register Optimization | Checksum: 1ad55e151
+
+Time (s): cpu = 00:00:07 ; elapsed = 00:00:04 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+Phase 3 Detail Placement | Checksum: 1ad55e151
+
+Time (s): cpu = 00:00:07 ; elapsed = 00:00:04 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+
+Phase 4 Post Placement Optimization and Clean-Up
+
+Phase 4.1 Post Commit Optimization
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+
+Phase 4.1.1 Post Placement Optimization
+Post Placement Optimization Initialization | Checksum: 177c46379
+
+Phase 4.1.1.1 BUFG Insertion
+
+Starting Physical Synthesis Task
+
+Phase 1 Physical Synthesis Initialization
+INFO: [Physopt 32-721] Multithreading enabled for phys_opt_design using a maximum of 4 CPUs
+INFO: [Physopt 32-619] Estimated Timing Summary | WNS=3.034 | TNS=0.000 |
+Phase 1 Physical Synthesis Initialization | Checksum: 177880025
+
+Time (s): cpu = 00:00:00.19 ; elapsed = 00:00:00.09 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+INFO: [Place 46-56] BUFG insertion identified 0 candidate nets. Inserted BUFG: 0, Replicated BUFG Driver: 0, Skipped due to Placement/Routing Conflicts: 0, Skipped due to Timing Degradation: 0, Skipped due to Illegal Netlist: 0.
+Ending Physical Synthesis Task | Checksum: 185a13369
+
+Time (s): cpu = 00:00:00.20 ; elapsed = 00:00:00.09 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+Phase 4.1.1.1 BUFG Insertion | Checksum: 177c46379
+
+Time (s): cpu = 00:00:08 ; elapsed = 00:00:04 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+INFO: [Place 30-746] Post Placement Timing Summary WNS=3.034. For the most accurate timing information please run report_timing.
+
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:04 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+Phase 4.1 Post Commit Optimization | Checksum: 159919c30
+
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:04 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+
+Phase 4.2 Post Placement Cleanup
+Phase 4.2 Post Placement Cleanup | Checksum: 159919c30
+
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:04 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+
+Phase 4.3 Placer Reporting
+
+Phase 4.3.1 Print Estimated Congestion
+INFO: [Place 30-612] Post-Placement Estimated Congestion 
+ ____________________________________________________
+|           | Global Congestion | Short Congestion  |
+| Direction | Region Size       | Region Size       |
+|___________|___________________|___________________|
+|      North|                1x1|                1x1|
+|___________|___________________|___________________|
+|      South|                1x1|                1x1|
+|___________|___________________|___________________|
+|       East|                1x1|                1x1|
+|___________|___________________|___________________|
+|       West|                1x1|                1x1|
+|___________|___________________|___________________|
+
+Phase 4.3.1 Print Estimated Congestion | Checksum: 159919c30
+
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:04 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+Phase 4.3 Placer Reporting | Checksum: 159919c30
+
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:04 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+
+Phase 4.4 Final Placement Cleanup
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:04 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+Phase 4 Post Placement Optimization and Clean-Up | Checksum: 21ea779fd
+
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:04 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+Ending Placer Task | Checksum: 1a06ff9d7
+
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:04 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+INFO: [Common 17-83] Releasing license: Implementation
+68 Infos, 2 Warnings, 1 Critical Warnings and 0 Errors encountered.
+place_design completed successfully
+place_design: Time (s): cpu = 00:00:10 ; elapsed = 00:00:05 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1291 ; free virtual = 52961
+INFO: [Common 17-600] The following parameters have non-default value.
+general.maxThreads
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Writing placer database...
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Write XDEF Complete: Time (s): cpu = 00:00:00.34 ; elapsed = 00:00:00.10 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1287 ; free virtual = 52962
+INFO: [Common 17-1381] The checkpoint '/home/hazen/work/vga_terminal/Projects/terminal/terminal.runs/impl_1/top_terminal_placed.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_io -file top_terminal_io_placed.rpt
+report_io: Time (s): cpu = 00:00:00.07 ; elapsed = 00:00:00.12 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1277 ; free virtual = 52948
+INFO: [runtcl-4] Executing : report_utilization -file top_terminal_utilization_placed.rpt -pb top_terminal_utilization_placed.pb
+INFO: [runtcl-4] Executing : report_control_sets -verbose -file top_terminal_control_sets_placed.rpt
+report_control_sets: Time (s): cpu = 00:00:00.05 ; elapsed = 00:00:00.08 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1285 ; free virtual = 52956
+INFO: [runtcl-4] Executing : report_utilization -file top_terminal_utilization_placed_1.rpt -pb top_terminal_utilization_placed_1.pb
+Command: route_design
+Attempting to get a license for feature 'Implementation' and/or device 'xc7a35t'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xc7a35t'
+Running DRC as a precondition to command route_design
+INFO: [DRC 23-27] Running DRC with 4 threads
+INFO: [Vivado_Tcl 4-198] DRC finished with 0 Errors
+INFO: [Vivado_Tcl 4-199] Please refer to the DRC report (report_drc) for more information.
+
+
+Starting Routing Task
+INFO: [Route 35-254] Multithreading enabled for route_design using a maximum of 4 CPUs
+Checksum: PlaceDB: aa837ab3 ConstDB: 0 ShapeSum: f5ec7f24 RouteDB: 0
+
+Phase 1 Build RT Design
+Phase 1 Build RT Design | Checksum: 19072eaa6
+
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:08 . Memory (MB): peak = 2911.527 ; gain = 44.680 ; free physical = 1149 ; free virtual = 52820
+Post Restoration Checksum: NetGraph: d93f304c NumContArr: b733ba5a Constraints: 0 Timing: 0
+
+Phase 2 Router Initialization
+
+Phase 2.1 Create Timer
+Phase 2.1 Create Timer | Checksum: 19072eaa6
+
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:08 . Memory (MB): peak = 2911.527 ; gain = 44.680 ; free physical = 1149 ; free virtual = 52820
+
+Phase 2.2 Fix Topology Constraints
+Phase 2.2 Fix Topology Constraints | Checksum: 19072eaa6
+
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:08 . Memory (MB): peak = 2918.523 ; gain = 51.676 ; free physical = 1133 ; free virtual = 52804
+
+Phase 2.3 Pre Route Cleanup
+Phase 2.3 Pre Route Cleanup | Checksum: 19072eaa6
+
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:08 . Memory (MB): peak = 2918.523 ; gain = 51.676 ; free physical = 1133 ; free virtual = 52804
+ Number of Nodes with overlaps = 0
+
+Phase 2.4 Update Timing
+Phase 2.4 Update Timing | Checksum: 1dfbbc6cf
+
+Time (s): cpu = 00:00:11 ; elapsed = 00:00:08 . Memory (MB): peak = 2930.523 ; gain = 63.676 ; free physical = 1123 ; free virtual = 52794
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=3.203  | TNS=0.000  | WHS=-0.234 | THS=-189.840|
+
+Phase 2 Router Initialization | Checksum: 174d4fe91
+
+Time (s): cpu = 00:00:12 ; elapsed = 00:00:09 . Memory (MB): peak = 2930.523 ; gain = 63.676 ; free physical = 1122 ; free virtual = 52793
+
+Router Utilization Summary
+  Global Vertical Routing Utilization    = 0 %
+  Global Horizontal Routing Utilization  = 0 %
+  Routable Net Status*
+  *Does not include unroutable nets such as driverless and loadless.
+  Run report_route_status for detailed report.
+  Number of Failed Nets               = 1192
+    (Failed Nets is the sum of unrouted and partially routed nets)
+  Number of Unrouted Nets             = 1192
+  Number of Partially Routed Nets     = 0
+  Number of Node Overlaps             = 0
+
+
+Phase 3 Initial Routing
+
+Phase 3.1 Global Routing
+Phase 3.1 Global Routing | Checksum: 174d4fe91
+
+Time (s): cpu = 00:00:12 ; elapsed = 00:00:09 . Memory (MB): peak = 2934.523 ; gain = 67.676 ; free physical = 1122 ; free virtual = 52793
+Phase 3 Initial Routing | Checksum: 178ac62d1
+
+Time (s): cpu = 00:00:13 ; elapsed = 00:00:09 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1120 ; free virtual = 52791
+
+Phase 4 Rip-up And Reroute
+
+Phase 4.1 Global Iteration 0
+ Number of Nodes with overlaps = 114
+ Number of Nodes with overlaps = 13
+ Number of Nodes with overlaps = 0
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=2.010  | TNS=0.000  | WHS=N/A    | THS=N/A    |
+
+Phase 4.1 Global Iteration 0 | Checksum: 172cb24ab
+
+Time (s): cpu = 00:00:14 ; elapsed = 00:00:10 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1120 ; free virtual = 52791
+Phase 4 Rip-up And Reroute | Checksum: 172cb24ab
+
+Time (s): cpu = 00:00:14 ; elapsed = 00:00:10 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1120 ; free virtual = 52791
+
+Phase 5 Delay and Skew Optimization
+
+Phase 5.1 Delay CleanUp
+
+Phase 5.1.1 Update Timing
+Phase 5.1.1 Update Timing | Checksum: 1a5911ce8
+
+Time (s): cpu = 00:00:14 ; elapsed = 00:00:10 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1120 ; free virtual = 52791
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=2.089  | TNS=0.000  | WHS=N/A    | THS=N/A    |
+
+Phase 5.1 Delay CleanUp | Checksum: 1a5911ce8
+
+Time (s): cpu = 00:00:14 ; elapsed = 00:00:10 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1120 ; free virtual = 52791
+
+Phase 5.2 Clock Skew Optimization
+Phase 5.2 Clock Skew Optimization | Checksum: 1a5911ce8
+
+Time (s): cpu = 00:00:14 ; elapsed = 00:00:10 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1120 ; free virtual = 52791
+Phase 5 Delay and Skew Optimization | Checksum: 1a5911ce8
+
+Time (s): cpu = 00:00:14 ; elapsed = 00:00:10 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1120 ; free virtual = 52791
+
+Phase 6 Post Hold Fix
+
+Phase 6.1 Hold Fix Iter
+
+Phase 6.1.1 Update Timing
+Phase 6.1.1 Update Timing | Checksum: 1e89ef184
+
+Time (s): cpu = 00:00:15 ; elapsed = 00:00:10 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1121 ; free virtual = 52792
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=2.089  | TNS=0.000  | WHS=0.048  | THS=0.000  |
+
+Phase 6.1 Hold Fix Iter | Checksum: 1cfdda5cc
+
+Time (s): cpu = 00:00:15 ; elapsed = 00:00:10 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1121 ; free virtual = 52792
+Phase 6 Post Hold Fix | Checksum: 1cfdda5cc
+
+Time (s): cpu = 00:00:15 ; elapsed = 00:00:10 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1121 ; free virtual = 52792
+
+Phase 7 Route finalize
+
+Router Utilization Summary
+  Global Vertical Routing Utilization    = 1.21462 %
+  Global Horizontal Routing Utilization  = 1.11036 %
+  Routable Net Status*
+  *Does not include unroutable nets such as driverless and loadless.
+  Run report_route_status for detailed report.
+  Number of Failed Nets               = 0
+    (Failed Nets is the sum of unrouted and partially routed nets)
+  Number of Unrouted Nets             = 0
+  Number of Partially Routed Nets     = 0
+  Number of Node Overlaps             = 0
+
+Phase 7 Route finalize | Checksum: 1b29633f8
+
+Time (s): cpu = 00:00:15 ; elapsed = 00:00:10 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1121 ; free virtual = 52792
+
+Phase 8 Verifying routed nets
+
+ Verification completed successfully
+Phase 8 Verifying routed nets | Checksum: 1b29633f8
+
+Time (s): cpu = 00:00:15 ; elapsed = 00:00:10 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1120 ; free virtual = 52791
+
+Phase 9 Depositing Routes
+Phase 9 Depositing Routes | Checksum: 17d952ce9
+
+Time (s): cpu = 00:00:15 ; elapsed = 00:00:10 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1120 ; free virtual = 52791
+
+Phase 10 Post Router Timing
+INFO: [Route 35-57] Estimated Timing Summary | WNS=2.089  | TNS=0.000  | WHS=0.048  | THS=0.000  |
+
+INFO: [Route 35-327] The final timing numbers are based on the router estimated timing analysis. For a complete and accurate timing signoff, please run report_timing_summary.
+Phase 10 Post Router Timing | Checksum: 17d952ce9
+
+Time (s): cpu = 00:00:15 ; elapsed = 00:00:10 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1120 ; free virtual = 52791
+INFO: [Route 35-16] Router Completed Successfully
+
+Time (s): cpu = 00:00:15 ; elapsed = 00:00:10 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1138 ; free virtual = 52809
+
+Routing Is Done.
+INFO: [Common 17-83] Releasing license: Implementation
+88 Infos, 2 Warnings, 1 Critical Warnings and 0 Errors encountered.
+route_design completed successfully
+route_design: Time (s): cpu = 00:00:17 ; elapsed = 00:00:11 . Memory (MB): peak = 2944.523 ; gain = 78.445 ; free physical = 1138 ; free virtual = 52809
+INFO: [Common 17-600] The following parameters have non-default value.
+general.maxThreads
+source /home/hazen/work/vga_terminal/Hog/Tcl/integrated/post-implementation.tcl
+INFO: [Hog:Msg-0] Evaluating Git sha for terminal...
+INFO: [Hog:GetRepoVersions-0] Hog submodule /home/hazen/work/vga_terminal/Hog clean.
+CRITICAL WARNING: [Hog:GetRepoVersions-0] Git working directory /home/hazen/work/vga_terminal/Top/terminal not clean, commit hash, and version will be set to 0.
+INFO: [Hog:GetVerFromSHA-0] No tag contains 3B24302, will use most recent tag v0.0.1. As this is an official tag, patch will be incremented to 2.
+INFO: [Hog:GetVerFromSHA-0] No tag contains BB51F16, will use most recent tag v0.0.1. As this is an official tag, patch will be incremented to 2.
+INFO: [Hog:GetVerFromSHA-0] No tag contains BB51F16, will use most recent tag v0.0.1. As this is an official tag, patch will be incremented to 2.
+INFO: [Hog:GetVerFromSHA-0] No tag contains BB51F16, will use most recent tag v0.0.1. As this is an official tag, patch will be incremented to 2.
+INFO: [Hog:GetRepoVersions-0] This project does not use IPbus XMLs
+INFO: [Hog:Msg-0] Git describe set to: v0.0.1-6-g1e6ba7b-dirty
+INFO: [Hog:Msg-0] Evaluating last git SHA in which terminal was modified...
+CRITICAL WARNING: [Hog:Msg-0] Git working directory /home/hazen/work/vga_terminal not clean, git commit hash be set to 0.
+CRITICAL WARNING: [Hog:Msg-0] Multithreading enabled. Number of threads: 4
+INFO: [Hog:Msg-0] The git SHA value 0000000 will be set as bitstream USERID.
+INFO: [Hog:Msg-0] All done.
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Writing placer database...
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Write XDEF Complete: Time (s): cpu = 00:00:00.34 ; elapsed = 00:00:00.11 . Memory (MB): peak = 2958.465 ; gain = 5.938 ; free physical = 1127 ; free virtual = 52803
+INFO: [Common 17-1381] The checkpoint '/home/hazen/work/vga_terminal/Projects/terminal/terminal.runs/impl_1/top_terminal_routed.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_drc -file top_terminal_drc_routed.rpt -pb top_terminal_drc_routed.pb -rpx top_terminal_drc_routed.rpx
+Command: report_drc -file top_terminal_drc_routed.rpt -pb top_terminal_drc_routed.pb -rpx top_terminal_drc_routed.rpx
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 4 threads
+INFO: [Coretcl 2-168] The results of DRC are in file /home/hazen/work/vga_terminal/Projects/terminal/terminal.runs/impl_1/top_terminal_drc_routed.rpt.
+report_drc completed successfully
+INFO: [runtcl-4] Executing : report_methodology -file top_terminal_methodology_drc_routed.rpt -pb top_terminal_methodology_drc_routed.pb -rpx top_terminal_methodology_drc_routed.rpx
+Command: report_methodology -file top_terminal_methodology_drc_routed.rpt -pb top_terminal_methodology_drc_routed.pb -rpx top_terminal_methodology_drc_routed.rpx
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [DRC 23-133] Running Methodology with 4 threads
+INFO: [Coretcl 2-1520] The results of Report Methodology are in file /home/hazen/work/vga_terminal/Projects/terminal/terminal.runs/impl_1/top_terminal_methodology_drc_routed.rpt.
+report_methodology completed successfully
+INFO: [runtcl-4] Executing : report_power -file top_terminal_power_routed.rpt -pb top_terminal_power_summary_routed.pb -rpx top_terminal_power_routed.rpx
+Command: report_power -file top_terminal_power_routed.rpt -pb top_terminal_power_summary_routed.pb -rpx top_terminal_power_routed.rpx
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+Running Vector-less Activity Propagation...
+
+Finished Running Vector-less Activity Propagation
+112 Infos, 2 Warnings, 4 Critical Warnings and 0 Errors encountered.
+report_power completed successfully
+INFO: [runtcl-4] Executing : report_route_status -file top_terminal_route_status.rpt -pb top_terminal_route_status.pb
+INFO: [runtcl-4] Executing : report_timing_summary -max_paths 10 -file top_terminal_timing_summary_routed.rpt -pb top_terminal_timing_summary_routed.pb -rpx top_terminal_timing_summary_routed.rpx -warn_on_violation 
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 4 CPUs
+INFO: [runtcl-4] Executing : report_incremental_reuse -file top_terminal_incremental_reuse_routed.rpt
+INFO: [Vivado_Tcl 4-1062] Incremental flow is disabled. No incremental reuse Info to report.
+INFO: [runtcl-4] Executing : report_clock_utilization -file top_terminal_clock_utilization_routed.rpt
+INFO: [runtcl-4] Executing : report_bus_skew -warn_on_violation -file top_terminal_bus_skew_routed.rpt -pb top_terminal_bus_skew_routed.pb -rpx top_terminal_bus_skew_routed.rpx
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 4 CPUs
+INFO: [runtcl-4] Executing : report_drc -file top_terminal_drc_routed_1.rpt -pb top_terminal_drc_routed_1.pb -rpx top_terminal_drc_routed_1.rpx
+Command: report_drc -file top_terminal_drc_routed_1.rpt -pb top_terminal_drc_routed_1.pb -rpx top_terminal_drc_routed_1.rpx
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 4 threads
+INFO: [Coretcl 2-168] The results of DRC are in file /home/hazen/work/vga_terminal/Projects/terminal/terminal.runs/impl_1/top_terminal_drc_routed_1.rpt.
+report_drc completed successfully
+INFO: [runtcl-4] Executing : report_power -file top_terminal_power_routed_1.rpt -pb top_terminal_power_summary_routed_1.pb -rpx top_terminal_power_routed_1.rpx
+Command: report_power -file top_terminal_power_routed_1.rpt -pb top_terminal_power_summary_routed_1.pb -rpx top_terminal_power_routed_1.rpx
+Running Vector-less Activity Propagation...
+
+Finished Running Vector-less Activity Propagation
+8 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
+report_power completed successfully
+INFO: [runtcl-4] Executing : report_timing_summary -max_paths 10 -file top_terminal_timing_summary_routed_1.rpt -pb top_terminal_timing_summary_routed_1.pb -rpx top_terminal_timing_summary_routed_1.rpx -warn_on_violation 
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 4 CPUs
+INFO: [runtcl-4] Executing : report_utilization -file route_report_utilization_0.rpt -pb route_report_utilization_0.pb
+INFO: [Common 17-206] Exiting Vivado at Sun Dec 12 15:39:27 2021...
+[Sun Dec 12 15:39:32 2021] impl_1 finished
+wait_on_run: Time (s): cpu = 00:00:00.83 ; elapsed = 00:00:52 . Memory (MB): peak = 2363.027 ; gain = 0.000 ; free physical = 2523 ; free virtual = 54198
+INFO: [Hog:Msg-0] Run: impl_1 progress: 100%, status : route_design Complete!
+INFO: [Hog:Msg-0] Time requirements are met
+*** Timing summary ***
+WNS: 2.089728
+TNS: 0.000000
+WHS: 0.049709
+THS: 0.000000
+INFO: [Hog:Msg-0] Starting write bitstream flow...
+INFO: [Vivado 12-4149] The synthesis checkpoint for IP '/home/hazen/work/vga_terminal/IP/clk_vga/clk_vga.xci' is already up-to-date
+[Sun Dec 12 15:39:32 2021] Launched impl_1...
+Run output will be captured here: /home/hazen/work/vga_terminal/Projects/terminal/terminal.runs/impl_1/runme.log
+[Sun Dec 12 15:39:32 2021] Waiting for impl_1 to finish...
+
+*** Running vivado
+    with args -log top_terminal.vdi -applog -m64 -product Vivado -messageDb vivado.pb -mode batch -source top_terminal.tcl -notrace
+
+
+****** Vivado v2020.2 (64-bit)
+  **** SW Build 3064766 on Wed Nov 18 09:12:47 MST 2020
+  **** IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
+    ** Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+
+source top_terminal.tcl -notrace
+Command: link_design -top top_terminal -part xc7a35tcpg236-1
+Design is defaulting to srcset: sources_1
+Design is defaulting to constrset: constrs_1
+INFO: [Device 21-403] Loading part xc7a35tcpg236-1
+INFO: [Project 1-454] Reading design checkpoint '/home/hazen/Basys3_IP.gen/sources_1/ip/clk_vga/clk_vga.dcp' for cell 'clk_vga_1'
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 2356.055 ; gain = 0.000 ; free physical = 1985 ; free virtual = 53654
+INFO: [Netlist 29-17] Analyzing 522 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2020.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+WARNING: [Opt 31-35] Removing redundant IBUF, clk_vga_1/inst/clkin1_ibufg, from the path connected to top-level port: clk 
+Resolution: The tool has removed redundant IBUF. To resolve this warning, check for redundant IBUF in the input design.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'clk_vga_1/clk_in1' is not directly connected to top level port. Synthesis is ignored for IBUF_LOW_PWR but preserved for implementation.
+Parsing XDC File [/home/hazen/Basys3_IP.gen/sources_1/ip/clk_vga/clk_vga_board.xdc] for cell 'clk_vga_1/inst'
+Finished Parsing XDC File [/home/hazen/Basys3_IP.gen/sources_1/ip/clk_vga/clk_vga_board.xdc] for cell 'clk_vga_1/inst'
+Parsing XDC File [/home/hazen/Basys3_IP.gen/sources_1/ip/clk_vga/clk_vga.xdc] for cell 'clk_vga_1/inst'
+INFO: [Timing 38-35] Done setting XDC timing constraints. [/home/hazen/Basys3_IP.gen/sources_1/ip/clk_vga/clk_vga.xdc:57]
+INFO: [Timing 38-2] Deriving generated clocks [/home/hazen/Basys3_IP.gen/sources_1/ip/clk_vga/clk_vga.xdc:57]
+get_clocks: Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memory (MB): peak = 2596.773 ; gain = 184.844 ; free physical = 1508 ; free virtual = 53177
+Finished Parsing XDC File [/home/hazen/Basys3_IP.gen/sources_1/ip/clk_vga/clk_vga.xdc] for cell 'clk_vga_1/inst'
+Parsing XDC File [/home/hazen/work/vga_terminal/terminal/xdc/Basys3_VGA.xdc]
+Finished Parsing XDC File [/home/hazen/work/vga_terminal/terminal/xdc/Basys3_VGA.xdc]
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2596.773 ; gain = 0.000 ; free physical = 1513 ; free virtual = 53182
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 369 instances were transformed.
+  LUT6_2 => LUT6_2 (LUT5, LUT6): 69 instances
+  RAM128X1D => RAM128X1D (MUXF7(x2), RAMD64E(x4)): 288 instances
+  RAM256X1S => RAM256X1S (MUXF7(x2), MUXF8, RAMS64E(x4)): 8 instances
+  RAM32M => RAM32M (RAMD32(x6), RAMS32(x2)): 4 instances
+
+10 Infos, 2 Warnings, 0 Critical Warnings and 0 Errors encountered.
+link_design completed successfully
+link_design: Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 2596.773 ; gain = 240.871 ; free physical = 1513 ; free virtual = 53182
+source /home/hazen/work/vga_terminal/Hog/Tcl/integrated/pre-implementation.tcl
+CRITICAL WARNING: [Hog:Msg-0] Multithreading enabled. Bitfile will not be deterministic. Number of threads: 4
+INFO: [Hog:Msg-0] All done
+Command: opt_design
+Attempting to get a license for feature 'Implementation' and/or device 'xc7a35t'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xc7a35t'
+Running DRC as a precondition to command opt_design
+
+Starting DRC Task
+INFO: [DRC 23-27] Running DRC with 4 threads
+INFO: [Project 1-461] DRC finished with 0 Errors
+INFO: [Project 1-462] Please refer to the DRC report (report_drc) for more information.
+
+Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.64 . Memory (MB): peak = 2628.789 ; gain = 32.016 ; free physical = 1502 ; free virtual = 53171
+
+Starting Cache Timing Information Task
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+Ending Cache Timing Information Task | Checksum: 1c184fad8
+
+Time (s): cpu = 00:00:00.15 ; elapsed = 00:00:00.09 . Memory (MB): peak = 2647.633 ; gain = 18.844 ; free physical = 1502 ; free virtual = 53171
+
+Starting Logic Optimization Task
+
+Phase 1 Retarget
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Opt 31-49] Retargeted 0 cell(s).
+Phase 1 Retarget | Checksum: 1a0afd2e2
+
+Time (s): cpu = 00:00:00.23 ; elapsed = 00:00:00.10 . Memory (MB): peak = 2801.633 ; gain = 0.000 ; free physical = 1335 ; free virtual = 53004
+INFO: [Opt 31-389] Phase Retarget created 2 cells and removed 2 cells
+INFO: [Opt 31-1021] In phase Retarget, 1 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail. 
+
+Phase 2 Constant propagation
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Phase 2 Constant propagation | Checksum: 1c22e2dc6
+
+Time (s): cpu = 00:00:00.26 ; elapsed = 00:00:00.13 . Memory (MB): peak = 2801.633 ; gain = 0.000 ; free physical = 1335 ; free virtual = 53004
+INFO: [Opt 31-389] Phase Constant propagation created 11 cells and removed 12 cells
+
+Phase 3 Sweep
+Phase 3 Sweep | Checksum: 1679d6de5
+
+Time (s): cpu = 00:00:00.28 ; elapsed = 00:00:00.14 . Memory (MB): peak = 2801.633 ; gain = 0.000 ; free physical = 1335 ; free virtual = 53004
+INFO: [Opt 31-389] Phase Sweep created 7 cells and removed 3 cells
+INFO: [Opt 31-1021] In phase Sweep, 2 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail. 
+
+Phase 4 BUFG optimization
+INFO: [Opt 31-194] Inserted BUFG clk_IBUF_BUFG_inst to drive 656 load(s) on clock net clk_IBUF_BUFG
+INFO: [Opt 31-193] Inserted 1 BUFG(s) on clock nets
+Phase 4 BUFG optimization | Checksum: 16102ea02
+
+Time (s): cpu = 00:00:00.36 ; elapsed = 00:00:00.23 . Memory (MB): peak = 2801.633 ; gain = 0.000 ; free physical = 1335 ; free virtual = 53004
+INFO: [Opt 31-662] Phase BUFG optimization created 1 cells of which 1 are BUFGs and removed 0 cells.
+
+Phase 5 Shift Register Optimization
+INFO: [Opt 31-1064] SRL Remap converted 0 SRLs to 0 registers and converted 0 registers of register chains to 0 SRLs
+Phase 5 Shift Register Optimization | Checksum: 16102ea02
+
+Time (s): cpu = 00:00:00.36 ; elapsed = 00:00:00.23 . Memory (MB): peak = 2801.633 ; gain = 0.000 ; free physical = 1335 ; free virtual = 53004
+INFO: [Opt 31-389] Phase Shift Register Optimization created 0 cells and removed 0 cells
+
+Phase 6 Post Processing Netlist
+Phase 6 Post Processing Netlist | Checksum: 1236d3f94
+
+Time (s): cpu = 00:00:00.37 ; elapsed = 00:00:00.24 . Memory (MB): peak = 2801.633 ; gain = 0.000 ; free physical = 1335 ; free virtual = 53004
+INFO: [Opt 31-389] Phase Post Processing Netlist created 0 cells and removed 0 cells
+Opt_design Change Summary
+=========================
+
+
+-------------------------------------------------------------------------------------------------------------------------
+|  Phase                        |  #Cells created  |  #Cells Removed  |  #Constrained objects preventing optimizations  |
+-------------------------------------------------------------------------------------------------------------------------
+|  Retarget                     |               2  |               2  |                                              1  |
+|  Constant propagation         |              11  |              12  |                                              0  |
+|  Sweep                        |               7  |               3  |                                              2  |
+|  BUFG optimization            |               1  |               0  |                                              0  |
+|  Shift Register Optimization  |               0  |               0  |                                              0  |
+|  Post Processing Netlist      |               0  |               0  |                                              0  |
+-------------------------------------------------------------------------------------------------------------------------
+
+
+
+Starting Connectivity Check Task
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2801.633 ; gain = 0.000 ; free physical = 1335 ; free virtual = 53004
+Ending Logic Optimization Task | Checksum: 2670749c4
+
+Time (s): cpu = 00:00:00.45 ; elapsed = 00:00:00.28 . Memory (MB): peak = 2801.633 ; gain = 0.000 ; free physical = 1335 ; free virtual = 53004
+
+Starting Power Optimization Task
+INFO: [Pwropt 34-132] Skipping clock gating for clocks with a period < 2.00 ns.
+Ending Power Optimization Task | Checksum: 2670749c4
+
+Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2801.633 ; gain = 0.000 ; free physical = 1335 ; free virtual = 53004
+
+Starting Final Cleanup Task
+Ending Final Cleanup Task | Checksum: 2670749c4
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2801.633 ; gain = 0.000 ; free physical = 1335 ; free virtual = 53004
+
+Starting Netlist Obfuscation Task
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2801.633 ; gain = 0.000 ; free physical = 1335 ; free virtual = 53004
+Ending Netlist Obfuscation Task | Checksum: 2670749c4
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2801.633 ; gain = 0.000 ; free physical = 1335 ; free virtual = 53004
+INFO: [Common 17-83] Releasing license: Implementation
+32 Infos, 2 Warnings, 1 Critical Warnings and 0 Errors encountered.
+opt_design completed successfully
+INFO: [Common 17-600] The following parameters have non-default value.
+general.maxThreads
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Writing placer database...
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Write XDEF Complete: Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00 . Memory (MB): peak = 2801.633 ; gain = 0.000 ; free physical = 1329 ; free virtual = 53000
+INFO: [Common 17-1381] The checkpoint '/home/hazen/work/vga_terminal/Projects/terminal/terminal.runs/impl_1/top_terminal_opt.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_drc -file top_terminal_drc_opted.rpt -pb top_terminal_drc_opted.pb -rpx top_terminal_drc_opted.rpx
+Command: report_drc -file top_terminal_drc_opted.rpt -pb top_terminal_drc_opted.pb -rpx top_terminal_drc_opted.rpx
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 4 threads
+INFO: [Coretcl 2-168] The results of DRC are in file /home/hazen/work/vga_terminal/Projects/terminal/terminal.runs/impl_1/top_terminal_drc_opted.rpt.
+report_drc completed successfully
+Command: place_design
+Attempting to get a license for feature 'Implementation' and/or device 'xc7a35t'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xc7a35t'
+INFO: [DRC 23-27] Running DRC with 4 threads
+INFO: [Vivado_Tcl 4-198] DRC finished with 0 Errors
+INFO: [Vivado_Tcl 4-199] Please refer to the DRC report (report_drc) for more information.
+Running DRC as a precondition to command place_design
+INFO: [DRC 23-27] Running DRC with 4 threads
+INFO: [Vivado_Tcl 4-198] DRC finished with 0 Errors
+INFO: [Vivado_Tcl 4-199] Please refer to the DRC report (report_drc) for more information.
+
+Starting Placer Task
+INFO: [Place 30-611] Multithreading enabled for place_design using a maximum of 4 CPUs
+
+Phase 1 Placer Initialization
+
+Phase 1.1 Placer Initialization Netlist Sorting
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1264 ; free virtual = 52934
+Phase 1.1 Placer Initialization Netlist Sorting | Checksum: 1bcc03265
+
+Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.03 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1264 ; free virtual = 52934
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1264 ; free virtual = 52934
+
+Phase 1.2 IO Placement/ Clock Placement/ Build Placer Device
+Phase 1.2 IO Placement/ Clock Placement/ Build Placer Device | Checksum: f6fd70c4
+
+Time (s): cpu = 00:00:00.40 ; elapsed = 00:00:00.23 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1294 ; free virtual = 52964
+
+Phase 1.3 Build Placer Netlist Model
+Phase 1.3 Build Placer Netlist Model | Checksum: 1f5a6bec5
+
+Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.86 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1303 ; free virtual = 52973
+
+Phase 1.4 Constrain Clocks/Macros
+Phase 1.4 Constrain Clocks/Macros | Checksum: 1f5a6bec5
+
+Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.86 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1303 ; free virtual = 52973
+Phase 1 Placer Initialization | Checksum: 1f5a6bec5
+
+Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.87 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1303 ; free virtual = 52973
+
+Phase 2 Global Placement
+
+Phase 2.1 Floorplanning
+Phase 2.1 Floorplanning | Checksum: 1a9e9ec62
+
+Time (s): cpu = 00:00:02 ; elapsed = 00:00:01 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1302 ; free virtual = 52972
+
+Phase 2.2 Update Timing before SLR Path Opt
+Phase 2.2 Update Timing before SLR Path Opt | Checksum: 1e0457485
+
+Time (s): cpu = 00:00:02 ; elapsed = 00:00:01 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1302 ; free virtual = 52972
+
+Phase 2.3 Global Placement Core
+
+Phase 2.3.1 Physical Synthesis In Placer
+INFO: [Physopt 32-1035] Found 0 LUTNM shape to break, 17 LUT instances to create LUTNM shape
+INFO: [Physopt 32-1044] Break lutnm for timing: one critical 0, two critical 0, total 0, new lutff created 0
+INFO: [Physopt 32-775] End 1 Pass. Optimized 8 nets or cells. Created 0 new cell, deleted 8 existing cells and moved 0 existing cell
+INFO: [Physopt 32-65] No nets found for high-fanout optimization.
+INFO: [Physopt 32-232] Optimized 0 net. Created 0 new instance.
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+INFO: [Physopt 32-670] No setup violation found.  DSP Register Optimization was not performed.
+INFO: [Physopt 32-670] No setup violation found.  Shift Register to Pipeline Optimization was not performed.
+INFO: [Physopt 32-670] No setup violation found.  Shift Register Optimization was not performed.
+INFO: [Physopt 32-670] No setup violation found.  BRAM Register Optimization was not performed.
+INFO: [Physopt 32-670] No setup violation found.  URAM Register Optimization was not performed.
+INFO: [Physopt 32-949] No candidate nets found for dynamic/static region interface net replication
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1288 ; free virtual = 52957
+
+Summary of Physical Synthesis Optimizations
+============================================
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+|  Optimization                                     |  Added Cells  |  Removed Cells  |  Optimized Cells/Nets  |  Dont Touch  |  Iterations  |  Elapsed   |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+|  LUT Combining                                    |            0  |              8  |                     8  |           0  |           1  |  00:00:00  |
+|  Very High Fanout                                 |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  DSP Register                                     |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  Shift Register to Pipeline                       |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  Shift Register                                   |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  BRAM Register                                    |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  URAM Register                                    |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  Dynamic/Static Region Interface Net Replication  |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  Total                                            |            0  |              8  |                     8  |           0  |           3  |  00:00:00  |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Phase 2.3.1 Physical Synthesis In Placer | Checksum: 16084cb30
+
+Time (s): cpu = 00:00:05 ; elapsed = 00:00:02 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1288 ; free virtual = 52958
+Phase 2.3 Global Placement Core | Checksum: 1dba05742
+
+Time (s): cpu = 00:00:05 ; elapsed = 00:00:03 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1288 ; free virtual = 52958
+Phase 2 Global Placement | Checksum: 1dba05742
+
+Time (s): cpu = 00:00:05 ; elapsed = 00:00:03 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1289 ; free virtual = 52959
+
+Phase 3 Detail Placement
+
+Phase 3.1 Commit Multi Column Macros
+Phase 3.1 Commit Multi Column Macros | Checksum: 15564bce6
+
+Time (s): cpu = 00:00:06 ; elapsed = 00:00:03 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1286 ; free virtual = 52956
+
+Phase 3.2 Commit Most Macros & LUTRAMs
+Phase 3.2 Commit Most Macros & LUTRAMs | Checksum: 1192cdd5a
+
+Time (s): cpu = 00:00:07 ; elapsed = 00:00:03 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1284 ; free virtual = 52954
+
+Phase 3.3 Area Swap Optimization
+Phase 3.3 Area Swap Optimization | Checksum: 168204a21
+
+Time (s): cpu = 00:00:07 ; elapsed = 00:00:03 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1284 ; free virtual = 52954
+
+Phase 3.4 Pipeline Register Optimization
+Phase 3.4 Pipeline Register Optimization | Checksum: e5dc920d
+
+Time (s): cpu = 00:00:07 ; elapsed = 00:00:03 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1284 ; free virtual = 52954
+
+Phase 3.5 Small Shape Detail Placement
+Phase 3.5 Small Shape Detail Placement | Checksum: 25c5cad47
+
+Time (s): cpu = 00:00:07 ; elapsed = 00:00:04 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+
+Phase 3.6 Re-assign LUT pins
+Phase 3.6 Re-assign LUT pins | Checksum: 22831995d
+
+Time (s): cpu = 00:00:07 ; elapsed = 00:00:04 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+
+Phase 3.7 Pipeline Register Optimization
+Phase 3.7 Pipeline Register Optimization | Checksum: 1ad55e151
+
+Time (s): cpu = 00:00:07 ; elapsed = 00:00:04 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+Phase 3 Detail Placement | Checksum: 1ad55e151
+
+Time (s): cpu = 00:00:07 ; elapsed = 00:00:04 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+
+Phase 4 Post Placement Optimization and Clean-Up
+
+Phase 4.1 Post Commit Optimization
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+
+Phase 4.1.1 Post Placement Optimization
+Post Placement Optimization Initialization | Checksum: 177c46379
+
+Phase 4.1.1.1 BUFG Insertion
+
+Starting Physical Synthesis Task
+
+Phase 1 Physical Synthesis Initialization
+INFO: [Physopt 32-721] Multithreading enabled for phys_opt_design using a maximum of 4 CPUs
+INFO: [Physopt 32-619] Estimated Timing Summary | WNS=3.034 | TNS=0.000 |
+Phase 1 Physical Synthesis Initialization | Checksum: 177880025
+
+Time (s): cpu = 00:00:00.19 ; elapsed = 00:00:00.09 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+INFO: [Place 46-56] BUFG insertion identified 0 candidate nets. Inserted BUFG: 0, Replicated BUFG Driver: 0, Skipped due to Placement/Routing Conflicts: 0, Skipped due to Timing Degradation: 0, Skipped due to Illegal Netlist: 0.
+Ending Physical Synthesis Task | Checksum: 185a13369
+
+Time (s): cpu = 00:00:00.20 ; elapsed = 00:00:00.09 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+Phase 4.1.1.1 BUFG Insertion | Checksum: 177c46379
+
+Time (s): cpu = 00:00:08 ; elapsed = 00:00:04 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+INFO: [Place 30-746] Post Placement Timing Summary WNS=3.034. For the most accurate timing information please run report_timing.
+
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:04 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+Phase 4.1 Post Commit Optimization | Checksum: 159919c30
+
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:04 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+
+Phase 4.2 Post Placement Cleanup
+Phase 4.2 Post Placement Cleanup | Checksum: 159919c30
+
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:04 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+
+Phase 4.3 Placer Reporting
+
+Phase 4.3.1 Print Estimated Congestion
+INFO: [Place 30-612] Post-Placement Estimated Congestion 
+ ____________________________________________________
+|           | Global Congestion | Short Congestion  |
+| Direction | Region Size       | Region Size       |
+|___________|___________________|___________________|
+|      North|                1x1|                1x1|
+|___________|___________________|___________________|
+|      South|                1x1|                1x1|
+|___________|___________________|___________________|
+|       East|                1x1|                1x1|
+|___________|___________________|___________________|
+|       West|                1x1|                1x1|
+|___________|___________________|___________________|
+
+Phase 4.3.1 Print Estimated Congestion | Checksum: 159919c30
+
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:04 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+Phase 4.3 Placer Reporting | Checksum: 159919c30
+
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:04 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+
+Phase 4.4 Final Placement Cleanup
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:04 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+Phase 4 Post Placement Optimization and Clean-Up | Checksum: 21ea779fd
+
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:04 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+Ending Placer Task | Checksum: 1a06ff9d7
+
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:04 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1282 ; free virtual = 52952
+INFO: [Common 17-83] Releasing license: Implementation
+68 Infos, 2 Warnings, 1 Critical Warnings and 0 Errors encountered.
+place_design completed successfully
+place_design: Time (s): cpu = 00:00:10 ; elapsed = 00:00:05 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1291 ; free virtual = 52961
+INFO: [Common 17-600] The following parameters have non-default value.
+general.maxThreads
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Writing placer database...
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Write XDEF Complete: Time (s): cpu = 00:00:00.34 ; elapsed = 00:00:00.10 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1287 ; free virtual = 52962
+INFO: [Common 17-1381] The checkpoint '/home/hazen/work/vga_terminal/Projects/terminal/terminal.runs/impl_1/top_terminal_placed.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_io -file top_terminal_io_placed.rpt
+report_io: Time (s): cpu = 00:00:00.07 ; elapsed = 00:00:00.12 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1277 ; free virtual = 52948
+INFO: [runtcl-4] Executing : report_utilization -file top_terminal_utilization_placed.rpt -pb top_terminal_utilization_placed.pb
+INFO: [runtcl-4] Executing : report_control_sets -verbose -file top_terminal_control_sets_placed.rpt
+report_control_sets: Time (s): cpu = 00:00:00.05 ; elapsed = 00:00:00.08 . Memory (MB): peak = 2866.078 ; gain = 0.000 ; free physical = 1285 ; free virtual = 52956
+INFO: [runtcl-4] Executing : report_utilization -file top_terminal_utilization_placed_1.rpt -pb top_terminal_utilization_placed_1.pb
+Command: route_design
+Attempting to get a license for feature 'Implementation' and/or device 'xc7a35t'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xc7a35t'
+Running DRC as a precondition to command route_design
+INFO: [DRC 23-27] Running DRC with 4 threads
+INFO: [Vivado_Tcl 4-198] DRC finished with 0 Errors
+INFO: [Vivado_Tcl 4-199] Please refer to the DRC report (report_drc) for more information.
+
+
+Starting Routing Task
+INFO: [Route 35-254] Multithreading enabled for route_design using a maximum of 4 CPUs
+Checksum: PlaceDB: aa837ab3 ConstDB: 0 ShapeSum: f5ec7f24 RouteDB: 0
+
+Phase 1 Build RT Design
+Phase 1 Build RT Design | Checksum: 19072eaa6
+
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:08 . Memory (MB): peak = 2911.527 ; gain = 44.680 ; free physical = 1149 ; free virtual = 52820
+Post Restoration Checksum: NetGraph: d93f304c NumContArr: b733ba5a Constraints: 0 Timing: 0
+
+Phase 2 Router Initialization
+
+Phase 2.1 Create Timer
+Phase 2.1 Create Timer | Checksum: 19072eaa6
+
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:08 . Memory (MB): peak = 2911.527 ; gain = 44.680 ; free physical = 1149 ; free virtual = 52820
+
+Phase 2.2 Fix Topology Constraints
+Phase 2.2 Fix Topology Constraints | Checksum: 19072eaa6
+
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:08 . Memory (MB): peak = 2918.523 ; gain = 51.676 ; free physical = 1133 ; free virtual = 52804
+
+Phase 2.3 Pre Route Cleanup
+Phase 2.3 Pre Route Cleanup | Checksum: 19072eaa6
+
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:08 . Memory (MB): peak = 2918.523 ; gain = 51.676 ; free physical = 1133 ; free virtual = 52804
+ Number of Nodes with overlaps = 0
+
+Phase 2.4 Update Timing
+Phase 2.4 Update Timing | Checksum: 1dfbbc6cf
+
+Time (s): cpu = 00:00:11 ; elapsed = 00:00:08 . Memory (MB): peak = 2930.523 ; gain = 63.676 ; free physical = 1123 ; free virtual = 52794
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=3.203  | TNS=0.000  | WHS=-0.234 | THS=-189.840|
+
+Phase 2 Router Initialization | Checksum: 174d4fe91
+
+Time (s): cpu = 00:00:12 ; elapsed = 00:00:09 . Memory (MB): peak = 2930.523 ; gain = 63.676 ; free physical = 1122 ; free virtual = 52793
+
+Router Utilization Summary
+  Global Vertical Routing Utilization    = 0 %
+  Global Horizontal Routing Utilization  = 0 %
+  Routable Net Status*
+  *Does not include unroutable nets such as driverless and loadless.
+  Run report_route_status for detailed report.
+  Number of Failed Nets               = 1192
+    (Failed Nets is the sum of unrouted and partially routed nets)
+  Number of Unrouted Nets             = 1192
+  Number of Partially Routed Nets     = 0
+  Number of Node Overlaps             = 0
+
+
+Phase 3 Initial Routing
+
+Phase 3.1 Global Routing
+Phase 3.1 Global Routing | Checksum: 174d4fe91
+
+Time (s): cpu = 00:00:12 ; elapsed = 00:00:09 . Memory (MB): peak = 2934.523 ; gain = 67.676 ; free physical = 1122 ; free virtual = 52793
+Phase 3 Initial Routing | Checksum: 178ac62d1
+
+Time (s): cpu = 00:00:13 ; elapsed = 00:00:09 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1120 ; free virtual = 52791
+
+Phase 4 Rip-up And Reroute
+
+Phase 4.1 Global Iteration 0
+ Number of Nodes with overlaps = 114
+ Number of Nodes with overlaps = 13
+ Number of Nodes with overlaps = 0
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=2.010  | TNS=0.000  | WHS=N/A    | THS=N/A    |
+
+Phase 4.1 Global Iteration 0 | Checksum: 172cb24ab
+
+Time (s): cpu = 00:00:14 ; elapsed = 00:00:10 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1120 ; free virtual = 52791
+Phase 4 Rip-up And Reroute | Checksum: 172cb24ab
+
+Time (s): cpu = 00:00:14 ; elapsed = 00:00:10 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1120 ; free virtual = 52791
+
+Phase 5 Delay and Skew Optimization
+
+Phase 5.1 Delay CleanUp
+
+Phase 5.1.1 Update Timing
+Phase 5.1.1 Update Timing | Checksum: 1a5911ce8
+
+Time (s): cpu = 00:00:14 ; elapsed = 00:00:10 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1120 ; free virtual = 52791
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=2.089  | TNS=0.000  | WHS=N/A    | THS=N/A    |
+
+Phase 5.1 Delay CleanUp | Checksum: 1a5911ce8
+
+Time (s): cpu = 00:00:14 ; elapsed = 00:00:10 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1120 ; free virtual = 52791
+
+Phase 5.2 Clock Skew Optimization
+Phase 5.2 Clock Skew Optimization | Checksum: 1a5911ce8
+
+Time (s): cpu = 00:00:14 ; elapsed = 00:00:10 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1120 ; free virtual = 52791
+Phase 5 Delay and Skew Optimization | Checksum: 1a5911ce8
+
+Time (s): cpu = 00:00:14 ; elapsed = 00:00:10 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1120 ; free virtual = 52791
+
+Phase 6 Post Hold Fix
+
+Phase 6.1 Hold Fix Iter
+
+Phase 6.1.1 Update Timing
+Phase 6.1.1 Update Timing | Checksum: 1e89ef184
+
+Time (s): cpu = 00:00:15 ; elapsed = 00:00:10 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1121 ; free virtual = 52792
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=2.089  | TNS=0.000  | WHS=0.048  | THS=0.000  |
+
+Phase 6.1 Hold Fix Iter | Checksum: 1cfdda5cc
+
+Time (s): cpu = 00:00:15 ; elapsed = 00:00:10 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1121 ; free virtual = 52792
+Phase 6 Post Hold Fix | Checksum: 1cfdda5cc
+
+Time (s): cpu = 00:00:15 ; elapsed = 00:00:10 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1121 ; free virtual = 52792
+
+Phase 7 Route finalize
+
+Router Utilization Summary
+  Global Vertical Routing Utilization    = 1.21462 %
+  Global Horizontal Routing Utilization  = 1.11036 %
+  Routable Net Status*
+  *Does not include unroutable nets such as driverless and loadless.
+  Run report_route_status for detailed report.
+  Number of Failed Nets               = 0
+    (Failed Nets is the sum of unrouted and partially routed nets)
+  Number of Unrouted Nets             = 0
+  Number of Partially Routed Nets     = 0
+  Number of Node Overlaps             = 0
+
+Phase 7 Route finalize | Checksum: 1b29633f8
+
+Time (s): cpu = 00:00:15 ; elapsed = 00:00:10 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1121 ; free virtual = 52792
+
+Phase 8 Verifying routed nets
+
+ Verification completed successfully
+Phase 8 Verifying routed nets | Checksum: 1b29633f8
+
+Time (s): cpu = 00:00:15 ; elapsed = 00:00:10 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1120 ; free virtual = 52791
+
+Phase 9 Depositing Routes
+Phase 9 Depositing Routes | Checksum: 17d952ce9
+
+Time (s): cpu = 00:00:15 ; elapsed = 00:00:10 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1120 ; free virtual = 52791
+
+Phase 10 Post Router Timing
+INFO: [Route 35-57] Estimated Timing Summary | WNS=2.089  | TNS=0.000  | WHS=0.048  | THS=0.000  |
+
+INFO: [Route 35-327] The final timing numbers are based on the router estimated timing analysis. For a complete and accurate timing signoff, please run report_timing_summary.
+Phase 10 Post Router Timing | Checksum: 17d952ce9
+
+Time (s): cpu = 00:00:15 ; elapsed = 00:00:10 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1120 ; free virtual = 52791
+INFO: [Route 35-16] Router Completed Successfully
+
+Time (s): cpu = 00:00:15 ; elapsed = 00:00:10 . Memory (MB): peak = 2944.523 ; gain = 77.676 ; free physical = 1138 ; free virtual = 52809
+
+Routing Is Done.
+INFO: [Common 17-83] Releasing license: Implementation
+88 Infos, 2 Warnings, 1 Critical Warnings and 0 Errors encountered.
+route_design completed successfully
+route_design: Time (s): cpu = 00:00:17 ; elapsed = 00:00:11 . Memory (MB): peak = 2944.523 ; gain = 78.445 ; free physical = 1138 ; free virtual = 52809
+INFO: [Common 17-600] The following parameters have non-default value.
+general.maxThreads
+source /home/hazen/work/vga_terminal/Hog/Tcl/integrated/post-implementation.tcl
+INFO: [Hog:Msg-0] Evaluating Git sha for terminal...
+INFO: [Hog:GetRepoVersions-0] Hog submodule /home/hazen/work/vga_terminal/Hog clean.
+CRITICAL WARNING: [Hog:GetRepoVersions-0] Git working directory /home/hazen/work/vga_terminal/Top/terminal not clean, commit hash, and version will be set to 0.
+INFO: [Hog:GetVerFromSHA-0] No tag contains 3B24302, will use most recent tag v0.0.1. As this is an official tag, patch will be incremented to 2.
+INFO: [Hog:GetVerFromSHA-0] No tag contains BB51F16, will use most recent tag v0.0.1. As this is an official tag, patch will be incremented to 2.
+INFO: [Hog:GetVerFromSHA-0] No tag contains BB51F16, will use most recent tag v0.0.1. As this is an official tag, patch will be incremented to 2.
+INFO: [Hog:GetVerFromSHA-0] No tag contains BB51F16, will use most recent tag v0.0.1. As this is an official tag, patch will be incremented to 2.
+INFO: [Hog:GetRepoVersions-0] This project does not use IPbus XMLs
+INFO: [Hog:Msg-0] Git describe set to: v0.0.1-6-g1e6ba7b-dirty
+INFO: [Hog:Msg-0] Evaluating last git SHA in which terminal was modified...
+CRITICAL WARNING: [Hog:Msg-0] Git working directory /home/hazen/work/vga_terminal not clean, git commit hash be set to 0.
+CRITICAL WARNING: [Hog:Msg-0] Multithreading enabled. Number of threads: 4
+INFO: [Hog:Msg-0] The git SHA value 0000000 will be set as bitstream USERID.
+INFO: [Hog:Msg-0] All done.
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Writing placer database...
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Write XDEF Complete: Time (s): cpu = 00:00:00.34 ; elapsed = 00:00:00.11 . Memory (MB): peak = 2958.465 ; gain = 5.938 ; free physical = 1127 ; free virtual = 52803
+INFO: [Common 17-1381] The checkpoint '/home/hazen/work/vga_terminal/Projects/terminal/terminal.runs/impl_1/top_terminal_routed.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_drc -file top_terminal_drc_routed.rpt -pb top_terminal_drc_routed.pb -rpx top_terminal_drc_routed.rpx
+Command: report_drc -file top_terminal_drc_routed.rpt -pb top_terminal_drc_routed.pb -rpx top_terminal_drc_routed.rpx
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 4 threads
+INFO: [Coretcl 2-168] The results of DRC are in file /home/hazen/work/vga_terminal/Projects/terminal/terminal.runs/impl_1/top_terminal_drc_routed.rpt.
+report_drc completed successfully
+INFO: [runtcl-4] Executing : report_methodology -file top_terminal_methodology_drc_routed.rpt -pb top_terminal_methodology_drc_routed.pb -rpx top_terminal_methodology_drc_routed.rpx
+Command: report_methodology -file top_terminal_methodology_drc_routed.rpt -pb top_terminal_methodology_drc_routed.pb -rpx top_terminal_methodology_drc_routed.rpx
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [DRC 23-133] Running Methodology with 4 threads
+INFO: [Coretcl 2-1520] The results of Report Methodology are in file /home/hazen/work/vga_terminal/Projects/terminal/terminal.runs/impl_1/top_terminal_methodology_drc_routed.rpt.
+report_methodology completed successfully
+INFO: [runtcl-4] Executing : report_power -file top_terminal_power_routed.rpt -pb top_terminal_power_summary_routed.pb -rpx top_terminal_power_routed.rpx
+Command: report_power -file top_terminal_power_routed.rpt -pb top_terminal_power_summary_routed.pb -rpx top_terminal_power_routed.rpx
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+Running Vector-less Activity Propagation...
+
+Finished Running Vector-less Activity Propagation
+112 Infos, 2 Warnings, 4 Critical Warnings and 0 Errors encountered.
+report_power completed successfully
+INFO: [runtcl-4] Executing : report_route_status -file top_terminal_route_status.rpt -pb top_terminal_route_status.pb
+INFO: [runtcl-4] Executing : report_timing_summary -max_paths 10 -file top_terminal_timing_summary_routed.rpt -pb top_terminal_timing_summary_routed.pb -rpx top_terminal_timing_summary_routed.rpx -warn_on_violation 
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 4 CPUs
+INFO: [runtcl-4] Executing : report_incremental_reuse -file top_terminal_incremental_reuse_routed.rpt
+INFO: [Vivado_Tcl 4-1062] Incremental flow is disabled. No incremental reuse Info to report.
+INFO: [runtcl-4] Executing : report_clock_utilization -file top_terminal_clock_utilization_routed.rpt
+INFO: [runtcl-4] Executing : report_bus_skew -warn_on_violation -file top_terminal_bus_skew_routed.rpt -pb top_terminal_bus_skew_routed.pb -rpx top_terminal_bus_skew_routed.rpx
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 4 CPUs
+INFO: [runtcl-4] Executing : report_drc -file top_terminal_drc_routed_1.rpt -pb top_terminal_drc_routed_1.pb -rpx top_terminal_drc_routed_1.rpx
+Command: report_drc -file top_terminal_drc_routed_1.rpt -pb top_terminal_drc_routed_1.pb -rpx top_terminal_drc_routed_1.rpx
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 4 threads
+INFO: [Coretcl 2-168] The results of DRC are in file /home/hazen/work/vga_terminal/Projects/terminal/terminal.runs/impl_1/top_terminal_drc_routed_1.rpt.
+report_drc completed successfully
+INFO: [runtcl-4] Executing : report_power -file top_terminal_power_routed_1.rpt -pb top_terminal_power_summary_routed_1.pb -rpx top_terminal_power_routed_1.rpx
+Command: report_power -file top_terminal_power_routed_1.rpt -pb top_terminal_power_summary_routed_1.pb -rpx top_terminal_power_routed_1.rpx
+Running Vector-less Activity Propagation...
+
+Finished Running Vector-less Activity Propagation
+8 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
+report_power completed successfully
+INFO: [runtcl-4] Executing : report_timing_summary -max_paths 10 -file top_terminal_timing_summary_routed_1.rpt -pb top_terminal_timing_summary_routed_1.pb -rpx top_terminal_timing_summary_routed_1.rpx -warn_on_violation 
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 4 CPUs
+INFO: [runtcl-4] Executing : report_utilization -file route_report_utilization_0.rpt -pb route_report_utilization_0.pb
+INFO: [Common 17-206] Exiting Vivado at Sun Dec 12 15:39:27 2021...
+
+*** Running vivado
+    with args -log top_terminal.vdi -applog -m64 -product Vivado -messageDb vivado.pb -mode batch -source top_terminal.tcl -notrace
+
+
+****** Vivado v2020.2 (64-bit)
+  **** SW Build 3064766 on Wed Nov 18 09:12:47 MST 2020
+  **** IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
+    ** Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+
+source top_terminal.tcl -notrace
+Command: open_checkpoint top_terminal_routed.dcp
+
+Starting open_checkpoint Task
+
+Time (s): cpu = 00:00:00.08 ; elapsed = 00:00:00.05 . Memory (MB): peak = 2353.816 ; gain = 2.969 ; free physical = 1519 ; free virtual = 53194
+INFO: [Device 21-403] Loading part xc7a35tcpg236-1
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2353.992 ; gain = 0.000 ; free physical = 1989 ; free virtual = 53664
+INFO: [Netlist 29-17] Analyzing 512 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2020.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'clk_vga_1/clk_in1' is not directly connected to top level port. Synthesis is ignored for IBUF_LOW_PWR but preserved for implementation.
+INFO: [Timing 38-478] Restoring timing data from binary archive.
+INFO: [Timing 38-479] Binary timing data restore complete.
+INFO: [Project 1-856] Restoring constraints from binary archive.
+INFO: [Constraints 18-5170] The checkpoint was created with non-default parameter values which do not match the current Vivado settings.  Mismatching parameters are:
+  general.maxThreads
+INFO: [Project 1-853] Binary constraint restore complete.
+Reading XDEF placement.
+Reading placer database...
+Reading XDEF routing.
+Read XDEF File: Time (s): cpu = 00:00:00.17 ; elapsed = 00:00:00.19 . Memory (MB): peak = 2520.621 ; gain = 6.938 ; free physical = 1442 ; free virtual = 53117
+Restored from archive | CPU: 0.200000 secs | Memory: 4.587791 MB |
+Finished XDEF File Restore: Time (s): cpu = 00:00:00.17 ; elapsed = 00:00:00.19 . Memory (MB): peak = 2520.621 ; gain = 6.938 ; free physical = 1442 ; free virtual = 53117
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2520.621 ; gain = 0.000 ; free physical = 1441 ; free virtual = 53116
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 359 instances were transformed.
+  LUT6_2 => LUT6_2 (LUT5, LUT6): 59 instances
+  RAM128X1D => RAM128X1D (MUXF7(x2), RAMD64E(x4)): 288 instances
+  RAM256X1S => RAM256X1S (MUXF7(x2), MUXF8, RAMS64E(x4)): 8 instances
+  RAM32M => RAM32M (RAMD32(x6), RAMS32(x2)): 4 instances
+
+INFO: [Project 1-604] Checkpoint was created with Vivado v2020.2 (64-bit) build 3064766
+open_checkpoint: Time (s): cpu = 00:00:10 ; elapsed = 00:00:10 . Memory (MB): peak = 2520.621 ; gain = 173.742 ; free physical = 1441 ; free virtual = 53116
+source /home/hazen/work/vga_terminal/Hog/Tcl/integrated/pre-bitstream.tcl
+CRITICAL WARNING: [Hog:Msg-0] Multithreading enabled. Bitfile will not be deterministic. Number of threads: 4
+INFO: [Hog:Msg-0] All done.
+Command: write_bitstream -force top_terminal.bit
+Attempting to get a license for feature 'Implementation' and/or device 'xc7a35t'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xc7a35t'
+Running DRC as a precondition to command write_bitstream
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/opt/Xilinx/Vivado/2020.2/data/ip'.
+INFO: [DRC 23-27] Running DRC with 4 threads
+INFO: [Vivado 12-3199] DRC finished with 0 Errors
+INFO: [Vivado 12-3200] Please refer to the DRC report (report_drc) for more information.
+INFO: [Designutils 20-2272] Running write_bitstream with 4 threads.
+Loading data files...
+Loading site data...
+Loading route data...
+Processing options...
+Creating bitmap...
+Creating bitstream...
+Writing bitstream ./top_terminal.bit...
+INFO: [Vivado 12-1842] Bitgen Completed Successfully.
+INFO: [Project 1-118] WebTalk data collection is enabled (User setting is ON. Install Setting is ON.).
+INFO: [Common 17-186] '/home/hazen/work/vga_terminal/Projects/terminal/terminal.runs/impl_1/usage_statistics_webtalk.xml' has been successfully sent to Xilinx on Sun Dec 12 15:40:03 2021. For additional details about this file, please refer to the WebTalk help file at /opt/Xilinx/Vivado/2020.2/doc/webtalk_introduction.html.
+INFO: [Common 17-83] Releasing license: Implementation
+25 Infos, 1 Warnings, 1 Critical Warnings and 0 Errors encountered.
+write_bitstream completed successfully
+write_bitstream: Time (s): cpu = 00:00:11 ; elapsed = 00:00:13 . Memory (MB): peak = 2963.543 ; gain = 442.922 ; free physical = 1333 ; free virtual = 53019
+source /home/hazen/work/vga_terminal/Hog/Tcl/integrated/post-bitstream.tcl
+Post-Bitstream proj_dir /home/hazen/work/vga_terminal/Projects/terminal
+INFO: [Hog:Msg-0] Evaluating Git sha for terminal...
+INFO: [Hog:GetRepoVersions-0] Hog submodule /home/hazen/work/vga_terminal/Hog clean.
+CRITICAL WARNING: [Hog:GetRepoVersions-0] Git working directory /home/hazen/work/vga_terminal/Top/terminal not clean, commit hash, and version will be set to 0.
+INFO: [Hog:GetVerFromSHA-0] No tag contains 3B24302, will use most recent tag v0.0.1. As this is an official tag, patch will be incremented to 2.
+INFO: [Hog:GetVerFromSHA-0] No tag contains BB51F16, will use most recent tag v0.0.1. As this is an official tag, patch will be incremented to 2.
+INFO: [Hog:GetVerFromSHA-0] No tag contains BB51F16, will use most recent tag v0.0.1. As this is an official tag, patch will be incremented to 2.
+INFO: [Hog:GetVerFromSHA-0] No tag contains BB51F16, will use most recent tag v0.0.1. As this is an official tag, patch will be incremented to 2.
+INFO: [Hog:GetRepoVersions-0] This project does not use IPbus XMLs
+INFO: [Hog:Msg-0] Git describe set to: v0.0.1-6-g1e6ba7b-dirty
+INFO: [Hog:Msg-0] Creating /home/hazen/work/vga_terminal/bin/terminal-v0.0.1-6-g1e6ba7b-dirty...
+INFO: [Hog:Msg-0] Evaluating differences with last commit...
+WARNING: [Hog:Msg-0] Found non committed changes:
+diff --git a/.gitignore b/.gitignore
+index 6e12ded..a6df4e5 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -94,3 +94,5 @@ _info
+ **.qdb
+ **.qpg
+ **.qtl
++**.fmt
++**.hex
+diff --git a/Top/terminal/list/terminal.src b/Top/terminal/list/terminal.src
+index dd7afd2..f4107c2 100644
+--- a/Top/terminal/list/terminal.src
++++ b/Top/terminal/list/terminal.src
+@@ -5,3 +5,8 @@ terminal/src/vga80x40_col1fixed.vhd
+ terminal/src/mem_font.vhd
+ terminal/src/mem_text.vhd
+ IP/clk_vga/clk_vga.xci
++picoblaze/src/kcpsm6.vhd
++picoblaze/src/pico_control.vhd
++picoblaze/src/uart_rx6.vhd
++picoblaze/src/uart_tx6.vhd
++picoblaze/psm/my_ROM.vhd
+diff --git a/terminal/src/top_terminal.vhd b/terminal/src/top_terminal.vhd
+index 0722274..92b3eae 100644
+--- a/terminal/src/top_terminal.vhd
++++ b/terminal/src/top_terminal.vhd
+@@ -22,13 +22,26 @@ entity top_terminal is
+     vgaGreen : out std_logic_vector(3 downto 0);
+     Hsync    : out std_logic;
+     Vsync    : out std_logic;
+-    led      : out std_logic_vector(7 downto 0);
+-    sw       : in  std_logic_vector(10 downto 0)
++    led      : out std_logic_vector(15 downto 0);
++    sw       : in  std_logic_vector(10 downto 0);
++    RsRx     : in  std_logic;
++    RsTx     : out std_logic
+     );
+ end entity top_terminal;
+ 
+ architecture arch of top_terminal is
+ 
++  component pico_control is
++    port (
++      clk     : in  std_logic;
++      reset   : in  std_logic;
++      RX      : in  std_logic;
++      TX      : out std_logic;
++      control : out std_logic_vector(31 downto 0);
++      status  : in  std_logic_vector(7 downto 0);
++      action  : out std_logic_vector(7 downto 0));
++  end component pico_control;
++
+   component mem_text is
+     port (
+       clk   : in  std_logic;
+@@ -76,23 +89,27 @@ architecture arch of top_terminal is
+ 
+   signal s_vsync, s_hsync : std_logic;
+ 
+-  signal R, G, B        : std_logic;
++  signal R, G, B : std_logic;
+ 
+   signal TEXT_A, FONT_A : std_logic_vector(11 downto 0);
+   signal TEXT_D, FONT_D : std_logic_vector(7 downto 0);
+ 
+-  signal TEXT_WR_A : std_logic_vector(11 downto 0);
+-  signal TEXT_WR_D : std_logic_vector(7 downto 0);
+-  signal TEXT_RD_D : std_logic_vector(7 downto 0);
++  signal TEXT_WR_A  : std_logic_vector(11 downto 0);
++  signal TEXT_WR_D  : std_logic_vector(7 downto 0);
++  signal TEXT_RD_D  : std_logic_vector(7 downto 0);
+   signal TEXT_WR_WE : std_logic;
+ 
+   signal locked : std_logic;
+ 
+   signal color : std_logic_vector(2 downto 0);
+ 
+-  signal vs0    : std_logic;
++  signal vs0 : std_logic;
+ 
+-  signal control : std_logic_vector(7 downto 0);
++  signal vga_control : std_logic_vector(7 downto 0);
++
++  signal s_control : std_logic_vector(31 downto 0);
++  signal s_status : std_logic_vector(7 downto 0);
++  signal s_action : std_logic_vector(7 downto 0);
+ 
+ begin  -- architecture arch
+ 
+@@ -100,7 +117,11 @@ begin  -- architecture arch
+ 
+   color <= sw(10 downto 8);
+ 
+-  control <= "10000" & color;
++  vga_control <= "10000" & color;
++
++  s_status <= sw(7 downto 0);
++
++  led <= s_control(15 downto 0);
+ 
+   -- all full intensity
+   vgaRed(0) <= R;
+@@ -124,6 +145,16 @@ begin  -- architecture arch
+       locked   => locked,
+       clk_in1  => clk);
+ 
++  pico_control_1: entity work.pico_control
++    port map (
++      clk     => clk,
++      reset   => reset,
++      RX      => RsRx,
++      TX      => RsTx,
++      control => s_control,
++      status  => s_status,
++      action  => s_action);
++
+   vga80x40_1 : entity work.vga80x40
+     port map (
+       reset    => reset,
+@@ -134,7 +165,7 @@ begin  -- architecture arch
+       FONT_D   => FONT_D,
+       ocrx     => X"00",
+       ocry     => X"00",
+-      octl     => control,
++      octl     => vga_control,
+       R        => R,
+       G        => G,
+       B        => B,
+@@ -142,7 +173,7 @@ begin  -- architecture arch
+       vsync    => s_vsync);
+ 
+   -- video RAM
+-  mem_text_1: entity work.mem_text
++  mem_text_1 : entity work.mem_text
+     port map (
+       clk   => clk,
+       addra => TEXT_A,
+@@ -162,7 +193,7 @@ begin  -- architecture arch
+   begin  -- process
+     if clk'event and clk = '1' then     -- rising clock edge
+ 
+-      
++
+ 
+     end if;
+   end process;
+diff --git a/terminal/xdc/Basys3_VGA.xdc b/terminal/xdc/Basys3_VGA.xdc
+index 39daca5..a165662 100644
+--- a/terminal/xdc/Basys3_VGA.xdc
++++ b/terminal/xdc/Basys3_VGA.xdc
+@@ -43,7 +43,7 @@ set_property PACKAGE_PIN T2 [get_ports {sw[10]}]
+ 	#set_property IOSTANDARD LVCMOS33 [get_ports {sw[15]}]
+ 
+ 
+-LEDs
++#LEDs
+ set_property PACKAGE_PIN U16 [get_ports {led[0]}]
+ 	set_property IOSTANDARD LVCMOS33 [get_ports {led[0]}]
+ set_property PACKAGE_PIN E19 [get_ports {led[1]}]
+@@ -68,14 +68,14 @@ set_property PACKAGE_PIN W3 [get_ports {led[10]}]
+ 	set_property IOSTANDARD LVCMOS33 [get_ports {led[10]}]
+ set_property PACKAGE_PIN U3 [get_ports {led[11]}]
+ 	set_property IOSTANDARD LVCMOS33 [get_ports {led[11]}]
+-#set_property PACKAGE_PIN P3 [get_ports {led[12]}]
+-	#set_property IOSTANDARD LVCMOS33 [get_ports {led[12]}]
+-#set_property PACKAGE_PIN N3 [get_ports {led[13]}]
+-	#set_property IOSTANDARD LVCMOS33 [get_ports {led[13]}]
+-#set_property PACKAGE_PIN P1 [get_ports {led[14]}]
+-	#set_property IOSTANDARD LVCMOS33 [get_ports {led[14]}]
+-#set_property PACKAGE_PIN L1 [get_ports {led[15]}]
+-	#set_property IOSTANDARD LVCMOS33 [get_ports {led[15]}]
++set_property PACKAGE_PIN P3 [get_ports {led[12]}]
++	set_property IOSTANDARD LVCMOS33 [get_ports {led[12]}]
++set_property PACKAGE_PIN N3 [get_ports {led[13]}]
++	set_property IOSTANDARD LVCMOS33 [get_ports {led[13]}]
++set_property PACKAGE_PIN P1 [get_ports {led[14]}]
++	set_property IOSTANDARD LVCMOS33 [get_ports {led[14]}]
++set_property PACKAGE_PIN L1 [get_ports {led[15]}]
++	set_property IOSTANDARD LVCMOS33 [get_ports {led[15]}]
+ 
+ 
+ ##7 segment display
+@@ -264,10 +264,10 @@ set_property PACKAGE_PIN R19 [get_ports Vsync]
+ 
+ 
+ ##USB-RS232 Interface
+-#set_property PACKAGE_PIN B18 [get_ports RsRx]
+-	#set_property IOSTANDARD LVCMOS33 [get_ports RsRx]
+-#set_property PACKAGE_PIN A18 [get_ports RsTx]
+-	#set_property IOSTANDARD LVCMOS33 [get_ports RsTx]
++set_property PACKAGE_PIN B18 [get_ports RsRx]
++	set_property IOSTANDARD LVCMOS33 [get_ports RsRx]
++set_property PACKAGE_PIN A18 [get_ports RsTx]
++	set_property IOSTANDARD LVCMOS33 [get_ports RsTx]
+ 
+ 
+ ##USB HID (PS/2)
+INFO: [Hog:Msg-0] Copying bit file /home/hazen/work/vga_terminal/Projects/terminal/terminal.runs/impl_1/top_terminal.bit into /home/hazen/work/vga_terminal/bin/terminal-v0.0.1-6-g1e6ba7b-dirty/terminal-v0.0.1-6-g1e6ba7b-dirty.bit...
+INFO: [Hog:Msg-0] No bin file found: /home/hazen/work/vga_terminal/Projects/terminal/terminal.runs/impl_1/top_terminal.bin, that is not a problem
+INFO: [Hog:Msg-0] No ltx file found: /home/hazen/work/vga_terminal/Projects/terminal/terminal.runs/impl_1/top_terminal.ltx, that is not a problem
+INFO: [Hog:Msg-0] All done.
+INFO: [Common 17-206] Exiting Vivado at Sun Dec 12 15:40:05 2021...
+[Sun Dec 12 15:40:05 2021] impl_1 finished
+wait_on_run: Time (s): cpu = 00:00:29 ; elapsed = 00:00:32 . Memory (MB): peak = 2363.027 ; gain = 0.000 ; free physical = 2466 ; free virtual = 54155
+INFO: [Hog:Msg-0] Run: impl_1 progress: 100%, status : write_bitstream Complete!
+*** Timing summary (again) ***
+WNS: 2.089728
+TNS: 0.000000
+WHS: 0.049709
+THS: 0.000000
+INFO: [Hog:GetRepoVersions-0] Hog submodule /home/hazen/work/vga_terminal/Hog clean.
+CRITICAL WARNING: [Hog:GetRepoVersions-0] Git working directory /home/hazen/work/vga_terminal/Top/terminal not clean, commit hash, and version will be set to 0.
+INFO: [Hog:GetVerFromSHA-0] No tag contains 3B24302, will use most recent tag v0.0.1. As this is an official tag, patch will be incremented to 2.
+INFO: [Hog:GetVerFromSHA-0] No tag contains BB51F16, will use most recent tag v0.0.1. As this is an official tag, patch will be incremented to 2.
+INFO: [Hog:GetVerFromSHA-0] No tag contains BB51F16, will use most recent tag v0.0.1. As this is an official tag, patch will be incremented to 2.
+INFO: [Hog:GetVerFromSHA-0] No tag contains BB51F16, will use most recent tag v0.0.1. As this is an official tag, patch will be incremented to 2.
+INFO: [Hog:GetRepoVersions-0] This project does not use IPbus XMLs
+INFO: [Hog:Msg-0] Git describe set to v0.0.1-6-g1e6ba7b-dirty
+INFO: [Hog:Msg-0] All done.
+INFO: [Common 17-206] Exiting Vivado at Sun Dec 12 15:40:05 2021...
