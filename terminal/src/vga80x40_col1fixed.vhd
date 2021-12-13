@@ -247,9 +247,8 @@ begin
 --    ram_tmp <= scry * 80 + scrx + 1 when ((scrx_079 = '0')) else
 --               scry * 80 when ((chry_011 = '0') and (scrx_079 = '1')) else
 --               0         when ((chry_011 = '1') and (scrx_079 = '1'));
-    ram_tmp <= scry * 80 + scrx;
-
-    TEXT_A <= std_logic_vector(TO_UNSIGNED(ram_tmp, 12));
+    TEXT_A_ROW <= scry;
+    TEXT_A_COL <= scrx;
 
     rom_tmp <= TO_INTEGER(unsigned(TEXT_D)) * 12 + chry;
     FONT_A  <= std_logic_vector(TO_UNSIGNED(rom_tmp, 12));

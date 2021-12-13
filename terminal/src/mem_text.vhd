@@ -38,7 +38,7 @@ architecture arch of mem_text is
 begin  -- architecture arch
 
   -- clocked write on port b
-  process(clk, web, addrb)
+  process(clk, web, addrb_row, addrb_col)
   begin
     if(rising_edge(clk)) then
       if(web = '1') then

@@ -154,8 +154,6 @@ architecture arch of pico_control is
 
   signal poke_ena : std_logic;
 
-  signal clk0, clk1, clk2, clk3 : std_logic;
-
   signal test_counter : std_logic_vector(31 downto 0);
   signal read_write   : std_logic_vector (7 downto 0);
 

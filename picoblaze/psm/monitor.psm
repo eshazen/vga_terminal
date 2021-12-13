@@ -35,7 +35,6 @@
 	CONSTANT get_peek_data_mid, 04 ; program data middle bits
 	CONSTANT get_peek_data_high, 05 ; ; program data upper bits
 
-	CONSTANT vram_data_in, 0d
 
 ;;; output ports
 	CONSTANT UART_TX6_output_port, 80
@@ -46,11 +45,6 @@
 	CONSTANT set_poke_data_low, 05  ; program RAM write data latch lsb
 	CONSTANT set_poke_data_mid, 06  ; program RAM write data latch lsb
 	CONSTANT set_poke_data_high, 07  ; program RAM write data latch msb (triggers write)
-
-	CONSTANT vram_data_out, 09
-	CONSTANT vram_addr_lo, 0a
-	CONSTANT vram_addr_hi, 0b
-	CONSTANT vram_wr, 0d
 
 ;;; scratchpad (256 bytes)
 ;;; 
@@ -84,9 +78,8 @@
 	CONSTANT hexarg4, 40
 	CONSTANT hexarg5, 44
 
-;;; terminal stuff
-	CONSTANT cur_line, 48	;cursor line   0-39
-	CONSTANT cur_col, 49	;cursor column 0-79
+	;; terminal uses a few bytes at 60 (see terminal.psm)
+
 ;;; free space up to 7e
 	
 
@@ -113,11 +106,11 @@ cold_start:
 start:	
 	;; set 9600 baud (651 decimal for 100MHz)
 	;; set 9600 baud (163 decimal for 25MHz)
-	load s0, 139'd
-;	load s0, 163'd
+;	load s0, 139'd
+	load s0, 163'd
         output s0, set_baud_rate_lsb
-	load S0, 02
-;	load S0, 00
+;	load S0, 02
+	load S0, 00
         output s0, set_baud_rate_msb	
 
 ;;; zero entire scratchpad

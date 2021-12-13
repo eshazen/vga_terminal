@@ -1,10 +1,29 @@
 ;;;
 ;;; serial terminal
 ;;;
+	address 0500		;origin for local debug
+	
+
+;;; terminal stuff
+	CONSTANT cur_line, 60	;cursor line   0-39
+	CONSTANT cur_col, 61	;cursor column 0-79
+
 	CONSTANT nrows, 40'd
 	CONSTANT last_row, 39'd
 	CONSTANT ncols, 80'd
 	CONSTANT last_col, 79'd
+
+	CONSTANT vram_data_in, 0d
+	CONSTANT vram_data_out, 09
+	CONSTANT vram_addr_lo, 0a
+	CONSTANT vram_addr_hi, 0b
+	CONSTANT vram_wr, 0d
+
+	jump cmd_T
+
+UART_RX_wait:	jump 003
+UART_TX:	jump 004
+main:		jump 029
 
 	;; enter here from monitor
 	;; for now, display characters received, exit on ^C
@@ -44,7 +63,7 @@ term_cr:
 
 	;; LF
 term_lf:
-	load s3,cur_line
+	fetch s3,cur_line
 	add s3,01
 	store s3,cur_line
 	jump termi

@@ -93,7 +93,10 @@ architecture arch of top_terminal is
 
   signal R, G, B : std_logic;
 
-  signal TEXT_A, FONT_A : std_logic_vector(11 downto 0);
+  signal    TEXT_A_ROW : integer range 039 downto 0;
+  signal    TEXT_A_COL : integer range 079 downto 0;
+
+  signal FONT_A : std_logic_vector(11 downto 0);
   signal TEXT_D, FONT_D : std_logic_vector(7 downto 0);
 
   signal TEXT_WR_A_COL : std_logic_vector(6 downto 0);
@@ -155,7 +158,7 @@ begin  -- architecture arch
 
   pico_control_1 : entity work.pico_control
     port map (
-      clk     => clk,
+      clk     => pclk,
       reset   => reset,
       RX      => RsRx,
       TX      => RsTx,
@@ -165,25 +168,26 @@ begin  -- architecture arch
 
   vga80x40_1 : entity work.vga80x40
     port map (
-      reset    => reset,
-      clk25MHz => pclk,
-      TEXT_A   => TEXT_A,
-      TEXT_D   => TEXT_D,
-      FONT_A   => FONT_A,
-      FONT_D   => FONT_D,
-      ocrx     => X"00",
-      ocry     => X"00",
-      octl     => vga_control,
-      R        => R,
-      G        => G,
-      B        => B,
-      hsync    => s_hsync,
-      vsync    => s_vsync);
+      reset      => reset,
+      clk25MHz   => pclk,
+      TEXT_A_ROW => TEXT_A_ROW,
+      TEXT_A_COL => TEXT_A_COL,
+      TEXT_D     => TEXT_D,
+      FONT_A     => FONT_A,
+      FONT_D     => FONT_D,
+      ocrx       => X"00",
+      ocry       => X"00",
+      octl       => vga_control,
+      R          => R,
+      G          => G,
+      B          => B,
+      hsync      => s_hsync,
+      vsync      => s_vsync);
 
   -- video RAM
   mem_text_1 : entity work.mem_text
     port map (
-      clk       => clk,
+      clk       => pclk,
       addra_row => TEXT_A_ROW,
       addra_col => TEXT_A_COL,
       douta     => TEXT_D,
@@ -199,11 +203,9 @@ begin  -- architecture arch
       addr => FONT_A,
       dout => FONT_D);
 
-  process (clk) is
+  process (pclk) is
   begin  -- process
-    if clk'event and clk = '1' then     -- rising clock edge
-
-
+    if pclk'event and pclk = '1' then     -- rising clock edge
 
     end if;
   end process;
