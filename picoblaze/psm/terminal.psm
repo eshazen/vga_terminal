@@ -1,7 +1,7 @@
 ;;;
 ;;; serial terminal
 ;;;
-;	address 500  ; ONLY FOR STANDALONE VERSION
+	address 500  ; ONLY FOR STANDALONE VERSION
 
 
 ;;; terminal stuff
@@ -41,13 +41,13 @@
 ;;;----------------------------------------
 ;;; jump vectors to monitor
 ;;; ----------------------------------------
-m_start: jump start		; 000: cold start
-m_last:	jump last		; 001: top of program
-m_main:	jump main		; 002: warm start
-m_UART_RX_wait:	jump UART_RX_wait ; 003: UART input (s5)
-m_UART_TX: jump UART_TX		; 004: UART output
-m_send_hex_byte: jump send_hex_byte ; 005: send hex output (s4)
-m_send_message:	jump send_message   ; 006: send message from (sA, sB)
+m_start: jump 000		; 000: cold start
+m_last:	jump 001		; 001: top of program
+m_main:	jump 002		; 002: warm start
+m_UART_RX_wait:	jump 003	; 003: UART input (s5)
+m_UART_TX: jump 004		; 004: UART output
+m_send_hex_byte: jump 005 ; 005: send hex output (s4)
+m_send_message:	jump 006  ; 006: send message from (sA, sB)
 
 ;;; set up for terminal action
 ;;; overall register use:
@@ -70,6 +70,8 @@ termi:	call dpcur		;update cursor display
 	jump z, m_main
 	compare s5, 1b		;ESC
 	jump z, m_main
+	
+	call m_UART_TX		;echo the char
 	
 	;; check for a control chars
 	compare s5,0d		;CR?
@@ -99,8 +101,10 @@ dolf:	add s9, 01		;of next row
 	;; scroll the screen up
 	call scroll
 	
-dpcur: 	output s8, cursor_row	;update cursor posn
-	output s9, cursor_col
+dpcur: 	add s8,01		;why?
+	output s8, cursor_col	;update cursor posn
+	sub s8,01
+	output s9, cursor_row
 	return
 
 ;;; scroll the entire screen up
