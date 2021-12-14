@@ -60,7 +60,11 @@ architecture rtl of vga80x40 is
   signal vsync_int : std_logic;
 
   signal blank : std_logic;
-  signal hctr  : integer range 793 downto 0;
+
+-- <ESH>
+--  signal hctr  : integer range 793 downto 0;
+  signal hctr  : integer range 799 downto 0;
+
   signal vctr  : integer range 524 downto 0;
   -- character/pixel position on the screen
   signal scry  : integer range 039 downto 0;  -- chr row   < 40 (6 bits)
@@ -211,13 +215,19 @@ begin
 
   begin
 
-    U_HCTR : ctrm generic map (M => 794) port map (
+-- <ESH>
+--    U_HCTR : ctrm generic map (M => 794) port map (
+    U_HCTR : ctrm generic map (M => 800) port map (    
       reset                      => reset, clk => clk25MHz, ce => hctr_ce, rs => hctr_rs, do => hctr);
 
     U_VCTR : ctrm generic map (M => 525) port map (reset, clk25MHz, vctr_ce, vctr_rs, vctr);
 
     hctr_ce <= '1';
-    hctr_rs <= '1' when hctr = 793 else '0';
+-- <ESH>
+--    hctr_rs <= '1' when hctr = 793 else '0';
+    hctr_rs <= '1' when hctr = 799 else '0';
+
+
     vctr_ce <= '1' when hctr = 663 else '0';
     vctr_rs <= '1' when vctr = 524 else '0';
 

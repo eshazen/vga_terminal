@@ -1,12 +1,14 @@
 ;;;
 ;;; serial terminal
 ;;;
-	address 0500		;origin for local debug
-	
+;	address 500  ; ONLY FOR STANDALONE VERSION
+
 
 ;;; terminal stuff
 	CONSTANT cur_line, 60	;cursor line   0-39
 	CONSTANT cur_col, 61	;cursor column 0-79
+
+	CONSTANT first_row, 01	;normally zero but our display malfunctions
 
 	CONSTANT nrows, 40'd
 	CONSTANT last_row, 39'd
@@ -15,93 +17,112 @@
 
 	CONSTANT vram_data_in, 0d
 	CONSTANT vram_data_out, 09
-	CONSTANT vram_addr_lo, 0a
-	CONSTANT vram_addr_hi, 0b
+	CONSTANT vram_addr_lo, 0a    ; column
+	CONSTANT vram_addr_hi, 0b    ; row
 	CONSTANT vram_wr, 0d
+
+	CONSTANT video_ctrl, 10
+	CONSTANT cursor_col, 11
+	CONSTANT cursor_row, 12
+
+	;; bits in control register
+	CONSTANT video_red, 01
+	CONSTANT video_green, 02
+	CONSTANT video_blue, 04
+	CONSTANT cur_mode, 10
+	CONSTANT cur_blink, 20
+	CONSTANT cur_en, 40
+	CONSTANT vga_en, 80
+
+	CONSTANT mode_set, e7	;dpy enabled, cursor on, blink color=white
 
 	jump cmd_T
 
-UART_RX_wait:	jump 003
-UART_TX:	jump 004
-main:		jump 029
+;;;----------------------------------------
+;;; jump vectors to monitor
+;;; ----------------------------------------
+m_start: jump start		; 000: cold start
+m_last:	jump last		; 001: top of program
+m_main:	jump main		; 002: warm start
+m_UART_RX_wait:	jump UART_RX_wait ; 003: UART input (s5)
+m_UART_TX: jump UART_TX		; 004: UART output
+m_send_hex_byte: jump send_hex_byte ; 005: send hex output (s4)
+m_send_message:	jump send_message   ; 006: send message from (sA, sB)
 
-	;; enter here from monitor
-	;; for now, display characters received, exit on ^C
+;;; set up for terminal action
+;;; overall register use:
+;;;   s8 - current column \ cursor position
+;;;   s9 - current row    / memory address
+;;;   sA - 01 for writing to RAM
 cmd_T:
-	;; clear the screen
-	call cls
-	load s0, 00
-	store s0,cur_line
-	store s0,cur_col
+	;; initial hardware set up - pretty simple
+	load s0, mode_set
+	output s0, video_ctrl
+	load sA, 01
 
-termi:	call UART_RX_wait
-	call UART_TX
+	call cls		;clear
+	call home		;home cursor
+
+termi:	call dpcur		;update cursor display
+	call m_UART_RX_wait	;get input character to s5
+	;; check for escape
 	compare s5, 03		;^C
-	jump z, main
+	jump z, m_main
 	compare s5, 1b		;ESC
-	jump z, main
+	jump z, m_main
 	
-	;; check for a few control chars
+	;; check for a control chars
 	compare s5,0d		;CR?
 	jump z,term_cr
 	compare s5,0a		;LF?
 	jump z,term_lf
 	
-	;; display at cursor
-	call cur2mem		;convert cursor loc'n to memory address
-	output s5,vram_data_out
-	load s5,01
-	output s5,vram_wr
-	call currt
+	call v_putc
 	jump termi
 
-	;; CR
+;;; display character in s5 at cursor
+;;; move cursor right
+v_putc:	output s8,vram_addr_lo	;set column RAM address
+	output s9,vram_addr_hi	;set row RAM address
+	output s5,vram_data_out	;set output data
+	output sA,vram_wr	;write to VRAM
+	add s8, 01		;increment column
+	compare s8, ncols	;did we just wrap?
+	jump nz, dpcur
+	load s8, 00		;reset to first column
+	;; this is also the entry point for a LF from anywhere
+dolf:	add s9, 01		;of next row
+	compare s9, nrows	;off bottom of screen?
+	jump nz, dpcur
+
+	sub s9, 01		;back to last row
+	;; scroll the screen up
+	call scroll
+	
+dpcur: 	output s8, cursor_row	;update cursor posn
+	output s9, cursor_col
+	return
+
+;;; scroll the entire screen up
+;;; FIXME: write this
+scroll:	return
+
 term_cr:
-	load s2,00
-	store s2,cur_col
+	load s8,00
 	jump termi
 
 	;; LF
-term_lf:
-	fetch s3,cur_line
-	add s3,01
-	store s3,cur_line
+term_lf: call dolf
 	jump termi
 
-	;; cursor right, wrap at end
-currt:	fetch s2, cur_col
-	fetch s3, cur_line
-	add s2, 01
-	compare s2, 80'd
-	jump z,curwrp
-	;; no wrap
-	store s2, cur_col
-	jump cur2mem
-
-curwrp:	load s2,00
-	add s3, 01
-	compare s3, 40'd
-	jump z,curlwp
-	store s3,cur_line
-	store s2,cur_col
-	jump cur2mem
-
-curlwp:	load s3,00
-	store s3,cur_line
-	;; fall through to cur2mem
-
-	;; get cursor location from scratchpad (cur_line, cur_col)
-	;; convert to linear memory address
-	;; output to vram_addr_lo/hi
-cur2mem:
-	fetch s2, cur_line	;cur_line as double word to (s3, s2)
-	fetch s3, cur_col
-	output s2, vram_addr_hi
-	output s3, vram_addr_lo
+;;; home cursor
+home:	
+	load s8,00
+	load s9,first_row
 	return
 	
 	;; clear the screen
-	;; home the cursor
+	;; uses s0, s2, s3, s4
 cls:	load s2, 00
 	load s3, 00
 
@@ -110,7 +131,6 @@ cls:	load s2, 00
 	output s0, vram_data_out
 	load s4, 01		;write bit
 
-	;; clear a line
 crl:	output s2, vram_addr_lo
 	output s4, vram_wr
 	add s2, 01
@@ -123,5 +143,36 @@ crl:	output s2, vram_addr_lo
 	compare s3, nrows
 	jump nz, crl
 
-	return
+	jump home
 	
+	;; scroll screen between lines s2, s3 up a line
+	;; s2 - first line, increments as "copy from"
+	;;      ("copy to" is s2-1)
+	;; s3 - end line for checking
+	;; s4 - constant 01 for write ops
+	;; s1 - column
+	
+scrlin:	load s4, 01		;write bit
+	load s1, 00		;column
+	;; check for same value
+	compare s2, s3
+	return z		;null operation if s2==s3
+
+	;; start by incre
+
+	;; copy a line from line s2 to line s3
+	;; uses s0, s1, s4
+movlin:	load s4,01		;write strobe
+	load s1,00		;column
+
+	;; 18 clocks * 80 = 57us
+movchr:	output s1,vram_addr_lo
+	output s2,vram_addr_hi
+	input s0, vram_data_in
+	output s3,vram_addr_hi
+	output s0, vram_data_out
+	output s4, vram_wr
+	add s1,01
+	compare s1,ncols
+	jump nz, movchr
+

@@ -33,13 +33,14 @@ architecture arch of top_terminal is
 
   component pico_control is
     port (
-      clk     : in  std_logic;
-      reset   : in  std_logic;
-      RX      : in  std_logic;
-      TX      : out std_logic;
-      control : out std_logic_vector(31 downto 0);
-      status  : in  std_logic_vector(7 downto 0);
-      action  : out std_logic_vector(7 downto 0));
+      clk      : in  std_logic;
+      reset    : in  std_logic;
+      RX       : in  std_logic;
+      TX       : out std_logic;
+      control  : out std_logic_vector(31 downto 0);
+      control2 : out std_logic_vector(31 downto 0);
+      status   : in  std_logic_vector(7 downto 0);
+      action   : out std_logic_vector(7 downto 0));
   end component pico_control;
 
   component mem_text is
@@ -93,10 +94,10 @@ architecture arch of top_terminal is
 
   signal R, G, B : std_logic;
 
-  signal    TEXT_A_ROW : integer range 039 downto 0;
-  signal    TEXT_A_COL : integer range 079 downto 0;
+  signal TEXT_A_ROW : integer range 039 downto 0;
+  signal TEXT_A_COL : integer range 079 downto 0;
 
-  signal FONT_A : std_logic_vector(11 downto 0);
+  signal FONT_A         : std_logic_vector(11 downto 0);
   signal TEXT_D, FONT_D : std_logic_vector(7 downto 0);
 
   signal TEXT_WR_A_COL : std_logic_vector(6 downto 0);
@@ -114,6 +115,7 @@ architecture arch of top_terminal is
   signal vga_control : std_logic_vector(7 downto 0);
 
   signal s_control : std_logic_vector(31 downto 0);
+  signal s_control2 : std_logic_vector(31 downto 0);
   signal s_status  : std_logic_vector(7 downto 0);
   signal s_action  : std_logic_vector(7 downto 0);
 
@@ -156,15 +158,18 @@ begin  -- architecture arch
       locked   => locked,
       clk_in1  => clk);
 
+
+
   pico_control_1 : entity work.pico_control
     port map (
-      clk     => pclk,
-      reset   => reset,
-      RX      => RsRx,
-      TX      => RsTx,
-      control => s_control,
-      status  => s_status,
-      action  => s_action);
+      clk      => pclk,
+      reset    => reset,
+      RX       => RsRx,
+      TX       => RsTx,
+      control  => s_control,
+      control2 => s_control2,
+      status   => s_status,
+      action   => s_action);
 
   vga80x40_1 : entity work.vga80x40
     port map (
@@ -175,9 +180,9 @@ begin  -- architecture arch
       TEXT_D     => TEXT_D,
       FONT_A     => FONT_A,
       FONT_D     => FONT_D,
-      ocrx       => X"00",
-      ocry       => X"00",
-      octl       => vga_control,
+      ocrx       => s_control2(15 downto 8),
+      ocry       => s_control2(23 downto 16),
+      octl       => s_control2(7 downto 0),
       R          => R,
       G          => G,
       B          => B,
@@ -205,7 +210,7 @@ begin  -- architecture arch
 
   process (pclk) is
   begin  -- process
-    if pclk'event and pclk = '1' then     -- rising clock edge
+    if pclk'event and pclk = '1' then   -- rising clock edge
 
     end if;
   end process;

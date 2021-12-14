@@ -16,6 +16,7 @@ entity pico_control is
     RX      : in  std_logic;            -- asynch serial input
     TX      : out std_logic;            -- asynch serial output
     control : out std_logic_vector(31 downto 0); -- control register R/W
+    control2 : out std_logic_vector(31 downto 0); -- 2nd control register R/W
     status  : in  std_logic_vector(7 downto 0); -- status register R/O
     action  : out std_logic_vector(7 downto 0)); -- action (pulsed) register W/O
 
@@ -158,6 +159,7 @@ architecture arch of pico_control is
   signal read_write   : std_logic_vector (7 downto 0);
 
   signal s_control : std_logic_vector(31 downto 0);
+  signal s_control2 : std_logic_vector(31 downto 0);
   signal s_status : std_logic_vector(7 downto 0);
   signal s_action : std_logic_vector(7 downto 0);
   
@@ -171,6 +173,7 @@ architecture arch of pico_control is
 --
 begin
 
+  control2 <= s_control2;
   control <= s_control;
   s_status <= status;
   action <= s_action;
@@ -399,40 +402,33 @@ begin
         -- Write to UART at port addresses 01 hex
         -- See below this clocked process for the combinatorial decode required.
 
-        -- other ports decoded using address bits 4:1
-        --        Old  New  Function
-        -- address 02: 01   baud rate low byte
-        -- address 04: 02   baud rate high byte
-        -- address 06: 03   program address low byte
-        -- address 08: 04   program address high byte
-        -- address 0a: 05   write program data bits 5:0
-        -- address 0c: 06   write program data bits 11:6
-        -- address 0e: 07   write program data bits 17:12  (triggers write)
-        -- address 10: 08   read/write test port
-
-        -- Write to 'set_baud_rate' at port addresses 02 hex     
+        -- Write to 'set_baud_rate' at port addresses 01, 02 hex     
         -- This value is set by KCPSM6 to define the BAUD rate of the UART. 
         -- See the 'UART baud rate' section for details.
 
+        case port_id(4 downto 0) is
+          when "0" & x"1" => set_baud_rate(7 downto 0)  <= out_port;
+          when "0" & x"2" => set_baud_rate(15 downto 8) <= out_port;
+          when "0" & x"3" => peek_addr(7 downto 0)      <= out_port;
+          when "0" & x"4" => peek_addr(11 downto 8)     <= out_port(3 downto 0);
+          when "0" & x"5" => poke_data(7 downto 0)      <= out_port(7 downto 0);
+          when "0" & x"6" => poke_data(15 downto 8)     <= out_port(7 downto 0);
+          when "0" & x"7" => poke_data(17 downto 16)    <= out_port(1 downto 0);
+                             poke_ena <= '1';
 
-        case port_id(3 downto 0) is
-          when x"1" => set_baud_rate(7 downto 0)  <= out_port;
-          when x"2" => set_baud_rate(15 downto 8) <= out_port;
-          when x"3" => peek_addr(7 downto 0)      <= out_port;
-          when x"4" => peek_addr(11 downto 8)     <= out_port(3 downto 0);
-          when x"5" => poke_data(7 downto 0)      <= out_port(7 downto 0);
-          when x"6" => poke_data(15 downto 8)     <= out_port(7 downto 0);
-          when x"7" => poke_data(17 downto 16)    <= out_port(1 downto 0);
-                       poke_ena <= '1';
+          when "0" & x"8" => read_write <= out_port;
 
-          when x"8" => read_write <= out_port;
-
-          when x"9" => s_control(7 downto 0) <= out_port;
-          when x"A" => s_control(15 downto 8) <= out_port;
-          when x"B" => s_control(23 downto 16) <= out_port;
-          when x"C" => s_control(31 downto 24) <= out_port;
+          when "0" & x"9" => s_control(7 downto 0) <= out_port;
+          when "0" & x"A" => s_control(15 downto 8) <= out_port;
+          when "0" & x"B" => s_control(23 downto 16) <= out_port;
+          when "0" & x"C" => s_control(31 downto 24) <= out_port;
 
           when x"D" => s_action <= out_port;
+
+          when "1" & x"0" => s_control2(7 downto 0) <= out_port;
+          when "1" & x"1" => s_control2(15 downto 8) <= out_port;
+          when "1" & x"2" => s_control2(23 downto 16) <= out_port;
+          when "1" & x"3" => s_control2(31 downto 24) <= out_port;
 
           when others => null;
         end case;
