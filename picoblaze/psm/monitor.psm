@@ -106,17 +106,23 @@ cold_start:
 start:	
 	;; set 9600 baud (651 decimal for 100MHz)
 	;; set 9600 baud (163 decimal for 25MHz)
+	;; set 4800 baud (328 dec, 0x148 for 25.175MHz)
 ;	load s0, 139'd
-	load s0, 163'd
+;	load s0, 163'd
+	load s0, 48
         output s0, set_baud_rate_lsb
 ;	load S0, 02
-	load S0, 00
+;	load S0, 00
+	load s0, 01
         output s0, set_baud_rate_msb	
 
 ;;; zero entire scratchpad
 	load sA, 00
 	load sC, 00
 	call bzero
+
+	;; NOTE NOTE:  this version starts in the terminal mode
+	jump cmd_T
 
         CALL reset_UART_macros
         CALL welcome_message
@@ -317,11 +323,11 @@ hx_end:
 	jump z, cmd_I
 	compare s5, "O"		;command O - output port
 	jump z, cmd_O
-	compare s5, "H"
+	compare s5, "H"		;command H - help
 	jump z, cmd_H
-	compare s5, "V"
+	compare s5, "V"		;command V - set baud divisor
 	jump z, cmd_V
-	compare s5, "T"
+	compare s5, "T"		;command T - start terminal
 	jump z, cmd_T
 
 	;; fall through to error on unknown command

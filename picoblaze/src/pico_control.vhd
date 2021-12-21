@@ -1,6 +1,6 @@
 -- pico_control.vhd
 --  
--- PicoBlaze control interface for TDC
+-- PicoBlaze control interface for VGA terminal
 --
 -- All I/O synchronized to clk
 --

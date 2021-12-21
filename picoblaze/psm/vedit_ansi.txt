@@ -1,0 +1,37 @@
+VEDIT Terminal Entry:   (28) IBM PC (ANSI)
+
+2,1bH,5bH,0,0,0,0         Cursor Leadin
+1,3bH,0,0,0,0,0           Chars between X and Y
+1,48H,0,0,0,0,0           Cursor Lead Out
+80H,1,1                   Addoff
+84H,1bH,5bH,32H,4aH,0,0   Clear Screen
+0,0,0,0,0,0,0             EOS
+3,1bH,5bH,4bH,0,0,0       EOL
+0,0,0,0,0,0,0             Insert Line
+0,0,0,0,0,0,0             Delete Line
+1,0aH,0,0,0,0,0           Forward Scroll
+0,0,0,0,0,0,0             Reverse Scroll
+4,1bH,5bH,37H,6dH,0,0     Begin Reverse Video
+4,1bH,5bH,30H,6dH,0,0     End Reverse Video
+0,0,0,0,0,0,0             Enable Status Line
+0,0,0,0,0,0,0             Disable Status Line
+0,0,0,0,0,0,0             Enter VEDIT
+0,0,0,0,0,0,0             Exit VEDIT
+
+ANSI.SYS sequences
+
+Sequence	Effect
+ESC [ r A	Cursor up (CUU)
+ESC [ r B	Cursor down (CUD)
+ESC [ c C	Cursor forward (CUF)
+ESC [ c D	Cursor back (CUB)
+ESC [ r;c f	Horizontal and vertical position (HVP)
+ESC [ r;c H	Cursor position (CUP)
+ESC [ n J	Erase display (ED) (n=0, 2 or n=0, 1, 2)[nb 1]
+ESC [ n K	Erase in line (EL) (n=0 or n=0, 1, 2)[nb 1]
+ESC [ n m	Select graphic rendition (SGR) (n=0..47)
+ESC [ 6 n	Device status report (DSR) requests cursor position,
+returned as cursor position report (CPR):
+ESC [ r;c R
+ESC [ s	Save cursor position (SCP)
+ESC [ u	Restore cursor position (RCP)

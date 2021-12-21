@@ -1,11 +1,7 @@
 --
 -- VGA 80x40 text on 640x480 raster
 -- 
--- character RAM added -- not wired up yet
--- Thinking of a temporary external interface using P-Mods
---
--- Either a single 8-bit data port with some strobes
--- or a buffered Z80 bus interface (maybe wait state?)
+-- working terminal with Picoblaze
 --
 
 library IEEE;
@@ -25,7 +21,8 @@ entity top_terminal is
     led      : out std_logic_vector(15 downto 0);
     sw       : in  std_logic_vector(10 downto 0);
     RsRx     : in  std_logic;
-    RsTx     : out std_logic
+    RsTx     : out std_logic;
+    aux_rx   : in  std_logic
     );
 end entity top_terminal;
 
@@ -112,20 +109,22 @@ architecture arch of top_terminal is
 
   signal vs0 : std_logic;
 
-  signal vga_control : std_logic_vector(7 downto 0);
-
-  signal s_control : std_logic_vector(31 downto 0);
+  signal s_control  : std_logic_vector(31 downto 0);
   signal s_control2 : std_logic_vector(31 downto 0);
-  signal s_status  : std_logic_vector(7 downto 0);
-  signal s_action  : std_logic_vector(7 downto 0);
+  signal s_status   : std_logic_vector(7 downto 0);
+  signal s_action   : std_logic_vector(7 downto 0);
+
+  signal uart_rx : std_logic;
 
 begin  -- architecture arch
 
   reset <= '0';                         -- we don't need no steenkin reset!
 
-  color <= sw(10 downto 8);
-
-  vga_control <= "10000" & color;
+  -- switch 0 selects serial input
+  with sw(0) select
+    uart_rx <=
+    aux_rx when '0',
+    RsRx   when others;
 
   s_status <= TEXT_RD_D;
 
@@ -158,13 +157,11 @@ begin  -- architecture arch
       locked   => locked,
       clk_in1  => clk);
 
-
-
   pico_control_1 : entity work.pico_control
     port map (
       clk      => pclk,
       reset    => reset,
-      RX       => RsRx,
+      RX       => uart_rx,
       TX       => RsTx,
       control  => s_control,
       control2 => s_control2,

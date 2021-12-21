@@ -1,31 +1,39 @@
 ;;;
 ;;; serial terminal
-;;;
+;;; implements most ANSI.SYS codes:
+;;;   CUU, CUD, CUF, CUB, CUP, ED, EL
+;;; hopefully enough to keep WS and VEDIT happy
+;;; 
+	
 	address 500  ; ONLY FOR STANDALONE VERSION
 
 
-;;; terminal stuff
-	CONSTANT cur_line, 60	;cursor line   0-39
-	CONSTANT cur_col, 61	;cursor column 0-79
+;;; ---------- scratchpad locations --------------------
+	
+	CONSTANT escst, 60	; ESC parser state
+	CONSTANT escp1, 61	; parameter 1 (0 if none)
+	CONSTANT escp2, 62	; parameter 2 (0 if none)
 
+;;; ---------- constants ----------
 	CONSTANT first_row, 01	;normally zero but our display malfunctions
 
-	CONSTANT nrows, 40'd
+	CONSTANT nrows, 40'd	;so 39 usable rows
 	CONSTANT last_row, 39'd
 	CONSTANT ncols, 80'd
 	CONSTANT last_col, 79'd
 
-	CONSTANT vram_data_in, 0d
-	CONSTANT vram_data_out, 09
+;;; ---------- I/O ports --------------------
+	CONSTANT vram_data_in, 0d ; read data
+	CONSTANT vram_data_out, 09 ;write data
 	CONSTANT vram_addr_lo, 0a    ; column
 	CONSTANT vram_addr_hi, 0b    ; row
-	CONSTANT vram_wr, 0d
+	CONSTANT vram_wr, 0d	     ; write strobe
 
-	CONSTANT video_ctrl, 10
-	CONSTANT cursor_col, 11
-	CONSTANT cursor_row, 12
+	CONSTANT video_ctrl, 10	; various control bits (below)
+	CONSTANT cursor_col, 11	; hardware cursor column
+	CONSTANT cursor_row, 12	; hardware cursor row
 
-	;; bits in control register
+;;; ---------- bits in control register
 	CONSTANT video_red, 01
 	CONSTANT video_green, 02
 	CONSTANT video_blue, 04
@@ -34,12 +42,24 @@
 	CONSTANT cur_en, 40
 	CONSTANT vga_en, 80
 
-	CONSTANT mode_set, e7	;dpy enabled, cursor on, blink color=white
+;;;dpy enabled, cursor on, blink color=white
+	CONSTANT mode_set, e7
 
+;	CONSTANT ESC, 1b     ; already declared elsewhere ??
+	CONSTANT SEMI, 3b
+
+	;; parser states
+	CONSTANT S_IDLE, 00
+	CONSTANT S_NEXT, 01
+	CONSTANT S_PARM1, 02
+	CONSTANT S_PARM2, 03
+	
 	jump cmd_T
 
 ;;;----------------------------------------
 ;;; jump vectors to monitor
+;;; these require actual absolute jumps so they assemble correctly
+;;; and work both when included in monitor.psm and standalone
 ;;; ----------------------------------------
 m_start: jump 000		; 000: cold start
 m_last:	jump 001		; 001: top of program
@@ -63,18 +83,299 @@ cmd_T:
 	call cls		;clear
 	call home		;home cursor
 
+	;; enter here on any ESC processing error or finish
+escrst:	load s0, S_IDLE
+	store s0, escst		;set ESC parser to IDLE
+
 termi:	call dpcur		;update cursor display
 	call m_UART_RX_wait	;get input character to s5
-	;; check for escape
-	compare s5, 03		;^C
-	jump z, m_main
-	compare s5, 1b		;ESC
-	jump z, m_main
+
+	compare s5, ESC		;ESC
+	jump nz, noesc
+
+	;; got escape, start parsing
+	load s0, S_NEXT
+	store s0, escst
 	
-	call m_UART_TX		;echo the char
+	jump termi
+
+
+;;; got ESC, z where z is not [
+;;; check for local specials if any
+esc_local:
+	compare s5, "Q"		; ESC Q - exit to monitor
+	jump z, m_main
+
+	jump escrst
+	
+
+;;; 
+;;; Handle only CSI-style ANSI sequences, so:
+;;; CSI <parm> <final>
+;;;  CSI is ESC [
+;;;  <parm> are 30-3F 
+;;;  <parm> can be split into two by ; with each part optional
+;;;  <final> is 40-7E
+;;; 
+;;; Strategy:
+;;; Recognize CSI, capture all to <final>
+;;; parse <parm> if any to 0-2 values, each decimal up to 255
+;;;
+;;; Parser states (in escst):
+;;;   0 (IDLE) - waiting for ESC
+;;;   1 (NEXT) - waiting for [
+;;;   2 (PARM) - waiting for bytes 30-3F
+;;;
+;;; if ESC seen in sequence, abort and start over
+
+	;; check state and branch
+noesc:	fetch s0, escst		;current state
+	
+	compare s0, S_IDLE	;in idle state
+	jump z, ekko		;no escape seq in progress
+
+	compare s0, S_NEXT	;waiting for "[", ignore other
+	jump z, next
+
+escs1:	compare s0, S_PARM1
+	jump z, do_parm1
+	
+	compare s0, S_PARM2
+	jump z, do_parm2
+
+	;; unknown state, bail out
+	jump escrst
+
+;;; got ESC, checking next char
+next:	
+	compare s5, "["		;got CSI?
+	jump nz, esc_local	;nope, check for private/local seq
+	;; got CSI
+	load s0, S_PARM1
+	store s0, escst
+	;; zero the params
+	load s0, 00
+	store s0, escp1
+	store s0, escp2
+	jump termi
+
+;;; --- check for s5 parameter in range
+;;; return C if out of range
+;;; uses s4
+isparm:	compare s5, 30
+	return c			;(s5-30) less than 30
+	load s4, 40
+	compare s4, s5		;(40-s5)
+	return
+
+;;; first parameter
+do_parm1:
+	call isparm		;is a parameter byte?
+	jump c, endparm		;nope, end the sequence
+	compare s5, SEMI	;separator?
+	jump nz, addp1
+	;; semicolon
+	load s0, S_PARM2	;move on to parm2
+	store s0, escst
+	jump termi
+
+;;; multiply s0 by 10, add ascii s5
+;;; uses s1
+addp:	add s0, s0		;2x in s0
+	load s1, s0		;2x to s1
+	add s0,s1		;2x + 2x = 4x
+	add s0,s1		;4x + 2x = 6x
+	add s0,s1		;6x + 2x = 8x
+	add s0,s1		;8x + 2x = 10x
+	sub s5, "0"		;adjust new digit
+	add s0,s5		;new value
+	return
+
+addp1:	fetch s0, escp1		;get current p1 value
+	call addp		;add a digit
+	store s0, escp1
+	jump termi
+
+;;; second parameter
+do_parm2:
+	call isparm		;still parameter?
+	jump c, endparm		;nope, end sequence
+	fetch s0, escp2
+	call addp
+	store s0, escp2
+	jump termi
+
+;;; non-parameter byte seen, check for terminator
+endparm: compare s5, 40		;low end of terminator range
+	jump c, escrst		;below this is an error
+	compare s5, 7e		;upper end
+	jump nc, escrst
+	
+;;; we have a CSI, p1, p2, term sequence
+;;; terminator is still in s5
+	
+	compare s5, "A"
+	jump z, ANSI_CUU
+	compare s5, "B"
+	jump z, ANSI_CUD
+	compare s5, "C"
+	jump z, ANSI_CUF
+	compare s5, "D"
+	jump z, ANSI_CUB
+	compare s5, "H"
+	jump z, ANSI_CUP
+	compare s5, "J"
+	jump z, ANSI_ED
+	compare s5, "K"
+	jump z, ANSI_EL
+
+	jump	escrst
+
+;;; set missing p1, p2 to 1 (only appropriate for some functions,
+;;; so not done by default
+onedef:	fetch s0, escp1
+	compare s0, 00
+	jump nz, p1val
+	load s0, 01
+	store s0, escp1
+	
+p1val:	fetch s0, escp2
+	compare s0, 00
+	jump nz, p2val
+	load s0, 01
+	store s0, escp2
+p2val:	return
+	
+
+
+;;; ---------- Cursor up (CUU) ----------
+ANSI_CUU:
+	call onedef		;missing param = 1
+	fetch s1, escp1		;get row count
+cuu1:	compare s9, first_row	;already on top row?
+	jump z, escrst		;yes, we're done
+	sub s9,01
+	sub s1, 01
+	jump nz, cuu1
+	jump escrst
+
+;;; ---------- Cursor down (CUD) ----------
+ANSI_CUD:
+	call onedef		;missing param = 1
+	fetch s1, escp1
+cud1:	compare s9, last_row
+	jump z, escrst
+	add s9, 01
+	sub s1,01
+	jump nz,cud1
+	jump escrst
+
+;;; ---------- Cursor forward (CUF) ----------
+ANSI_CUF:
+	call onedef		;missing param = 1
+	fetch s1, escp1
+cuf1:	compare s8, ncols
+	jump z, escrst
+	add s8, 01
+	sub s1,01
+	jump nz,cuf1
+	jump escrst
+
+;;; ---------- Cursor back (CUB) ----------
+ANSI_CUB:
+	call onedef		;missing param = 1
+	fetch s1, escp1
+cub1:	compare s8, 00
+	jump z, escrst
+	sub s8, 01
+	sub s1, 01
+	jump nz,cub1
+	jump escrst
+
+;;; ---------- Cursor position (CUP) ----------
+ANSI_CUP:
+	call onedef		;missing param = 1
+	fetch s9, escp1		;column is OK
+	fetch s8, escp2
+	sub s8,01		;row offset by 1
+	jump escrst
+
+;;; ---------- Erase display (ED) ----------
+ANSI_ED:
+	fetch s1, escp1
+	compare s1, 00		; 0 means erase to end
+	jump z, ed_end
+	compare s1, 01		; 1 means erase to beginning
+	jump z, ed_beg
+	compare s1, 02		; erase and home
+	jump z, ed_all
+	compare s1, 03		; erase all too
+	jump z, ed_all
+	jump escrst		; anything else: ignore
+
+	;; first erase to end of line
+ed_end:	load s2, s9		;current line
+	load s3, s8		;current column
+	load s4,last_col
+	call clrcol
+	;; now erase lines from here to end
+	load s2, s9
+ed1:	add s2,01		;move down 1 line
+	compare s2, nrows	;at/past last line?
+	jump nc, escrst		;yes, we're done
+	call clrlin
+	jump ed1
+	
+	;; first erase to start of line
+ed_beg:	load s2, s9		;current line
+	load s3, 00		;first column
+	load s4, s8		;current column
+	call clrcol
+	;; now erase lines from start to here
+ed2:	sub s2, 01
+	jump z, escrst		;zero means done
+	call clrlin		;erase the line
+	jump ed2
+
+ed_all:	call cls
+	call home
+	jump escrst
+
+;;; ---------- Erase Line (EL) ----------
+ANSI_EL:
+	fetch s1, escp1
+	compare s1, 00		; 0 - clear to end
+	jump z, el_end
+	compare s1, 01		; 1 - clear to start
+	jump z, el_beg
+	compare s1, 02		; 2 - clear whole line
+	jump z, el_all
+	jump escrst
+
+;;; erase from cursor to end
+el_end:	load s2, s9		;current line
+	load s3, s8		;cursor column
+	load s4, last_col
+	call clrcol
+	jump escrst
+	
+;;; erase from beginning to cursor
+el_beg:	load s2, s9		;current line
+	load s3, 00		;first column
+	load s4, s8		;cursor column
+	call clrcol
+	jump escrst
+	
+;;; erase entire line
+el_all:	load s2, s9		; get current line
+	call clrlin
+	jump escrst
+
+;;; -------------------- non-escape processing --------------------
+ekko:	call m_UART_TX		;echo the char
 	
 	;; check for a control chars
-	compare s5,0d		;CR?
+noeko:	compare s5,0d		;CR?
 	jump z,term_cr
 	compare s5,0a		;LF?
 	jump z,term_lf
@@ -99,17 +400,29 @@ dolf:	add s9, 01		;of next row
 
 	sub s9, 01		;back to last row
 	;; scroll the screen up
-	call scroll
+	load s2, 00		;scroll from first row
+	load s3, last_row
+	call scrlin
 	
-dpcur: 	add s8,01		;why?
+	;; force cursor in valid range
+	;; update hardware display
+dpcur:
+	;; column must be 0..last_col
+	compare s8, ncols
+	jump c, colok
+	load s8, 00		;force to zero if not
+colok:
+	;; row must be first_row..last_row
+	compare s9, nrows
+	jump c, rowok
+	load s9, first_row
+
+rowok:	add s8,01		;hardware cursor offset by 1?
 	output s8, cursor_col	;update cursor posn
-	sub s8,01
+	sub s8,01		;hardware cursor offset by 1?
+	
 	output s9, cursor_row
 	return
-
-;;; scroll the entire screen up
-;;; FIXME: write this
-scroll:	return
 
 term_cr:
 	load s8,00
@@ -125,58 +438,70 @@ home:
 	load s9,first_row
 	return
 	
-	;; clear the screen
+;;; ------------------------------------------------------------
+;;; clear the screen
+;;; ------------------------------------------------------------
 	;; uses s0, s2, s3, s4
-cls:	load s2, 00
-	load s3, 00
-
-	output s3, vram_addr_hi
-	load s0, 20		;space character
-	output s0, vram_data_out
-	load s4, 01		;write bit
-
-crl:	output s2, vram_addr_lo
-	output s4, vram_wr
+cls:	load s2, 00		;start line
+cls1:	call clrlin		;erase line
 	add s2, 01
-	compare s2, ncols
-	jump nz, crl
-
-	load s2,00
-	add s3,01
-	output s3, vram_addr_hi
-	compare s3, nrows
-	jump nz, crl
-
-	jump home
+	compare s2,nrows
+	jump nz, cls1
+	return
 	
 	;; scroll screen between lines s2, s3 up a line
 	;; s2 - first line, increments as "copy from"
 	;;      ("copy to" is s2-1)
 	;; s3 - end line for checking
-	;; s4 - constant 01 for write ops
+	;; sA - constant 01 for write ops
 	;; s1 - column
+	;; doesn't disturb anything above s8
 	
-scrlin:	load s4, 01		;write bit
-	load s1, 00		;column
-	;; check for same value
+scrlin:	;; check for same value (done?)
 	compare s2, s3
-	return z		;null operation if s2==s3
+	jump z, clrlin
 
-	;; start by incre
+	load s5, s2		;target line
+	load s4, s2
+	add s4, 01
+	call movlin
 
-	;; copy a line from line s2 to line s3
-	;; uses s0, s1, s4
-movlin:	load s4,01		;write strobe
-	load s1,00		;column
+	add s2, 01
+	jump scrlin
+
+;;; copy one line from line s4 to s5
+;;; expects sA = 01
+;;; uses only s0, s1
+movlin:	load s1,00		;column
 
 	;; 18 clocks * 80 = 57us
 movchr:	output s1,vram_addr_lo
-	output s2,vram_addr_hi
+	output s4,vram_addr_hi
 	input s0, vram_data_in
-	output s3,vram_addr_hi
+	output s5,vram_addr_hi
 	output s0, vram_data_out
-	output s4, vram_wr
+	output sA, vram_wr
 	add s1,01
 	compare s1,ncols
 	jump nz, movchr
+	return
+
+;;; erase one line at s2
+;;; uses s0, s1, s3, s4  (expects sA=01)
+clrlin:	load s3, 00		;column 0
+	load s4, last_col	;last column
+	jump clrcol
+
+;;; erase column range (s3 to s4) in line s2
+clrcol:	output s2, vram_addr_hi
+	load s0, 20
+	output s0, vram_data_out
+	load s1, s3		;start column
+
+ccol:	output s1, vram_addr_lo
+	output sA, vram_wr
+	add s1, 01
+	compare s1, s4
+	jump nz, ccol
+	return
 
