@@ -228,6 +228,10 @@ endparm: compare s5, 40		;low end of terminator range
 	jump z, ANSI_ED
 	compare s5, "K"
 	jump z, ANSI_EL
+	compare s5, "M"
+	jump z, DEC_DL
+	compare s5, "L"
+	jump z, DEC_IL
 
 	jump	escrst
 
@@ -246,6 +250,34 @@ p1val:	fetch s0, escp2
 	store s0, escp2
 p2val:	return
 	
+
+;;; ---------- Line delete ----------
+;;; scroll lines from cursor to end up
+DEC_DL:	call onedef		;missing param = 1
+	fetch s7, escp1		;get line count
+
+dl1:	load s2, s9		;current row
+	load s3, last_row
+	call scrlup
+
+	sub s7,01
+	jump nz,dl1
+	jump escrst
+
+;;; ---------- Line insert ----------
+;;; scroll from cursor line to end of screen down
+;;; clear cursor line
+;;; repeat according to param
+DEC_IL:	call onedef		;missing param = 1
+	fetch s7, escp1		;get count
+
+il1:	load s2, s9		;current row
+	load s3, last_row
+	call scrldn
+
+	sub s7, 01
+	jump nz, il1
+	jump escrst
 
 
 ;;; ---------- Cursor up (CUU) ----------
@@ -375,24 +407,34 @@ el_all:	load s2, s9		; get current line
 ekko:	call m_UART_TX		;echo the char
 	
 	;; check for a control chars
-noeko:	compare s5,0d		;CR?
+noeko:	and s5,7f		;strip upper bit just in case
+	compare s5,20		;control?
+	jump nc,noctl		;nope, go print it
+
+	compare s5,08		;backspace?
+	jump z, term_bs
+	compare s5,0d		;CR?
 	jump z,term_cr
 	compare s5,0a		;LF?
 	jump z,term_lf
+
+	jump termi		;ignore all other control chars
 	
-	call v_putc
+noctl:	call v_putc
 	jump termi
 
 ;;; display character in s5 at cursor
-;;; move cursor right
+;;; move cursor right if not at end
 v_putc:	output s8,vram_addr_lo	;set column RAM address
 	output s9,vram_addr_hi	;set row RAM address
 	output s5,vram_data_out	;set output data
 	output sA,vram_wr	;write to VRAM
+
+	compare s8, last_col	;last column?
+	jump z, dpcur		;yes, we're done (don't wrap!)
 	add s8, 01		;increment column
-	compare s8, ncols	;did we just wrap?
-	jump nz, dpcur
-	load s8, 00		;reset to first column
+	jump dpcur
+	
 	;; this is also the entry point for a LF from anywhere
 dolf:	add s9, 01		;of next row
 	compare s9, nrows	;off bottom of screen?
@@ -402,7 +444,7 @@ dolf:	add s9, 01		;of next row
 	;; scroll the screen up
 	load s2, 00		;scroll from first row
 	load s3, last_row
-	call scrlin
+	call scrlup
 	
 	;; force cursor in valid range
 	;; update hardware display
@@ -423,6 +465,12 @@ rowok:	add s8,01		;hardware cursor offset by 1?
 	
 	output s9, cursor_row
 	return
+
+term_bs:
+	compare s8, 00
+	jump z, termi		;ignore if at column 1
+	sub s8,01
+	jump termi
 
 term_cr:
 	load s8,00
@@ -449,15 +497,14 @@ cls1:	call clrlin		;erase line
 	jump nz, cls1
 	return
 	
-	;; scroll screen between lines s2, s3 up a line
-	;; s2 - first line, increments as "copy from"
-	;;      ("copy to" is s2-1)
-	;; s3 - end line for checking
-	;; sA - constant 01 for write ops
-	;; s1 - column
-	;; doesn't disturb anything above s8
+;;; scroll screen between lines s2, s3 up a line
+;;; s2 - first line, increments as "copy from"
+;;;      ("copy to" is s2-1)
+;;; s3 - end line for checking
+;;; sA - constant 01 for write ops
+;;; doesn't disturb anything above s8
 	
-scrlin:	;; check for same value (done?)
+scrlup:	;; check for same value (done?)
 	compare s2, s3
 	jump z, clrlin
 
@@ -467,7 +514,23 @@ scrlin:	;; check for same value (done?)
 	call movlin
 
 	add s2, 01
-	jump scrlin
+	jump scrlup
+
+;;; scroll the screen between lines s2, s3 down a line
+;;; s2 - first line for check to stop scroll
+;;; s3 - last line
+;;;      copy from s3-1 to s3
+;;; sA - constant 01 for write ops
+scrldn:	compare s2, s3		;same means done, clear line
+	jump z, clrlin
+
+	load s5, s3		;target line
+	load s4, s3
+	sub s4, 01
+	call movlin
+
+	sub s3, 01
+	jump scrldn
 
 ;;; copy one line from line s4 to s5
 ;;; expects sA = 01

@@ -35,3 +35,9 @@ returned as cursor position report (CPR):
 ESC [ r;c R
 ESC [ s	Save cursor position (SCP)
 ESC [ u	Restore cursor position (RCP)
+
+More needed apparently for WordStar (these are VT102 specific
+but supported by Xterm)
+
+ESC [ n M       Delete line(s)
+ESC [ n L       Insert line(s)
