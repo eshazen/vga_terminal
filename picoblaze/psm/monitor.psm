@@ -122,7 +122,7 @@ start:
 	call bzero
 
 	;; NOTE NOTE:  this version starts in the terminal mode
-	jump cmd_T
+;	jump cmd_T
 
         CALL reset_UART_macros
         CALL welcome_message

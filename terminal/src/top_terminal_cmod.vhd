@@ -1,15 +1,17 @@
 --
 -- VGA 80x40 text on 640x480 raster
 -- 
--- FIXME:  edit for CMOD version
+-- Doesn't fit in xa15T.  Changing the text RAM to a BRAM
+-- now it fits but doesn't meet timing
+-- add registers on BRAM input and output
 --
 
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
-use IEEE.std_logic_unsigned.all;
+-- use IEEE.std_logic_unsigned.all;
 
-entity top_terminal is
+entity top_terminal_cmod is
 
   port (
     clk      : in  std_logic;
@@ -19,16 +21,15 @@ entity top_terminal is
     Hsync    : out std_logic;
     Vsync    : out std_logic;
     led      : out std_logic_vector(1 downto 0);
-    sw       : in  std_logic_vector(10 downto 0);
     RsRx     : in  std_logic;
     RsTx     : out std_logic;
     kb_data : in std_logic;             -- keyboard 4800 baud in
-    uart_rxd_out : in std_logic;        -- USB uart DIRECTION?!
-    uart_txd_in : out std_logic         -- USB uart DIRECTION?!
+    uart_rxd : in std_logic;        -- USB uart Rx (names sic.)
+    uart_txd : out std_logic         -- USB uart Tx
     );
-end entity top_terminal;
+end entity top_terminal_cmod;
 
-architecture arch of top_terminal is
+architecture arch of top_terminal_cmod is
 
   component pico_control is
     port (
@@ -42,25 +43,35 @@ architecture arch of top_terminal is
       action   : out std_logic_vector(7 downto 0));
   end component pico_control;
 
-  component mem_text is
+  component mem_text_bram is
     port (
-      clk       : in  std_logic;
-      addra     : in  std_logic_vector(11 downto 0);
-      douta     : out std_logic_vector(07 downto 0);
-      dinb      : in  std_logic_vector(7 downto 0);
-      addrb_col : in  std_logic_vector(6 downto 0);
-      addrb_row : in  std_logic_vector(5 downto 0);
-      web       : in  std_logic;
-      doutb     : out std_logic_vector(07 downto 0));
-  end component mem_text;
+      clka  : IN  STD_LOGIC;
+      ena   : IN  STD_LOGIC;
+      wea   : IN  STD_LOGIC_VECTOR(0 DOWNTO 0);
+      addra : IN  STD_LOGIC_VECTOR(12 DOWNTO 0);
+      dina  : IN  STD_LOGIC_VECTOR(7 DOWNTO 0);
+      douta : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
+      clkb  : IN  STD_LOGIC;
+      enb   : IN  STD_LOGIC;
+      web   : IN  STD_LOGIC_VECTOR(0 DOWNTO 0);
+      addrb : IN  STD_LOGIC_VECTOR(12 DOWNTO 0);
+      dinb  : IN  STD_LOGIC_VECTOR(7 DOWNTO 0);
+      doutb : OUT STD_LOGIC_VECTOR(7 DOWNTO 0));
+  end component mem_text_bram;
 
--- FIXME:  12MHz is input now
-  component clk_vga is
-    port (
-      clk_out1 : out std_logic;
-      locked   : out std_logic;
-      clk_in1  : in  std_logic);
-  end component clk_vga;
+--  component clk_wiz_0 is
+--    port (
+--      clk_out1 : out std_logic;
+--      locked   : out std_logic;
+--      clk_in1  : in  std_logic);
+--  end component clk_wiz_0;
+
+--  component clk_vga is
+--    port (
+--      clk_out1 : out std_logic;
+--      locked   : out std_logic;
+--      clk_in1  : in  std_logic);
+--  end component clk_vga;
 
   component vga80x40 is
     port (
@@ -117,17 +128,12 @@ architecture arch of top_terminal is
   signal s_status   : std_logic_vector(7 downto 0);
   signal s_action   : std_logic_vector(7 downto 0);
 
-  signal uart_rx : std_logic;
+  signal s_vga_data : std_logic_vector(7 downto 0);
+  signal s_vga_addr : std_logic_vector(12 downto 0);
 
 begin  -- architecture arch
 
   reset <= '0';                         -- we don't need no steenkin reset!
-
-  -- switch 0 selects serial input
-  with sw(0) select
-    uart_rx <=
-    aux_rx when '0',
-    RsRx   when others;
 
   s_status <= TEXT_RD_D;
 
@@ -154,18 +160,27 @@ begin  -- architecture arch
   Hsync <= s_hsync;
   Vsync <= s_vsync;
 
-  clk_vga_1 : clk_vga
-    port map (
-      clk_out1 => pclk,
-      locked   => locked,
-      clk_in1  => clk);
+--   clk_wiz_0_1 : clk_wiz_0
+--     port map (
+--       clk_out1 => pclk,
+--       locked   => locked,
+--       clk_in1  => clk);
+
+--  clk_vga_1 : clk_vga
+--    port map (
+--      clk_out1 => pclk,
+--      locked   => locked,
+--      clk_in1  => clk);
+
+  -- dummy clock for now
+  pclk <= clk;
 
   pico_control_1 : entity work.pico_control
     port map (
       clk      => pclk,
       reset    => reset,
-      RX       => uart_rx,
-      TX       => RsTx,
+      RX       => uart_rxd,              -- USB port for simple test
+      TX       => uart_txd,
       control  => s_control,
       control2 => s_control2,
       status   => s_status,
@@ -189,18 +204,36 @@ begin  -- architecture arch
       hsync      => s_hsync,
       vsync      => s_vsync);
 
-  -- video RAM
-  mem_text_1 : entity work.mem_text
+  mem_text_bram_1: mem_text_bram
     port map (
-      clk       => pclk,
-      addra_row => TEXT_A_ROW,
-      addra_col => TEXT_A_COL,
-      douta     => TEXT_D,
-      dinb      => TEXT_WR_D,
-      addrb_col => TEXT_WR_A_COL,
-      addrb_row => TEXT_WR_A_ROW,
-      web       => TEXT_WR_WE,
-      doutb     => TEXT_RD_D);
+      -- port A from VGA
+      clka  => pclk,
+      ena   => '1',
+      wea   => "0",
+      addra => s_vga_addr,
+
+      dina  => (others => '0'),
+      douta => s_vga_data,
+      -- port B from picoblaze
+      clkb  => pclk,
+      enb   => '1',
+      web   => (0 => TEXT_WR_WE),
+      addrb => TEXT_WR_A_ROW & TEXT_WR_A_COL,
+      dinb  => TEXT_WR_D,
+      doutb => TEXT_RD_D);
+
+--  -- video RAM
+--  mem_text_1 : entity work.mem_text
+--    port map (
+--      clk       => pclk,
+--      addra_row => TEXT_A_ROW,
+--      addra_col => TEXT_A_COL,
+--      douta     => TEXT_D,
+--      dinb      => TEXT_WR_D,
+--      addrb_col => TEXT_WR_A_COL,
+--      addrb_row => TEXT_WR_A_ROW,
+--      web       => TEXT_WR_WE,
+--      doutb     => TEXT_RD_D);
 
   -- character generator
   mem_font_1 : entity work.mem_font
@@ -211,7 +244,8 @@ begin  -- architecture arch
   process (pclk) is
   begin  -- process
     if pclk'event and pclk = '1' then   -- rising clock edge
-
+      s_vga_addr <= std_logic_vector( to_unsigned( TEXT_A_ROW, 6)) 
+               & std_logic_vector( to_unsigned( TEXT_A_COL, 7));
     end if;
   end process;
 
