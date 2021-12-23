@@ -4,6 +4,7 @@ terminal/src/ctrm.vhd
 terminal/src/vga80x40_col1fixed.vhd
 terminal/src/mem_font.vhd
 terminal/src/mem_text.vhd
+IP/clk_wiz_0/clk_wiz_0.xci
 IP/mem_text_bram/mem_text_bram.xci
 picoblaze/src/kcpsm6.vhd
 picoblaze/src/pico_control.vhd

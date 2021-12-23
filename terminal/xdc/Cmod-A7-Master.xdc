@@ -3,18 +3,19 @@
 ## - uncomment the lines corresponding to used pins
 ## - rename the used ports (in each line, after get_ports) according to the top level signal names in the project
 
-set_property PACKAGE_PIN L17 [get_ports clk]
-	set_property IOSTANDARD LVCMOS33 [get_ports clk]
-	create_clock -add -name sys_clk_pin -period 39.72 -waveform {0 19.86} [get_ports clk]
+# # fake 27.xxx MHz input
+# set_property PACKAGE_PIN L17 [get_ports clk]
+# 	set_property IOSTANDARD LVCMOS33 [get_ports clk]
+# 	create_clock -add -name sys_clk_pin -period 39.72 -waveform {0 19.86} [get_ports clk]
 
 ## # test fake 100 MHz clock
 ## set_property PACKAGE_PIN L17 [get_ports clk]
 ## 	set_property IOSTANDARD LVCMOS33 [get_ports clk]
 ## 	create_clock -add -name sys_clk_pin -period 10.00 -waveform {0 5} [get_ports clk]
 
-## ## 12 MHz Clock Signal
-## set_property -dict { PACKAGE_PIN L17   IOSTANDARD LVCMOS33 } [get_ports { clk }]; #IO_L12P_T1_MRCC_14 Sch=gclk
-## create_clock -add -name sys_clk_pin -period 83.33 -waveform {0 41.66} [get_ports {clk}];
+## 12 MHz Clock Signal
+set_property -dict { PACKAGE_PIN L17   IOSTANDARD LVCMOS33 } [get_ports { clk }]; #IO_L12P_T1_MRCC_14 Sch=gclk
+create_clock -add -name sys_clk_pin -period 83.33 -waveform {0 41.66} [get_ports {clk}];
 
 ## LEDs
 set_property -dict { PACKAGE_PIN A17   IOSTANDARD LVCMOS33 } [get_ports { led[0] }]; #IO_L12N_T1_MRCC_16 Sch=led[1]

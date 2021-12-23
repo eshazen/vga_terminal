@@ -59,12 +59,12 @@ architecture arch of top_terminal_cmod is
       doutb : OUT STD_LOGIC_VECTOR(7 DOWNTO 0));
   end component mem_text_bram;
 
---  component clk_wiz_0 is
---    port (
---      clk_out1 : out std_logic;
---      locked   : out std_logic;
---      clk_in1  : in  std_logic);
---  end component clk_wiz_0;
+  component clk_wiz_0 is
+    port (
+      clk_out1 : out std_logic;
+      locked   : out std_logic;
+      clk_in1  : in  std_logic);
+  end component clk_wiz_0;
 
 --  component clk_vga is
 --    port (
@@ -160,11 +160,11 @@ begin  -- architecture arch
   Hsync <= s_hsync;
   Vsync <= s_vsync;
 
---   clk_wiz_0_1 : clk_wiz_0
---     port map (
---       clk_out1 => pclk,
---       locked   => locked,
---       clk_in1  => clk);
+   clk_wiz_0_1 : clk_wiz_0
+     port map (
+       clk_out1 => pclk,
+       locked   => locked,
+       clk_in1  => clk);
 
 --  clk_vga_1 : clk_vga
 --    port map (
@@ -173,7 +173,7 @@ begin  -- architecture arch
 --      clk_in1  => clk);
 
   -- dummy clock for now
-  pclk <= clk;
+  -- pclk <= clk;
 
   pico_control_1 : entity work.pico_control
     port map (
