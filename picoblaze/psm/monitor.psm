@@ -109,11 +109,14 @@ start:
 	;; set 4800 baud (328 dec, 0x148 for 25.175MHz)
 ;	load s0, 139'd
 ;	load s0, 163'd
-	load s0, 48
+
+	;; 115200 baud with 7.375MHz clock = 4-1 or 3
+
+	load s0, 3
         output s0, set_baud_rate_lsb
 ;	load S0, 02
-;	load S0, 00
-	load s0, 01
+	load S0, 00
+;	load s0, 01
         output s0, set_baud_rate_msb	
 
 ;;; zero entire scratchpad

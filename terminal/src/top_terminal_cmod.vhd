@@ -71,43 +71,31 @@ architecture arch of top_terminal_cmod is
       doutb : out std_logic_vector(7 downto 0));
   end component mem_text_bram;
 
-  component clk_wiz_7375 is
-    port(
-      clk_out1 : out std_logic;
-      clk_in1  : in  std_logic);
-  end component clk_wiz_7375;
-
-  component clk_wiz_1 is
+  component clk_dual is
     port (
-      clk_out1 : out std_logic;
-      clk_in1  : in  std_logic);
-  end component clk_wiz_1;
+      clk_in   : in  std_logic;
+      clk_2500 : out std_logic;
+      clk_7375 : out std_logic
+      );
 
---  component clk_vga is
---    port (
---      clk_out1 : out std_logic;
---      locked   : out std_logic;
---      clk_in1  : in  std_logic);
---  end component clk_vga;
-
-  component vga80x40 is
-    port (
-      reset      : in  std_logic;
-      clk25MHz   : in  std_logic;
-      TEXT_A_ROW : out integer range 039 downto 0;
-      TEXT_A_COL : out integer range 079 downto 0;
-      TEXT_D     : in  std_logic_vector(07 downto 0);
-      FONT_A     : out std_logic_vector(11 downto 0);
-      FONT_D     : in  std_logic_vector(07 downto 0);
-      ocrx       : in  std_logic_vector(07 downto 0);
-      ocry       : in  std_logic_vector(07 downto 0);
-      octl       : in  std_logic_vector(07 downto 0);
-      R          : out std_logic;
-      G          : out std_logic;
-      B          : out std_logic;
-      hsync      : out std_logic;
-      vsync      : out std_logic);
-  end component vga80x40;
+    component vga80x40 is
+      port (
+        reset      : in  std_logic;
+        clk25MHz   : in  std_logic;
+        TEXT_A_ROW : out integer range 039 downto 0;
+        TEXT_A_COL : out integer range 079 downto 0;
+        TEXT_D     : in  std_logic_vector(07 downto 0);
+        FONT_A     : out std_logic_vector(11 downto 0);
+        FONT_D     : in  std_logic_vector(07 downto 0);
+        ocrx       : in  std_logic_vector(07 downto 0);
+        ocry       : in  std_logic_vector(07 downto 0);
+        octl       : in  std_logic_vector(07 downto 0);
+        R          : out std_logic;
+        G          : out std_logic;
+        B          : out std_logic;
+        hsync      : out std_logic;
+        vsync      : out std_logic);
+    end component vga80x40;
 
   component mem_font is
     port (
@@ -115,9 +103,9 @@ architecture arch of top_terminal_cmod is
       dout : out std_logic_vector(07 downto 0));
   end component mem_font;
 
-  signal pclk    : std_logic;
-  signal clk7375 : std_logic;
-  signal reset   : std_logic;
+  signal pclk  : std_logic;
+  signal bclk  : std_logic;
+  signal reset : std_logic;
 
   signal s_vsync, s_hsync : std_logic;
 
@@ -177,15 +165,11 @@ begin  -- architecture arch
   Hsync <= s_hsync;
   Vsync <= s_vsync;
 
-  clk_wiz_7375_1 : entity work.clk_wiz_7375
+  clk_dual_1 : clk_dual
     port map (
-      clk_out1 => clk,
-      clk_in1  => clk7375);
-
-  clk_wiz_1_1 : clk_wiz_1
-    port map (
-      clk_out1 => pclk,
-      clk_in1  => clk);
+      clk_in   => clk,
+      clk_2500 => pclk
+      clk_7375 => bclk);
 
 --  clk_vga_1 : clk_vga
 --    port map (
@@ -199,7 +183,7 @@ begin  -- architecture arch
   pico_control_1 : entity work.pico_control_xbaud
     port map (
       clk      => pclk,
-      bclk     => clk7375,
+      bclk     => bclk,
       reset    => reset,
       RX       => uart_txd,             -- USB port for simple test
       TX       => uart_rxd,
