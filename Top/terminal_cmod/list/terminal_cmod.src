@@ -4,10 +4,10 @@ terminal/src/ctrm.vhd
 terminal/src/vga80x40_col1fixed.vhd
 terminal/src/mem_font.vhd
 terminal/src/mem_text.vhd
-IP/clk_dual/clk_dual.xci
+IP/clk_wiz_1/clk_wiz_1.xci
 IP/mem_text_bram/mem_text_bram.xci
 picoblaze/src/kcpsm6.vhd
-picoblaze/src/pico_control_xbaud.vhd
+picoblaze/src/pico_control.vhd
 picoblaze/src/uart_rx6.vhd
 picoblaze/src/uart_tx6.vhd
 picoblaze/psm/my_ROM.vhd

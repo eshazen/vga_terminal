@@ -58,7 +58,7 @@ architecture syn of monitor is
     X"00000",
     X"00000",
     X"00000",
-    X"01003",
+    X"010A2",
     X"2D001",
     X"01000",
     X"2D002",
