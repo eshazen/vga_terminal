@@ -30,9 +30,10 @@ end entity top_terminal_cmod;
 
 architecture arch of top_terminal_cmod is
 
-  component pico_control is
+  component pico_control_xbaud is
     port (
       clk      : in  std_logic;
+      bclk     : in  std_logic;
       reset    : in  std_logic;
       RX       : in  std_logic;
       TX       : out std_logic;
@@ -40,7 +41,19 @@ architecture arch of top_terminal_cmod is
       control2 : out std_logic_vector(31 downto 0);
       status   : in  std_logic_vector(7 downto 0);
       action   : out std_logic_vector(7 downto 0));
-  end component pico_control;
+  end component pico_control_xbaud;
+
+--  component pico_control is
+--    port (
+--      clk      : in  std_logic;
+--      reset    : in  std_logic;
+--      RX       : in  std_logic;
+--      TX       : out std_logic;
+--      control  : out std_logic_vector(31 downto 0);
+--      control2 : out std_logic_vector(31 downto 0);
+--      status   : in  std_logic_vector(7 downto 0);
+--      action   : out std_logic_vector(7 downto 0));
+--  end component pico_control;
 
   component mem_text_bram is
     port (
@@ -57,6 +70,12 @@ architecture arch of top_terminal_cmod is
       dinb  : in  std_logic_vector(7 downto 0);
       doutb : out std_logic_vector(7 downto 0));
   end component mem_text_bram;
+
+  component clk_wiz_7375 is
+    port(
+      clk_out1 : out std_logic;
+      clk_in1  : in  std_logic);
+  end component clk_wiz_7375;
 
   component clk_wiz_1 is
     port (
@@ -96,8 +115,9 @@ architecture arch of top_terminal_cmod is
       dout : out std_logic_vector(07 downto 0));
   end component mem_font;
 
-  signal pclk  : std_logic;
-  signal reset : std_logic;
+  signal pclk    : std_logic;
+  signal clk7375 : std_logic;
+  signal reset   : std_logic;
 
   signal s_vsync, s_hsync : std_logic;
 
@@ -157,6 +177,11 @@ begin  -- architecture arch
   Hsync <= s_hsync;
   Vsync <= s_vsync;
 
+  clk_wiz_7375_1 : entity work.clk_wiz_7375
+    port map (
+      clk_out1 => clk,
+      clk_in1  => clk7375);
+
   clk_wiz_1_1 : clk_wiz_1
     port map (
       clk_out1 => pclk,
@@ -171,9 +196,10 @@ begin  -- architecture arch
   -- dummy clock for now
   -- pclk <= clk;
 
-  pico_control_1 : entity work.pico_control
+  pico_control_1 : entity work.pico_control_xbaud
     port map (
       clk      => pclk,
+      bclk     => clk7375,
       reset    => reset,
       RX       => uart_txd,             -- USB port for simple test
       TX       => uart_rxd,
