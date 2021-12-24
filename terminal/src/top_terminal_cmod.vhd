@@ -1,10 +1,6 @@
 --
 -- VGA 80x40 text on 640x480 raster
 -- 
--- Doesn't fit in xa15T.  Changing the text RAM to a BRAM
--- now it fits but doesn't meet timing
--- add registers on BRAM input and output
---
 
 library IEEE;
 use IEEE.std_logic_1164.all;
@@ -21,11 +17,14 @@ entity top_terminal_cmod is
     Hsync    : out std_logic;
     Vsync    : out std_logic;
     led      : out std_logic_vector(1 downto 0);
+    led0_b   : out std_logic;
+    led0_g   : out std_logic;
+    led0_r   : out std_logic;
     RsRx     : in  std_logic;
     RsTx     : out std_logic;
-    kb_data : in std_logic;             -- keyboard 4800 baud in
-    uart_rxd : in std_logic;        -- USB uart Rx (names sic.)
-    uart_txd : out std_logic         -- USB uart Tx
+    kb_data  : in  std_logic;           -- keyboard 4800 baud in
+    uart_rxd : out std_logic;           -- USB uart Rx (names sic.)
+    uart_txd : in  std_logic            -- USB uart Tx
     );
 end entity top_terminal_cmod;
 
@@ -45,18 +44,18 @@ architecture arch of top_terminal_cmod is
 
   component mem_text_bram is
     port (
-      clka  : IN  STD_LOGIC;
-      ena   : IN  STD_LOGIC;
-      wea   : IN  STD_LOGIC_VECTOR(0 DOWNTO 0);
-      addra : IN  STD_LOGIC_VECTOR(12 DOWNTO 0);
-      dina  : IN  STD_LOGIC_VECTOR(7 DOWNTO 0);
-      douta : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
-      clkb  : IN  STD_LOGIC;
-      enb   : IN  STD_LOGIC;
-      web   : IN  STD_LOGIC_VECTOR(0 DOWNTO 0);
-      addrb : IN  STD_LOGIC_VECTOR(12 DOWNTO 0);
-      dinb  : IN  STD_LOGIC_VECTOR(7 DOWNTO 0);
-      doutb : OUT STD_LOGIC_VECTOR(7 DOWNTO 0));
+      clka  : in  std_logic;
+      ena   : in  std_logic;
+      wea   : in  std_logic_vector(0 downto 0);
+      addra : in  std_logic_vector(12 downto 0);
+      dina  : in  std_logic_vector(7 downto 0);
+      douta : out std_logic_vector(7 downto 0);
+      clkb  : in  std_logic;
+      enb   : in  std_logic;
+      web   : in  std_logic_vector(0 downto 0);
+      addrb : in  std_logic_vector(12 downto 0);
+      dinb  : in  std_logic_vector(7 downto 0);
+      doutb : out std_logic_vector(7 downto 0));
   end component mem_text_bram;
 
   component clk_wiz_1 is
@@ -127,8 +126,9 @@ architecture arch of top_terminal_cmod is
   signal s_status   : std_logic_vector(7 downto 0);
   signal s_action   : std_logic_vector(7 downto 0);
 
-  signal s_vga_data : std_logic_vector(7 downto 0);
   signal s_vga_addr : std_logic_vector(12 downto 0);
+
+  signal s_counter : unsigned(23 downto 0);
 
 begin  -- architecture arch
 
@@ -140,8 +140,6 @@ begin  -- architecture arch
   TEXT_WR_A_COL <= s_control(14 downto 8);
   TEXT_WR_A_ROW <= s_control(21 downto 16);
   TEXT_WR_WE    <= s_action(0);
-
-  led <= "11";
 
   -- all full intensity
   vgaRed(0) <= R;
@@ -159,10 +157,10 @@ begin  -- architecture arch
   Hsync <= s_hsync;
   Vsync <= s_vsync;
 
-   clk_wiz_1_1 : clk_wiz_1
-     port map (
-       clk_out1 => pclk,
-       clk_in1  => clk);
+  clk_wiz_1_1 : clk_wiz_1
+    port map (
+      clk_out1 => pclk,
+      clk_in1  => clk);
 
 --  clk_vga_1 : clk_vga
 --    port map (
@@ -177,8 +175,8 @@ begin  -- architecture arch
     port map (
       clk      => pclk,
       reset    => reset,
-      RX       => uart_rxd,              -- USB port for simple test
-      TX       => uart_txd,
+      RX       => uart_txd,             -- USB port for simple test
+      TX       => uart_rxd,
       control  => s_control,
       control2 => s_control2,
       status   => s_status,
@@ -191,6 +189,7 @@ begin  -- architecture arch
       TEXT_A_ROW => TEXT_A_ROW,
       TEXT_A_COL => TEXT_A_COL,
       TEXT_D     => TEXT_D,
+--      TEXT_D     => X"55",      
       FONT_A     => FONT_A,
       FONT_D     => FONT_D,
       ocrx       => s_control2(15 downto 8),
@@ -202,16 +201,16 @@ begin  -- architecture arch
       hsync      => s_hsync,
       vsync      => s_vsync);
 
-  mem_text_bram_1: mem_text_bram
+  mem_text_bram_1 : mem_text_bram
     port map (
       -- port A from VGA
       clka  => pclk,
       ena   => '1',
       wea   => "0",
       addra => s_vga_addr,
-
       dina  => (others => '0'),
-      douta => s_vga_data,
+      douta => TEXT_D,
+
       -- port B from picoblaze
       clkb  => pclk,
       enb   => '1',
@@ -239,11 +238,22 @@ begin  -- architecture arch
       addr => FONT_A,
       dout => FONT_D);
 
+  s_vga_addr <= std_logic_vector(to_unsigned(TEXT_A_ROW, 6))
+                & std_logic_vector(to_unsigned(TEXT_A_COL, 7));
+
+  led(0) <= s_counter(23);
+  led(1) <= s_counter(22);
+
+  led0_b <= '0';
+  led0_g <= '0';
+  led0_r <= '0';
+
   process (pclk) is
   begin  -- process
     if pclk'event and pclk = '1' then   -- rising clock edge
-      s_vga_addr <= std_logic_vector( to_unsigned( TEXT_A_ROW, 6)) 
-               & std_logic_vector( to_unsigned( TEXT_A_COL, 7));
+
+      s_counter <= s_counter + 1;
+
     end if;
   end process;
 

@@ -3,7 +3,7 @@
 # N.B. some of this is guesswork
 #
 
-set flashDevice {mt25qu128-spi-x1_x2_x4}
+set flashDevice {mx25u3233f-spi-x1_x2_x4}
 
 open_hw_manager
 connect_hw_server -url localhost:3121
@@ -14,7 +14,7 @@ create_hw_cfgmem -hw_device [current_hw_device] $flashDevice
 
 set cfgMem [current_hw_cfgmem]
 
-set_property PROGRAM.FILES top.bin $cfgMem
+set_property PROGRAM.FILES top_terminal_cmod.bin $cfgMem
 set_property PROGRAM.ADDRESS_RANGE {use_file} $cfgMem
 set_property PROGRAM.BLANK_CHECK 1 $cfgMem
 set_property PROGRAM.ERASE 1 $cfgMem
