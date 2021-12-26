@@ -1,5 +1,6 @@
 --
 -- VGA 80x40 text on 640x480 raster
+--
 -- 
 
 library IEEE;

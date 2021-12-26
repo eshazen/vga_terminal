@@ -7,7 +7,8 @@ terminal/src/mem_text.vhd
 IP/clk_wiz_1/clk_wiz_1.xci
 IP/mem_text_bram/mem_text_bram.xci
 picoblaze/src/kcpsm6.vhd
-picoblaze/src/pico_control.vhd
+picoblaze/src/pico_control_multi_uart.vhd
+picoblaze/src/uart_bus.vhd
 picoblaze/src/uart_rx6.vhd
 picoblaze/src/uart_tx6.vhd
 picoblaze/psm/my_ROM.vhd
