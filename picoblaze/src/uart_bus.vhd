@@ -1,6 +1,9 @@
 --
 -- uart_bus.vhd - bidirectional UART package with baud rate generator
 --
+library IEEE;
+use IEEE.std_logic_1164.all;
+use IEEE.numeric_std.all;
 
 entity uart_bus is
 
@@ -10,6 +13,8 @@ entity uart_bus is
     set_baud_rate : in  std_logic_vector(15 downto 0);
     data_in       : in  std_logic_vector(7 downto 0);
     data_out      : out std_logic_vector(7 downto 0);
+    serial_out    : out std_logic;
+    serial_in     : in  std_logic;
     rd, wr        : in  std_logic;
     status_out    : out std_logic_vector(7 downto 0));
 
@@ -86,10 +91,10 @@ begin  -- architecture arch
       en_16_x_baud        => en_16_x_baud,
       serial_out          => serial_out,
       buffer_write        => wr,
-      buffer_data_present => buffer_data_present,
-      buffer_half_full    => buffer_half_full,
-      buffer_full         => buffer_full,
-      buffer_reset        => buffer_reset,
+      buffer_data_present => uart_tx_data_present,
+      buffer_half_full    => uart_tx_half_full,
+      buffer_full         => uart_tx_full,
+      buffer_reset        => reset,
       clk                 => clk);
 
   uart_rx6_1 : entity work.uart_rx6
@@ -98,10 +103,10 @@ begin  -- architecture arch
       en_16_x_baud        => en_16_x_baud,
       data_out            => data_out,
       buffer_read         => rd,
-      buffer_data_present => buffer_data_present,
-      buffer_half_full    => buffer_half_full,
-      buffer_full         => buffer_full,
-      buffer_reset        => buffer_reset,
+      buffer_data_present => uart_rx_data_present,
+      buffer_half_full    => uart_rx_half_full,
+      buffer_full         => uart_rx_full,
+      buffer_reset        => reset,
       clk                 => clk);
 
   --

@@ -20,8 +20,6 @@ long_help_msg:
 	LOAD&RETURN s5, help4$
 	LOAD&RETURN s5, help5$
 	LOAD&RETURN s5, help6$
-	LOAD&RETURN s5, help7$
-	LOAD&RETURN s5, help8$
 	LOAD&RETURN s5, help9$
 	LOAD&RETURN s5, helpA$
 	LOAD&RETURN s5, helpB$

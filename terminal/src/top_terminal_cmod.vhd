@@ -31,29 +31,19 @@ end entity top_terminal_cmod;
 
 architecture arch of top_terminal_cmod is
 
-  component pico_control is
+  component pico_control_multi_uart is
+    generic (
+      UARTS : integer);
     port (
       clk      : in  std_logic;
       reset    : in  std_logic;
-      RX       : in  std_logic;
-      TX       : out std_logic;
+      RX       : in  std_logic_vector(UARTS-1 downto 0);
+      TX       : out std_logic_vector(UARTS-1 downto 0);
       control  : out std_logic_vector(31 downto 0);
       control2 : out std_logic_vector(31 downto 0);
       status   : in  std_logic_vector(7 downto 0);
       action   : out std_logic_vector(7 downto 0));
-  end component pico_control;
-
---  component pico_control is
---    port (
---      clk      : in  std_logic;
---      reset    : in  std_logic;
---      RX       : in  std_logic;
---      TX       : out std_logic;
---      control  : out std_logic_vector(31 downto 0);
---      control2 : out std_logic_vector(31 downto 0);
---      status   : in  std_logic_vector(7 downto 0);
---      action   : out std_logic_vector(7 downto 0));
---  end component pico_control;
+  end component pico_control_multi_uart;
 
   component mem_text_bram is
     port (
@@ -73,7 +63,7 @@ architecture arch of top_terminal_cmod is
 
   component clk_wiz_1 is
     port (
-      clk_in   : in  std_logic;
+      clk_in  : in  std_logic;
       clk2500 : out std_logic
       );
   end component clk_wiz_1;
@@ -137,6 +127,9 @@ architecture arch of top_terminal_cmod is
 
   signal s_counter : unsigned(23 downto 0);
 
+  signal s_serial_in  : std_logic_vector(1 downto 0);
+  signal s_serial_out : std_logic_vector(1 downto 0);
+
 begin  -- architecture arch
 
   reset <= '0';                         -- we don't need no steenkin reset!
@@ -166,7 +159,7 @@ begin  -- architecture arch
 
   clk_wiz_1_1 : clk_wiz_1
     port map (
-      clk_in   => clk,
+      clk_in  => clk,
       clk2500 => pclk);
 
 --  clk_vga_1 : clk_vga
@@ -175,12 +168,14 @@ begin  -- architecture arch
 --      locked   => locked,
 --      clk_in1  => clk);
 
-  pico_control_1 : entity work.pico_control
+  pico_control_multi_uart_1 : entity work.pico_control_multi_uart
+    generic map (
+      UARTS => 2)
     port map (
       clk      => pclk,
       reset    => reset,
-      RX       => uart_txd,             -- USB port for simple test
-      TX       => uart_rxd,
+      RX       => s_serial_in,
+      TX       => s_serial_out,
       control  => s_control,
       control2 => s_control2,
       status   => s_status,
@@ -193,7 +188,6 @@ begin  -- architecture arch
       TEXT_A_ROW => TEXT_A_ROW,
       TEXT_A_COL => TEXT_A_COL,
       TEXT_D     => TEXT_D,
---      TEXT_D     => X"55",      
       FONT_A     => FONT_A,
       FONT_D     => FONT_D,
       ocrx       => s_control2(15 downto 8),
@@ -228,6 +222,11 @@ begin  -- architecture arch
     port map (
       addr => FONT_A,
       dout => FONT_D);
+
+  s_serial_in <= RsRx & uart_txd;
+
+  RsTx <= s_serial_out(1);
+  uart_rxd <= s_serial_out(0);
 
   s_vga_addr <= std_logic_vector(to_unsigned(TEXT_A_ROW, 6))
                 & std_logic_vector(to_unsigned(TEXT_A_COL, 7));

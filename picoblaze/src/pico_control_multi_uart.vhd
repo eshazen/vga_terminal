@@ -1,4 +1,4 @@
--- pico_control.vhd
+-- pico_control_multi_uart.vhd
 --  
 -- PicoBlaze control interface for VGA terminal
 --
@@ -44,7 +44,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.all;
 use ieee.numeric_std.all;
 
-entity pico_control is
+entity pico_control_multi_uart is
 
   generic (
     UARTS : integer := 3
@@ -59,9 +59,9 @@ entity pico_control is
     status   : in  std_logic_vector(7 downto 0);   -- status register R/O
     action   : out std_logic_vector(7 downto 0));  -- action (pulsed) register W/O
 
-end entity pico_control;
+end entity pico_control_multi_uart;
 
-architecture arch of pico_control is
+architecture arch of pico_control_multi_uart is
 
   component kcpsm6
     generic(hwbuild                 : std_logic_vector(7 downto 0)  := X"00";
@@ -105,9 +105,12 @@ architecture arch of pico_control is
       set_baud_rate : in  std_logic_vector(15 downto 0);
       data_in       : in  std_logic_vector(7 downto 0);
       data_out      : out std_logic_vector(7 downto 0);
+      serial_out    : out std_logic;
+      serial_in     : in  std_logic;
       rd, wr        : in  std_logic;
       status_out    : out std_logic_vector(7 downto 0));
   end component uart_bus;
+
 --
 --
 -------------------------------------------------------------------------------------------
@@ -238,6 +241,8 @@ begin
         set_baud_rate => baud_rate_hi(i) & baud_rate_lo(i),
         data_in       => out_port,
         data_out      => uart_data_out(i),
+        serial_in     => RX(i),
+        serial_out    => TX(i),
         rd            => uart_rd(i),
         wr            => uart_wr(i),
         status_out    => uart_status(i));
@@ -299,7 +304,7 @@ begin
         when "1" & X"5" => in_port <= uart_status(1);
         when "1" & X"6" => in_port <= uart_status(2);
         when "1" & X"7" => in_port <= uart_status(3);
-                           
+
         -- data at 18..1b
         when "1" & X"8" => in_port <= uart_data_out(0);
                            uart_rd(0) <= '1';
@@ -337,10 +342,6 @@ begin
 
         -- Write to UART at port addresses 01 hex
         -- See below this clocked process for the combinatorial decode required.
-
-        -- Write to 'set_baud_rate' at port addresses 01, 02 hex     
-        -- This value is set by KCPSM6 to define the BAUD rate of the UART. 
-        -- See the 'UART baud rate' section for details.
 
         case port_id(4 downto 0) is
 
@@ -401,21 +402,23 @@ begin
   end process output_ports;
 
 
+  
+
   -- See *** above for definition of 'pipe_port
 
   -- generate UART data write strobes at address 0x80, 0x81...
   -- certainly there is a better way to do this...
   uart_wr(0) <= '1' when (write_strobe = '1') and (pipe_port(7) = '1')
-                and (pipe_port(1) = '0') and (pipe_port(0) = '0');
+                and (pipe_port(1) = '0') and (pipe_port(0) = '0') else '0';
 
   uart_wr(1) <= '1' when (write_strobe = '1') and (pipe_port(7) = '1')
-                and (pipe_port(1) = '0') and (pipe_port(0) = '1');
+                and (pipe_port(1) = '0') and (pipe_port(0) = '1') else '0';
 
   uart_wr(2) <= '1' when (write_strobe = '1') and (pipe_port(7) = '1')
-                and (pipe_port(1) = '1') and (pipe_port(0) = '0');
+                and (pipe_port(1) = '1') and (pipe_port(0) = '0') else '0';
 
   uart_wr(3) <= '1' when (write_strobe = '1') and (pipe_port(7) = '1')
-                and (pipe_port(1) = '1') and (pipe_port(0) = '1');
+                and (pipe_port(1) = '1') and (pipe_port(0) = '1') else '0';
 
   --
   -----------------------------------------------------------------------------------------

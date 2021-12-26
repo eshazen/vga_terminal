@@ -1,0 +1,25 @@
+;;;
+;;; multi UART port addresses
+;;;
+;;; input ports
+	CONSTANT get_peek_data_low, 03 ; program data low bits
+	CONSTANT get_peek_data_mid, 04 ; program data middle bits
+	CONSTANT get_peek_data_high, 05 ; ; program data upper bits
+	
+        CONSTANT UART_status_port, 14             ; Read status
+        CONSTANT UART_RX6_input_port, 18	  ; rx data (n/a this file)
+	CONSTANT clock_freq_in_mhz, 02		  ; system clock frequency in MHz
+
+;;; output ports
+        CONSTANT set_baud_rate_lsb, 14 ; baud rate divisor, low byte
+	CONSTANT set_baud_rate_msb, 18 ; baud rate divisor, high byte
+	
+	CONSTANT set_peek_addr_lsb, 03	; program RAM address low bits
+	CONSTANT set_peek_addr_msb, 04  ; program RAM address high bits
+	CONSTANT set_poke_data_low, 05  ; program RAM write data latch lsb
+	CONSTANT set_poke_data_mid, 06  ; program RAM write data latch lsb
+	CONSTANT set_poke_data_high, 07  ; program RAM write data latch msb (triggers write)
+
+	CONSTANT reset_UART_port, 01
+	CONSTANT UART_TX6_output_port, 80
+	

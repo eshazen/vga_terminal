@@ -19,8 +19,8 @@ set_property -dict { PACKAGE_PIN L17   IOSTANDARD LVCMOS33 } [get_ports { clk }]
 # create_clock -add -name sys_clk_pin -period 84.0 -waveform {0 42.0} [get_ports {clk}];
 
 # Connect to input port when clock capable pin is selected for input
-create_clock -period 83.333 [get_ports clk_in]
-set_input_jitter [get_clocks -of_objects [get_ports clk_in]] 0.83333
+create_clock -period 83.333 [get_ports clk]
+set_input_jitter [get_clocks -of_objects [get_ports clk]] 0.83333
 
 ## # try to get it to ignore the clock domain crossing
 ## set_false_path -from [get_clocks clk2500] -to [get_clocks clk3728]
