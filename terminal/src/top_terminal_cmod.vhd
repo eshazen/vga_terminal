@@ -47,21 +47,20 @@ architecture arch of top_terminal_cmod is
       action   : out std_logic_vector(7 downto 0));
   end component pico_control_multi_uart;
 
-  component mem_text_bram is
+  component mem_text_bram
     port (
       clka  : in  std_logic;
-      ena   : in  std_logic;
       wea   : in  std_logic_vector(0 downto 0);
       addra : in  std_logic_vector(12 downto 0);
       dina  : in  std_logic_vector(7 downto 0);
       douta : out std_logic_vector(7 downto 0);
       clkb  : in  std_logic;
-      enb   : in  std_logic;
       web   : in  std_logic_vector(0 downto 0);
       addrb : in  std_logic_vector(12 downto 0);
       dinb  : in  std_logic_vector(7 downto 0);
-      doutb : out std_logic_vector(7 downto 0));
-  end component mem_text_bram;
+      doutb : out std_logic_vector(7 downto 0)
+      );
+  end component;
 
   component clk_wiz_1 is
     port (
@@ -113,9 +112,9 @@ architecture arch of top_terminal_cmod is
 --row 0 to 39 so 6 bits
   signal TEXT_WR_A_ROW : std_logic_vector(5 downto 0);
 
-  signal TEXT_WR_D     : std_logic_vector(7 downto 0);
-  signal TEXT_RD_D     : std_logic_vector(7 downto 0);
-  signal TEXT_WR_WE    : std_logic;
+  signal TEXT_WR_D  : std_logic_vector(7 downto 0);
+  signal TEXT_RD_D  : std_logic_vector(7 downto 0);
+  signal TEXT_WR_WE : std_logic;
 
   signal locked : std_logic;
 
@@ -204,19 +203,16 @@ begin  -- architecture arch
       hsync      => s_hsync,
       vsync      => s_vsync);
 
-  mem_text_bram_1 : mem_text_bram
+-- character RAM
+  mem_text_bram_2: entity work.mem_text_bram
     port map (
-      -- port A from VGA
       clka  => pclk,
-      ena   => '1',
       wea   => "0",
       addra => s_vga_addr,
       dina  => (others => '0'),
       douta => TEXT_D,
 
-      -- port B from picoblaze
       clkb  => pclk,
-      enb   => '1',
       web   => (0 => TEXT_WR_WE),
       addrb => TEXT_WR_A_ROW & TEXT_WR_A_COL,
       dinb  => TEXT_WR_D,
@@ -230,7 +226,7 @@ begin  -- architecture arch
 
   s_serial_in <= kb_data & RsRx & uart_txd;
 
-  RsTx <= s_serial_out(1);
+  RsTx     <= s_serial_out(1);
   uart_rxd <= s_serial_out(0);
 
   s_vga_addr <= std_logic_vector(to_unsigned(TEXT_A_ROW, 6))
