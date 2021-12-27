@@ -31,6 +31,8 @@ end entity top_terminal_cmod;
 
 architecture arch of top_terminal_cmod is
 
+  constant NUARTS : integer := 3;
+
   component pico_control_multi_uart is
     generic (
       UARTS : integer);
@@ -106,8 +108,11 @@ architecture arch of top_terminal_cmod is
   signal FONT_A         : std_logic_vector(11 downto 0);
   signal TEXT_D, FONT_D : std_logic_vector(7 downto 0);
 
+--column 0 to 79 so 7 bits
   signal TEXT_WR_A_COL : std_logic_vector(6 downto 0);
+--row 0 to 39 so 6 bits
   signal TEXT_WR_A_ROW : std_logic_vector(5 downto 0);
+
   signal TEXT_WR_D     : std_logic_vector(7 downto 0);
   signal TEXT_RD_D     : std_logic_vector(7 downto 0);
   signal TEXT_WR_WE    : std_logic;
@@ -127,8 +132,8 @@ architecture arch of top_terminal_cmod is
 
   signal s_counter : unsigned(23 downto 0);
 
-  signal s_serial_in  : std_logic_vector(1 downto 0);
-  signal s_serial_out : std_logic_vector(1 downto 0);
+  signal s_serial_in  : std_logic_vector(NUARTS-1 downto 0);
+  signal s_serial_out : std_logic_vector(NUARTS-1 downto 0);
 
 begin  -- architecture arch
 
@@ -170,7 +175,7 @@ begin  -- architecture arch
 
   pico_control_multi_uart_1 : entity work.pico_control_multi_uart
     generic map (
-      UARTS => 2)
+      UARTS => NUARTS)
     port map (
       clk      => pclk,
       reset    => reset,
@@ -223,7 +228,7 @@ begin  -- architecture arch
       addr => FONT_A,
       dout => FONT_D);
 
-  s_serial_in <= RsRx & uart_txd;
+  s_serial_in <= kb_data & RsRx & uart_txd;
 
   RsTx <= s_serial_out(1);
   uart_rxd <= s_serial_out(0);

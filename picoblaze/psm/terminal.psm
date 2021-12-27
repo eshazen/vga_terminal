@@ -3,7 +3,16 @@
 ;;; implements most ANSI.SYS codes:
 ;;;   CUU, CUD, CUF, CUB, CUP, ED, EL
 ;;; hopefully enough to keep WS and VEDIT happy
+;;;
+;;; Mods for multi-port version:
+;;; Initialize port 1 for 9600 baud for RC2014
+;;; Initialize port 2 for 4800 baud for keyboard
+;;; loop:
+;;;   check keyboard, copy to port 1 Tx
+;;;   check port 1 Rx, process VGA
+;;;   check port 0 for CR, exit to monitor
 ;;; 
+	INCLUDE "port_addr_multi.psm"
 	
 	address 500  ; ONLY FOR STANDALONE VERSION
 
@@ -75,7 +84,19 @@ m_send_message:	jump 006  ; 006: send message from (sA, sB)
 ;;;   s9 - current row    / memory address
 ;;;   sA - 01 for writing to RAM
 cmd_T:
-	;; initial hardware set up - pretty simple
+	;; serial port setup - RC2104, 9600 baud
+	load s0, set_baud_lsb_9600
+	output s0, set_baud_lsb_port1
+	load s0, set_baud_msb_9600
+	output s0, set_baud_msb_port1
+	
+	;; serial port setup - Keyboard, 4800 baud
+	load s0, set_baud_lsb_4800
+	output s0, set_baud_lsb_port2
+	load s0, set_baud_msb_4800
+	output s0, set_baud_msb_port2
+	
+	;; initial VGA hardware set up - pretty simple
 	load s0, mode_set
 	output s0, video_ctrl
 	load sA, 01
@@ -83,12 +104,46 @@ cmd_T:
 	call cls		;clear
 	call home		;home cursor
 
-	;; enter here on any ESC processing error or finish
+;;; ------------------------------------------------------------
+;;; enter here on any ESC processing error or finish
+;;; ------------------------------------------------------------
+	
 escrst:	load s0, S_IDLE
 	store s0, escst		;set ESC parser to IDLE
 
+;;; main polling loop entry
+	
 termi:	call dpcur		;update cursor display
-	call m_UART_RX_wait	;get input character to s5
+	
+	;; check for input from keyboard
+ckspin:	input s0, uart_status_port2
+	test s0, UART_Rx_data_present
+	jump z, no_kb_in
+	;; read keyboard, send to RC2014
+	input s0, uart_input_port2
+	output s0, uart_output_port1 ; no need to check status as it is faster
+
+no_kb_in:	
+	input s0, uart_status_port0 ;check for monitor port input
+	test s0, UART_Rx_data_present
+	jump z, no_mon_in
+	input s0, uart_input_port0 ;get monitor port data
+	compare s0, 0d		   ;check for CR
+	jump z, m_main		   ;bail to monitor
+
+no_mon_in:	
+	;; check for input from RC2014
+	input s0, uart_status_port1
+	test s0, UART_Rx_data_present
+	jump z, ckspin
+
+	input s5, uart_input_port1
+	
+;;; ------------------------------------------------------------
+;;; ---------- VGA processing of character in s5 ---------------
+;;; ------------------------------------------------------------
+
+;	call m_UART_RX_wait	;get input character to s5
 
 	compare s5, ESC		;ESC
 	jump nz, noesc
@@ -404,7 +459,9 @@ el_all:	load s2, s9		; get current line
 	jump escrst
 
 ;;; -------------------- non-escape processing --------------------
-ekko:	call m_UART_TX		;echo the char
+	;; FIXME
+ekko:
+	call m_UART_TX		;echo the char
 	
 	;; check for a control chars
 noeko:	and s5,7f		;strip upper bit just in case
@@ -568,3 +625,5 @@ ccol:	output s1, vram_addr_lo
 	jump nz, ccol
 	return
 
+
+	

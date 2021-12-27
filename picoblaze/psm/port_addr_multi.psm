@@ -7,12 +7,38 @@
 	CONSTANT get_peek_data_high, 05 ; ; program data upper bits
 	
         CONSTANT UART_status_port, 14             ; Read status
+	CONSTANT uart_status_port0, 14
+	CONSTANT uart_status_port1, 15
+	CONSTANT uart_status_port2, 16
+	CONSTANT uart_status_port3, 17
+
+        CONSTANT UART_Tx_data_present, 00000001'b ; Tx   data_present - bit0
+        CONSTANT UART_Tx_half_full, 00000010'b    ;         half_full - bit1
+        CONSTANT UART_Tx_full, 00000100'b         ;              full - bit2
+        CONSTANT UART_Rx_data_present, 00001000'b ; Rx   data_present - bit3
+        CONSTANT UART_Rx_half_full, 00010000'b    ;         half_full - bit4
+        CONSTANT UART_Rx_full, 00100000'b         ;              full - bit5
+
         CONSTANT UART_RX6_input_port, 18	  ; rx data (n/a this file)
+	CONSTANT uart_input_port0, 18
+	CONSTANT uart_input_port1, 19
+	CONSTANT uart_input_port2, 1a
+	CONSTANT uart_input_port3, 1b
+
 	CONSTANT clock_freq_in_mhz, 02		  ; system clock frequency in MHz
 
 ;;; output ports
         CONSTANT set_baud_rate_lsb, 14 ; baud rate divisor, low byte
+	CONSTANT set_baud_lsb_port0, 14
+	CONSTANT set_baud_lsb_port1, 15
+	CONSTANT set_baud_lsb_port2, 16
+	CONSTANT set_baud_lsb_port3, 17
+
 	CONSTANT set_baud_rate_msb, 18 ; baud rate divisor, high byte
+	CONSTANT set_baud_msb_port0, 18
+	CONSTANT set_baud_msb_port1, 19
+	CONSTANT set_baud_msb_port2, 1a
+	CONSTANT set_baud_msb_port3, 1b
 	
 	CONSTANT set_peek_addr_lsb, 03	; program RAM address low bits
 	CONSTANT set_peek_addr_msb, 04  ; program RAM address high bits
@@ -21,5 +47,15 @@
 	CONSTANT set_poke_data_high, 07  ; program RAM write data latch msb (triggers write)
 
 	CONSTANT reset_UART_port, 01
-	CONSTANT UART_TX6_output_port, 80
 	
+	CONSTANT UART_TX6_output_port, 80
+	CONSTANT uart_output_port0, 80
+	CONSTANT uart_output_port1, 81
+	CONSTANT uart_output_port2, 82
+	CONSTANT uart_output_port3, 83
+
+	CONSTANT set_baud_lsb_9600, a2
+	CONSTANT set_baud_msb_9600, 00
+
+	CONSTANT set_baud_lsb_4800, 45
+	CONSTANT set_baud_msb_4800, 01

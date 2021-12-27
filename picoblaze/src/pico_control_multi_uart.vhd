@@ -39,6 +39,7 @@
 --                   bit 7 is VGA enable
 --         14..17  - baud rate lo for UARTS 0..3
 --         18--1B  - baud rate hi for UARTS 0..3
+--         80--83  - UART transmit data
 --
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;
@@ -269,11 +270,6 @@ begin
   begin
     if clk'event and clk = '1' then
 
-      uart_rd(0) <= '0';
-      uart_rd(1) <= '0';
-      uart_rd(2) <= '0';
-      uart_rd(3) <= '0';
-
       case port_id(4 downto 0) is
 
         -- Read clock frequency contant at port address 02 hex
@@ -307,18 +303,41 @@ begin
 
         -- data at 18..1b
         when "1" & X"8" => in_port <= uart_data_out(0);
-                           uart_rd(0) <= '1';
         when "1" & X"9" => in_port <= uart_data_out(1);
-                           uart_rd(1) <= '1';
         when "1" & X"A" => in_port <= uart_data_out(2);
-                           uart_rd(2) <= '1';
         when "1" & X"B" => in_port <= uart_data_out(3);
-                           uart_rd(3) <= '1';
 
         -- Specify don't care for all other inputs to obtain optimum implementation
         when others => in_port <= "XXXXXXXX";
 
       end case;
+
+      -- Generate 'buffer_read' pulse following read from port addresses 18--1B
+
+      if (read_strobe = '1') and (port_id(4 downto 0) = "11000" ) then
+        uart_rd(0) <= '1';
+      else
+        uart_rd(0) <= '0';
+      end if;
+
+      if (read_strobe = '1') and (port_id(4 downto 0) = "11001" ) then
+        uart_rd(1) <= '1';
+      else
+        uart_rd(1) <= '0';
+      end if;
+
+      if (read_strobe = '1') and (port_id(4 downto 0) = "11010" ) then
+        uart_rd(2) <= '1';
+      else
+        uart_rd(2) <= '0';
+      end if;
+
+      if (read_strobe = '1') and (port_id(4 downto 0) = "11011" ) then
+        uart_rd(3) <= '1';
+      else
+        uart_rd(3) <= '0';
+      end if;
+
 
     end if;
   end process input_ports;
