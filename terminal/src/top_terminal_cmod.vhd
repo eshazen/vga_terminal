@@ -204,7 +204,7 @@ begin  -- architecture arch
       vsync      => s_vsync);
 
 -- character RAM
-  mem_text_bram_2: entity work.mem_text_bram
+  mem_text_bram_2: mem_text_bram
     port map (
       clka  => pclk,
       wea   => "0",

@@ -31,28 +31,6 @@
 	CONSTANT ncols, 80'd
 	CONSTANT last_col, 79'd
 
-;;; ---------- I/O ports --------------------
-	CONSTANT vram_data_in, 0d ; read data
-	CONSTANT vram_data_out, 09 ;write data
-	CONSTANT vram_addr_lo, 0a    ; column
-	CONSTANT vram_addr_hi, 0b    ; row
-	CONSTANT vram_wr, 0d	     ; write strobe
-
-	CONSTANT video_ctrl, 10	; various control bits (below)
-	CONSTANT cursor_col, 11	; hardware cursor column
-	CONSTANT cursor_row, 12	; hardware cursor row
-
-;;; ---------- bits in control register
-	CONSTANT video_red, 01
-	CONSTANT video_green, 02
-	CONSTANT video_blue, 04
-	CONSTANT cur_mode, 10
-	CONSTANT cur_blink, 20
-	CONSTANT cur_en, 40
-	CONSTANT vga_en, 80
-
-;;;dpy enabled, cursor on, blink color=white
-	CONSTANT mode_set, e7
 
 ;	CONSTANT ESC, 1b     ; already declared elsewhere ??
 	CONSTANT SEMI, 3b
@@ -597,9 +575,12 @@ movlin:	load s1,00		;column
 	;; 18 clocks * 80 = 57us
 movchr:	output s1,vram_addr_lo
 	output s4,vram_addr_hi
+	load s0, s0		;NOOP
 	input s0, vram_data_in
 	output s5,vram_addr_hi
+	load s0, s0		;NOOP
 	output s0, vram_data_out
+	load s0, s0		;NOOP
 	output sA, vram_wr
 	add s1,01
 	compare s1,ncols

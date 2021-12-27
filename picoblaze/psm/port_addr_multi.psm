@@ -59,3 +59,27 @@
 
 	CONSTANT set_baud_lsb_4800, 45
 	CONSTANT set_baud_msb_4800, 01
+
+;;; ---------- Video I/O ports --------------------
+	CONSTANT vram_data_in, 0d ; read data
+	CONSTANT vram_data_out, 09 ;write data
+	CONSTANT vram_addr_lo, 0a    ; column
+	CONSTANT vram_addr_hi, 0b    ; row
+	CONSTANT vram_wr, 0d	     ; write strobe
+
+	CONSTANT video_ctrl, 10	; various control bits (below)
+	CONSTANT cursor_col, 11	; hardware cursor column
+	CONSTANT cursor_row, 12	; hardware cursor row
+
+;;; ---------- bits in control register
+	CONSTANT video_red, 01
+	CONSTANT video_green, 02
+	CONSTANT video_blue, 04
+	CONSTANT cur_mode, 10
+	CONSTANT cur_blink, 20
+	CONSTANT cur_en, 40
+	CONSTANT vga_en, 80
+
+;;;dpy enabled, cursor on, blink color=white
+	CONSTANT mode_set, e7
+	
