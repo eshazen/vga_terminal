@@ -1,0 +1,26 @@
+	INCLUDE "port_addr_multi.psm"
+	
+	address 680
+
+;;; set color for a row
+
+;;; set color for one line at s2 to s5
+;;; uses s0, s1, s3, s4, s6  (expects sA=01)
+clrlin:	load s3, 00		;column 0
+	load s4, 79'd	;last column
+	load s6, 02
+	jump clrcol
+
+;;; erase column range (s3 to s4) in line s2
+clrcol:	output s2, vram_addr_hi
+	output s5, vram_data_out
+	load s1, s3		;start column
+
+ccol:	output s1, vram_addr_lo
+	output s6, vram_wr
+	add s1, 01
+	compare s1, s4
+	jump nz, ccol
+
+	jump 002
+	

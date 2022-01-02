@@ -43,7 +43,7 @@ architecture arch of top_terminal_cmod is
       TX       : out std_logic_vector(UARTS-1 downto 0);
       control  : out std_logic_vector(31 downto 0);
       control2 : out std_logic_vector(31 downto 0);
-      status   : in  std_logic_vector(7 downto 0);
+      status   : in  std_logic_vector(15 downto 0);
       action   : out std_logic_vector(7 downto 0));
   end component pico_control_multi_uart;
 
@@ -85,7 +85,8 @@ architecture arch of top_terminal_cmod is
       G          : out std_logic;
       B          : out std_logic;
       hsync      : out std_logic;
-      vsync      : out std_logic);
+      vsync      : out std_logic;
+      chr_en     : out std_logic);
   end component vga80x40;
 
   component mem_font is
@@ -106,15 +107,19 @@ architecture arch of top_terminal_cmod is
 
   signal FONT_A         : std_logic_vector(11 downto 0);
   signal TEXT_D, FONT_D : std_logic_vector(7 downto 0);
+  signal TEXTA_D        : std_logic_vector(7 downto 0);
 
 --column 0 to 79 so 7 bits
   signal TEXT_WR_A_COL : std_logic_vector(6 downto 0);
 --row 0 to 39 so 6 bits
   signal TEXT_WR_A_ROW : std_logic_vector(5 downto 0);
 
-  signal TEXT_WR_D  : std_logic_vector(7 downto 0);
-  signal TEXT_RD_D  : std_logic_vector(7 downto 0);
-  signal TEXT_WR_WE : std_logic;
+  signal TEXT_WR_D   : std_logic_vector(7 downto 0);
+  signal TEXTA_WR_D  : std_logic_vector(7 downto 0);
+  signal TEXT_RD_D   : std_logic_vector(7 downto 0);
+  signal TEXTA_RD_D  : std_logic_vector(7 downto 0);
+  signal TEXT_WR_WE  : std_logic;
+  signal TEXTA_WR_WE : std_logic;
 
   signal locked : std_logic;
 
@@ -124,7 +129,7 @@ architecture arch of top_terminal_cmod is
 
   signal s_control  : std_logic_vector(31 downto 0);
   signal s_control2 : std_logic_vector(31 downto 0);
-  signal s_status   : std_logic_vector(7 downto 0);
+  signal s_status   : std_logic_vector(15 downto 0);
   signal s_action   : std_logic_vector(7 downto 0);
 
   signal s_vga_addr : std_logic_vector(12 downto 0);
@@ -134,29 +139,37 @@ architecture arch of top_terminal_cmod is
   signal s_serial_in  : std_logic_vector(NUARTS-1 downto 0);
   signal s_serial_out : std_logic_vector(NUARTS-1 downto 0);
 
+  signal s_color : std_logic_vector(2 downto 0);
+  signal chr_en : std_logic;
+
 begin  -- architecture arch
 
   reset <= '0';                         -- we don't need no steenkin reset!
 
-  s_status <= TEXT_RD_D;
+  s_status <= TEXTA_RD_D & TEXT_RD_D;
 
   TEXT_WR_D     <= s_control(7 downto 0);
   TEXT_WR_A_COL <= s_control(14 downto 8);
   TEXT_WR_A_ROW <= s_control(21 downto 16);
+  TEXTA_WR_D    <= s_control(31 downto 24);
   TEXT_WR_WE    <= s_action(0);
+  TEXTA_WR_WE   <= s_action(1);
 
   -- all full intensity
   vgaRed(0) <= R;
   vgaRed(1) <= R;
   vgaRed(2) <= R;
+  vgaRed(3) <= R;
 
   vgaGreen(0) <= G;
   vgaGreen(1) <= G;
   vgaGreen(2) <= G;
+  vgaGreen(3) <= G;
 
   vgaBlue(0) <= B;
   vgaBlue(1) <= B;
   vgaBlue(2) <= B;
+  vgaBlue(3) <= B;
 
   Hsync <= s_hsync;
   Vsync <= s_vsync;
@@ -196,15 +209,16 @@ begin  -- architecture arch
       FONT_D     => FONT_D,
       ocrx       => s_control2(15 downto 8),
       ocry       => s_control2(23 downto 16),
-      octl       => s_control2(7 downto 0),
+      octl       => s_control2(7 downto 3) & s_color,
       R          => R,
       G          => G,
       B          => B,
       hsync      => s_hsync,
-      vsync      => s_vsync);
+      vsync      => s_vsync,
+      chr_en     => chr_en);
 
 -- character RAM
-  mem_text_bram_2: mem_text_bram
+  mem_text_bram_2 : mem_text_bram
     port map (
       clka  => pclk,
       wea   => "0",
@@ -217,6 +231,21 @@ begin  -- architecture arch
       addrb => TEXT_WR_A_ROW & TEXT_WR_A_COL,
       dinb  => TEXT_WR_D,
       doutb => TEXT_RD_D);
+
+-- attribute RAM
+  mem_text_bram_1 : mem_text_bram
+    port map (
+      clka  => pclk,
+      wea   => "0",
+      addra => s_vga_addr,
+      dina  => (others => '0'),
+      douta => TEXTA_D,
+
+      clkb  => pclk,
+      web   => (0 => TEXTA_WR_WE),
+      addrb => TEXT_WR_A_ROW & TEXT_WR_A_COL,
+      dinb  => TEXTA_WR_D,
+      doutb => TEXTA_RD_D);
 
   -- character generator
   mem_font_1 : entity work.mem_font
@@ -244,6 +273,10 @@ begin  -- architecture arch
     if pclk'event and pclk = '1' then   -- rising clock edge
 
       s_counter <= s_counter + 1;
+      -- put here to register the output
+      if chr_en = '1' then
+        s_color <= TEXTA_D(2 downto 0);
+      end if; 
 
     end if;
   end process;

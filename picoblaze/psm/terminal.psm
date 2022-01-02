@@ -16,12 +16,15 @@
 	
 	address 500  ; ONLY FOR STANDALONE VERSION
 
-
 ;;; ---------- scratchpad locations --------------------
 	
 	CONSTANT escst, 60	; ESC parser state
 	CONSTANT escp1, 61	; parameter 1 (0 if none)
 	CONSTANT escp2, 62	; parameter 2 (0 if none)
+	
+	CONSTANT color, 68	; current color
+
+	;; (up to 7f free)
 
 ;;; ---------- constants ----------
 	CONSTANT first_row, 01	;normally zero but our display malfunctions
@@ -40,6 +43,7 @@
 	CONSTANT S_NEXT, 01
 	CONSTANT S_PARM1, 02
 	CONSTANT S_PARM2, 03
+	CONSTANT S_START, 04	;got ( or )
 	
 	jump cmd_T
 
@@ -60,7 +64,7 @@ m_send_message:	jump 006  ; 006: send message from (sA, sB)
 ;;; overall register use:
 ;;;   s8 - current column \ cursor position
 ;;;   s9 - current row    / memory address
-;;;   sA - 01 for writing to RAM
+;;;   sA - 03 for writing to RAMs
 cmd_T:
 	;; serial port setup - RC2104, 9600 baud
 	load s0, set_baud_lsb_9600
@@ -77,7 +81,10 @@ cmd_T:
 	;; initial VGA hardware set up - pretty simple
 	load s0, mode_set
 	output s0, video_ctrl
-	load sA, 01
+	load sA, 03
+
+	load s0, 7		;default color = white
+	store s0, color
 
 	call cls		;clear
 	call home		;home cursor
@@ -128,7 +135,7 @@ no_mon_in:
 
 	;; got escape, start parsing
 	load s0, S_NEXT
-	store s0, escst
+newstat: store s0, escst
 	
 	jump termi
 
@@ -139,9 +146,19 @@ esc_local:
 	compare s5, "Q"		; ESC Q - exit to monitor
 	jump z, m_main
 
-	jump escrst
-	
+;;; now deal with some other annoying things
+;;; like ESC ( B/0/U/K) and ESC ) B/0/U/K
+	compare s5, "("
+	jump z, esc_starts
+	compare s5, ")"
+	jump z, esc_starts
 
+	jump escrst
+
+esc_starts:
+	load s0, S_START
+	jump newstat
+	
 ;;; 
 ;;; Handle only CSI-style ANSI sequences, so:
 ;;; CSI <parm> <final>
@@ -169,6 +186,9 @@ noesc:	fetch s0, escst		;current state
 
 	compare s0, S_NEXT	;waiting for "[", ignore other
 	jump z, next
+
+	compare s0, S_START
+	jump z, escrst
 
 escs1:	compare s0, S_PARM1
 	jump z, do_parm1
@@ -265,6 +285,8 @@ endparm: compare s5, 40		;low end of terminator range
 	jump z, DEC_DL
 	compare s5, "L"
 	jump z, DEC_IL
+	compare s5, "m"
+	jump z, ANSI_SGR
 
 	jump	escrst
 
@@ -283,6 +305,32 @@ p1val:	fetch s0, escp2
 	store s0, escp2
 p2val:	return
 	
+;;; ---------- set graphic rendition ----------
+;;; only support a small set of these
+;;; for now just set color directly from param
+ANSI_SGR:
+	fetch s0, escp1
+	compare s0, 00		;zero = white, normal
+	jump nz,sgr1
+	load s0, 7
+	
+setcol:	store s0, color
+	jump escrst
+
+	;; 1-7 just map to colors for now
+sgr1:	and s0,7		;low 3 bits only
+	jump setcol
+
+;; 	compare s0, 8		;below 8
+;; 	jump nc, sgr2
+;; 	jump setcol		;just set color 1-7
+;; ;
+;; 	;; 30-37 map to colors
+;; sgr2:	sub s0, 30'd
+;; 	jump c, escrst
+;; 	compare s0, 8
+;; 	jump nc, escrst
+;; 	jump setcol
 
 ;;; ---------- Line delete ----------
 ;;; scroll lines from cursor to end up
@@ -463,6 +511,10 @@ noctl:	call v_putc
 v_putc:	output s8,vram_addr_lo	;set column RAM address
 	output s9,vram_addr_hi	;set row RAM address
 	output s5,vram_data_out	;set output data
+
+	;; set color
+	fetch s0, color
+	output s0, vram_attr_out
 	output sA,vram_wr	;write to VRAM
 
 	compare s8, last_col	;last column?
@@ -523,6 +575,7 @@ home:
 	
 ;;; ------------------------------------------------------------
 ;;; clear the screen
+;;; set all to current color
 ;;; ------------------------------------------------------------
 	;; uses s0, s2, s3, s4
 cls:	load s2, 00		;start line
@@ -536,7 +589,7 @@ cls1:	call clrlin		;erase line
 ;;; s2 - first line, increments as "copy from"
 ;;;      ("copy to" is s2-1)
 ;;; s3 - end line for checking
-;;; sA - constant 01 for write ops
+;;; sA - constant 03 for write ops
 ;;; doesn't disturb anything above s8
 	
 scrlup:	;; check for same value (done?)
@@ -555,7 +608,7 @@ scrlup:	;; check for same value (done?)
 ;;; s2 - first line for check to stop scroll
 ;;; s3 - last line
 ;;;      copy from s3-1 to s3
-;;; sA - constant 01 for write ops
+;;; sA - constant 03 for write ops
 scrldn:	compare s2, s3		;same means done, clear line
 	jump z, clrlin
 
@@ -568,8 +621,9 @@ scrldn:	compare s2, s3		;same means done, clear line
 	jump scrldn
 
 ;;; copy one line from line s4 to s5
-;;; expects sA = 01
-;;; uses only s0, s1
+;;; copy both text and attribute data
+;;; expects sA = 03
+;;; uses s0, s1, s6
 movlin:	load s1,00		;column
 
 	;; 18 clocks * 80 = 57us
@@ -577,11 +631,15 @@ movchr:	output s1,vram_addr_lo
 	output s4,vram_addr_hi
 	load s0, s0		;NOOP
 	input s0, vram_data_in
+	input s6, vram_attr_in
+	load s0, s0		;NOOP
 	output s5,vram_addr_hi
 	load s0, s0		;NOOP
 	output s0, vram_data_out
+	output s6, vram_attr_out
 	load s0, s0		;NOOP
 	output sA, vram_wr
+
 	add s1,01
 	compare s1,ncols
 	jump nz, movchr
@@ -589,6 +647,7 @@ movchr:	output s1,vram_addr_lo
 
 ;;; erase one line at s2
 ;;; uses s0, s1, s3, s4  (expects sA=01)
+;;; set attr to current color
 clrlin:	load s3, 00		;column 0
 	load s4, last_col	;last column
 	jump clrcol
@@ -597,6 +656,8 @@ clrlin:	load s3, 00		;column 0
 clrcol:	output s2, vram_addr_hi
 	load s0, 20
 	output s0, vram_data_out
+	fetch s0, color
+	output s0, vram_attr_out
 	load s1, s3		;start column
 
 ccol:	output s1, vram_addr_lo

@@ -11,8 +11,9 @@
 --           09    - VGA text data for write
 --           0a    - VGA text column address
 --           0b    - VGA test row address
---           0c    - spare controls
---         0d      - VGA test data read
+--           0c    - VGA attribute data for write
+--         0d      - VGA text data read
+--         0e      - VGA attr data read
 --         10..13  - control port 2
 --           10    - video control port
 --           11    - Hardware cursor column
@@ -57,7 +58,7 @@ entity pico_control_multi_uart is
     TX       : out std_logic_vector(UARTS-1 downto 0);  -- asynch serial output
     control  : out std_logic_vector(31 downto 0);  -- control register R/W
     control2 : out std_logic_vector(31 downto 0);  -- 2nd control register R/W
-    status   : in  std_logic_vector(7 downto 0);   -- status register R/O
+    status   : in  std_logic_vector(15 downto 0);   -- status register R/O
     action   : out std_logic_vector(7 downto 0));  -- action (pulsed) register W/O
 
 end entity pico_control_multi_uart;
@@ -173,7 +174,7 @@ architecture arch of pico_control_multi_uart is
 
   signal s_control  : std_logic_vector(31 downto 0);
   signal s_control2 : std_logic_vector(31 downto 0);
-  signal s_status   : std_logic_vector(7 downto 0);
+  signal s_status   : std_logic_vector(15 downto 0);
   signal s_action   : std_logic_vector(7 downto 0);
 
 --
@@ -287,7 +288,8 @@ begin
         when "0" & X"C" => in_port <= s_control(31 downto 24);
 
         -- read the status port
-        when "0" & X"D" => in_port <= s_status;
+        when "0" & X"D" => in_port <= s_status(7 downto 0);
+        when "0" & X"E" => in_port <= s_status(15 downto 8);
 
         -- read the control2 port for symmetry at 10..13
         when "1" & x"0" => in_port <= s_control2(7 downto 0);

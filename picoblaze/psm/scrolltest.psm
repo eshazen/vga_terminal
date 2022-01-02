@@ -1,0 +1,18 @@
+	INCLUDE "port_addr_multi.psm"
+	
+	address 680
+
+	load sA, 01
+	
+	load s4, 05
+	load s5, 03
+	load s1,01		;start column
+
+	;; just read data, display in hex
+	output s1,vram_addr_lo
+	output s4,vram_addr_hi
+	input s4, vram_data_in
+	call 005
+	jump 002
+	
+	

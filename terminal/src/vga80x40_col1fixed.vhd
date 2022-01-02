@@ -45,6 +45,7 @@ entity vga80x40 is
     G          : out std_logic;
     B          : out std_logic;
     hsync      : out std_logic;
+    chr_en     : out std_logic;
     vsync      : out std_logic
     );
 end vga80x40;
@@ -63,14 +64,14 @@ architecture rtl of vga80x40 is
 
 -- <ESH>
 --  signal hctr  : integer range 793 downto 0;
-  signal hctr  : integer range 799 downto 0;
+  signal hctr : integer range 799 downto 0;
 
-  signal vctr  : integer range 524 downto 0;
+  signal vctr : integer range 524 downto 0;
   -- character/pixel position on the screen
-  signal scry  : integer range 039 downto 0;  -- chr row   < 40 (6 bits)
-  signal scrx  : integer range 079 downto 0;  -- chr col   < 80 (7 bits)
-  signal chry  : integer range 011 downto 0;  -- chr high  < 12 (4 bits)
-  signal chrx  : integer range 007 downto 0;  -- chr width < 08 (3 bits)
+  signal scry : integer range 039 downto 0;  -- chr row   < 40 (6 bits)
+  signal scrx : integer range 079 downto 0;  -- chr col   < 80 (7 bits)
+  signal chry : integer range 011 downto 0;  -- chr high  < 12 (4 bits)
+  signal chrx : integer range 007 downto 0;  -- chr width < 08 (3 bits)
 
   signal losr_ce : std_logic;
   signal losr_ld : std_logic;
@@ -217,7 +218,7 @@ begin
 
 -- <ESH>
 --    U_HCTR : ctrm generic map (M => 794) port map (
-    U_HCTR : ctrm generic map (M => 800) port map (    
+    U_HCTR : ctrm generic map (M => 800) port map (
       reset                      => reset, clk => clk25MHz, ce => hctr_ce, rs => hctr_rs, do => hctr);
 
     U_VCTR : ctrm generic map (M => 525) port map (reset, clk25MHz, vctr_ce, vctr_rs, vctr);
@@ -252,6 +253,8 @@ begin
     chry_ce <= hctr_639 and blank;
     scry_ce <= chry_011 and hctr_639;
 
+--    chr_en <= chrx_007;                 --character strobe output
+    chr_en <= '1' when chrx = 000 else '0';
 
 -- Proboscide99 31/08/08
 --    ram_tmp <= scry * 80 + scrx + 1 when ((scrx_079 = '0')) else

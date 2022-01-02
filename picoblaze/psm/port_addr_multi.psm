@@ -61,10 +61,14 @@
 	CONSTANT set_baud_msb_4800, 01
 
 ;;; ---------- Video I/O ports --------------------
-	CONSTANT vram_data_in, 0d ; read data
+	CONSTANT vram_data_in, 0d ; read data (text)
+	CONSTANT vram_attr_in, 0e ; read data (attr)
+	
 	CONSTANT vram_data_out, 09 ;write data
 	CONSTANT vram_addr_lo, 0a    ; column
 	CONSTANT vram_addr_hi, 0b    ; row
+	CONSTANT vram_attr_out, 0c   ;attribute data
+
 	CONSTANT vram_wr, 0d	     ; write strobe
 
 	CONSTANT video_ctrl, 10	; various control bits (below)
